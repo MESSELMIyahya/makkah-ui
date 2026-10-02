@@ -1,0 +1,4 @@
+interface:
+  display_name: "Shadcn Registry"
+  short_description: "Author installable shadcn registry items"
+  default_prompt: "Use $shadcn-registry to add or adapt an installable registry item."

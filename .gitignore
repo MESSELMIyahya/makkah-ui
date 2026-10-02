@@ -1,0 +1,17 @@
+node_modules
+.content-collections
+.DS_Store
+dist
+dist-ssr
+*.local
+.env
+.nitro
+.tanstack
+.wrangler
+.output
+.vinxi
+__unconfig*
+todos.json
+.vercel
+.env*.local
+.vitest/

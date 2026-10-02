@@ -1,0 +1,72 @@
+import { createFileRoute, notFound } from "@tanstack/react-router";
+
+import { RegistryItemDoc } from "@/components/docs/component-doc";
+import { ContentSkeleton } from "@/components/docs/content-skeleton";
+import { DocsLayout } from "@/components/docs/docs-layout";
+
+import { getRegistryItemDetail } from "../lib/registry/detail.functions";
+import { registryCatalog } from "../lib/registry/item-types";
+import { getRegistryItemRoutePath, getRegistrySectionForType } from "../lib/registry/sections";
+import { getMarkdownAlternatePath, getSeoHead, getTechArticleJsonLd } from "../lib/seo";
+
+export const Route = createFileRoute("/registry/$name")({
+  loader: async ({ params }) => {
+    const detail = await getRegistryItemDetail({
+      data: {
+        name: params.name,
+      },
+    });
+
+    if (!detail.item) {
+      throw notFound();
+    }
+
+    return detail.item;
+  },
+  pendingComponent: RegistryItemPendingRoute,
+  head: ({ loaderData: item }) => {
+    if (!item) {
+      return getSeoHead({
+        title: registryCatalog.title,
+        description: registryCatalog.description,
+        path: registryCatalog.basePath,
+        markdownPath: getMarkdownAlternatePath(registryCatalog.basePath),
+      });
+    }
+
+    const path = getRegistryItemRoutePath(item);
+    const section = getRegistrySectionForType(item.type);
+
+    return getSeoHead({
+      title: item.title,
+      description: item.description,
+      path,
+      markdownPath: getMarkdownAlternatePath(path),
+      ogType: "article",
+      jsonLd: [
+        getTechArticleJsonLd({
+          title: item.title,
+          description: item.description,
+          path,
+          section: section.title,
+        }),
+      ],
+    });
+  },
+  component: RegistryItemRoute,
+});
+
+function RegistryItemPendingRoute() {
+  return <ContentSkeleton section={registryCatalog.id} variant="registry-item" />;
+}
+
+function RegistryItemRoute() {
+  const item = Route.useLoaderData();
+  const section = getRegistrySectionForType(item.type);
+
+  return (
+    <DocsLayout section={section.id}>
+      <RegistryItemDoc item={item} />
+    </DocsLayout>
+  );
+}

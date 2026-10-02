@@ -1,0 +1,19 @@
+---
+name: example-card
+type: registry:ui
+title: Example Card
+description: A compact card component that demonstrates shadcn registry dependencies.
+registryDependencies:
+  - badge
+  - button
+  - card
+---
+
+Use the card anywhere you need a compact content summary with a title, description, status badge,
+and action.
+
+```tsx
+import { ExampleCard } from "@/components/ui/example-card";
+
+<ExampleCard title="Hello" description="world!" />
+```

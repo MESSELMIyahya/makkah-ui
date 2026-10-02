@@ -1,0 +1,421 @@
+"use client";
+
+import { IconChevronDown } from "@tabler/icons-react";
+import * as React from "react";
+
+import { getCanonicalRegistryItemUrl } from "../../lib/site-config";
+import { cn } from "../../lib/utils";
+import { Button } from "../ui/button";
+import { CopyButton } from "../ui/copy-button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+
+const PACKAGE_MANAGER_STORAGE_KEY = "preferred-pm";
+const PACKAGE_MANAGER_CHANGE_EVENT = "preferred-pm-change";
+const DEFAULT_PACKAGE_MANAGER = "npm";
+
+const packageManagers = [
+  {
+    value: "npm",
+    label: "npm",
+    logo: (props: React.SVGProps<SVGSVGElement>) => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1em"
+        height="1em"
+        viewBox="0 0 32 32"
+        {...props}
+      >
+        <path fill="#e53935" d="M4 4v24h24V4Zm20 20h-4V12h-4v12H8V8h16Z" />
+      </svg>
+    ),
+  },
+  {
+    value: "pnpm",
+    label: "pnpm",
+    logo: (props: React.SVGProps<SVGSVGElement>) => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1em"
+        height="1em"
+        viewBox="0 0 32 32"
+        {...props}
+      >
+        <path fill="#e0e0e0" d="M2 22h8v8H2zm10 0h8v8h-8zm10 0h8v8h-8zM12 12h8v8h-8z" />
+        <path fill="#ffb300" d="M2 2h8v8H2zm10 0h8v8h-8zm10 0h8v8h-8zm0 10h8v8h-8z" />
+      </svg>
+    ),
+  },
+  {
+    value: "yarn",
+    label: "yarn",
+    logo: (props: React.SVGProps<SVGSVGElement>) => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1em"
+        height="1em"
+        viewBox="0 0 32 32"
+        {...props}
+      >
+        <path
+          fill="#0288d1"
+          d="M27.575 23.967a9.9 9.9 0 0 0-3.751 1.726a22.6 22.6 0 0 1-5.537 2.504a1.55 1.55 0 0 1-.931.52a59 59 0 0 1-6.11.548c-1.102.008-1.777-.282-1.965-.735a1.49 1.49 0 0 1 .82-1.965a3.6 3.6 0 0 1-.486-.359c-.163-.162-.334-.487-.385-.367c-.213.52-.324 1.794-.897 2.366c-.786.795-2.273.53-3.153.069c-.965-.513.069-1.718.069-1.718a.69.69 0 0 1-.94-.324a4.6 4.6 0 0 1-.632-2.794a5.2 5.2 0 0 1 1.674-2.76a8.84 8.84 0 0 1 .624-4.17a9.9 9.9 0 0 1 3-3.469S7.136 11.015 7.82 9.177c.444-1.196.623-1.187.769-1.239a3.44 3.44 0 0 0 1.375-.811a4.99 4.99 0 0 1 4.178-1.607s1.094-3.357 2.12-2.7a17.4 17.4 0 0 1 1.452 2.735s1.213-.71 1.35-.445a10.74 10.74 0 0 1 .495 5.81a13.3 13.3 0 0 1-2.46 5.127c-.129.214 1.47.889 2.477 3.683c.932 2.554.103 4.699.248 4.938c.026.043.034.06.034.06s1.068.085 3.213-1.24a8.05 8.05 0 0 1 4.05-1.52a1.026 1.026 0 0 1 .453 2Z"
+        />
+      </svg>
+    ),
+  },
+  {
+    value: "bun",
+    label: "bun",
+    logo: (props: React.SVGProps<SVGSVGElement>) => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1em"
+        height="1em"
+        viewBox="0 0 32 32"
+        {...props}
+      >
+        <path
+          fill="#fff8e1"
+          d="M15.696 27.002a13.73 13.73 0 0 1-9.071-3.062a8.86 8.86 0 0 1-3.6-6.505c-.252-5.091 3.813-7.747 8.748-10.455c.28-.165.537-.322.793-.48a7.8 7.8 0 0 1 3.52-1.5a2 2 0 0 1 .695.118a14.8 14.8 0 0 1 2.95 1.576c.972.6 2.182 1.348 3.707 2.173a10.14 10.14 0 0 1 5.274 6.147A8.8 8.8 0 0 1 29 17.035a8.15 8.15 0 0 1-2.525 5.959a15.6 15.6 0 0 1-10.778 4.008Z"
+        />
+        <path
+          fill="#37474f"
+          d="M16.087 6a1 1 0 0 1 .358.06l.038.013l.037.012a14.5 14.5 0 0 1 2.684 1.46a72 72 0 0 0 3.767 2.205a9.17 9.17 0 0 1 4.767 5.493A8 8 0 0 1 28 17.055a7.18 7.18 0 0 1-2.234 5.233a14.6 14.6 0 0 1-10.07 3.714a12.74 12.74 0 0 1-8.415-2.816l-.027-.024l-.029-.023a7.98 7.98 0 0 1-3.202-5.758c-.223-4.516 3.431-6.89 8.231-9.525l.027-.015l.027-.015q.389-.231.783-.474A7.4 7.4 0 0 1 16.087 6m0-2c-1.618 0-3.248 1.19-4.795 2.103c-4.52 2.481-9.56 5.41-9.267 11.376a9.9 9.9 0 0 0 3.942 7.215a14.77 14.77 0 0 0 9.73 3.308c7.122 0 14.335-4.134 14.303-10.957a9.6 9.6 0 0 0-.322-2.29a11.16 11.16 0 0 0-5.764-6.768c-3.495-1.89-5.242-3.326-6.798-3.811A3 3 0 0 0 16.086 4Z"
+        />
+        <path
+          fill="#37474f"
+          d="M19.855 20.236A.8.8 0 0 0 19.26 20h-6.514a.8.8 0 0 0-.596.236a.51.51 0 0 0-.137.463a4.37 4.37 0 0 0 1.641 2.339a4.2 4.2 0 0 0 2.349.926a4.2 4.2 0 0 0 2.343-.926a4.37 4.37 0 0 0 1.642-2.339a.5.5 0 0 0-.132-.463Z"
+        />
+        <ellipse cx="22.5" cy="18.5" fill="#f8bbd0" rx="2.5" ry="1.5" />
+        <ellipse cx="9.5" cy="18.5" fill="#f8bbd0" rx="2.5" ry="1.5" />
+        <circle cx="10" cy="16" r="2" fill="#37474f" />
+        <circle cx="22" cy="16" r="2" fill="#37474f" />
+        <path fill="#455a64" d="M9.996 18A2 2 0 1 0 8 15.996V16a2 2 0 0 0 1.996 2" />
+        <circle cx="9" cy="15" r="1" fill="#fafafa" />
+        <circle cx="21" cy="15" r="1" fill="#fafafa" />
+      </svg>
+    ),
+  },
+  {
+    value: "vite-plus",
+    label: "vp",
+    logo: (props: React.SVGProps<SVGSVGElement>) => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1em"
+        height="1em"
+        viewBox="0 0 32 32"
+        {...props}
+      >
+        <g fill="none">
+          <path
+            fill="url(#SVGHszO3cqp)"
+            d="m29.884 6.146l-13.142 23.5a.714.714 0 0 1-1.244.005L2.096 6.148a.714.714 0 0 1 .746-1.057l13.156 2.352a.7.7 0 0 0 .253 0l12.881-2.348a.714.714 0 0 1 .752 1.05z"
+          />
+          <path
+            fill="url(#SVGzrK2gcXq)"
+            d="M22.264 2.007L12.54 3.912a.36.36 0 0 0-.288.33l-.598 10.104a.357.357 0 0 0 .437.369l2.707-.625a.357.357 0 0 1 .43.42l-.804 3.939a.357.357 0 0 0 .454.413l1.672-.508a.357.357 0 0 1 .454.414l-1.279 6.187c-.08.387.435.598.65.267l.143-.222l7.925-15.815a.357.357 0 0 0-.387-.51l-2.787.537a.357.357 0 0 1-.41-.45l1.818-6.306a.357.357 0 0 0-.412-.45"
+          />
+          <defs>
+            <linearGradient
+              id="SVGHszO3cqp"
+              x1="6"
+              x2="235"
+              y1="33"
+              y2="344"
+              gradientTransform="translate(1.34 1.894)scale(.07142)"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor="#41d1ff" />
+              <stop offset="1" stopColor="#bd34fe" />
+            </linearGradient>
+            <linearGradient
+              id="SVGzrK2gcXq"
+              x1="194.651"
+              x2="236.076"
+              y1="8.818"
+              y2="292.989"
+              gradientTransform="translate(1.34 1.894)scale(.07142)"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor="#ffea83" />
+              <stop offset=".083" stopColor="#ffdd35" />
+              <stop offset="1" stopColor="#ffa800" />
+            </linearGradient>
+          </defs>
+        </g>
+      </svg>
+    ),
+  },
+  {
+    value: "deno",
+    label: "deno",
+    logo: (props: React.SVGProps<SVGSVGElement>) => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1em"
+        height="1em"
+        viewBox="0 0 32 32"
+        {...props}
+      >
+        <path
+          fillRule="evenodd"
+          d="M4.45 21.34A12.5 12.5 0 0 1 3.27 16a12 12 0 0 1 .09-1.46a11 11 0 0 1 .24-1.42a12.75 12.75 0 0 1 9.73-9.57A13 13 0 0 1 16 3.27h1a12.73 12.73 0 0 1 11.57 10.5a13 13 0 0 1 .16 2.23v1a12.6 12.6 0 0 1-3.3 7.61a6.62 6.62 0 0 1-4.7 2.06a4.68 4.68 0 0 1-2.88-1.09a4.58 4.58 0 0 1-1.63-3.09a5.5 5.5 0 0 1 .14-1.61a3.4 3.4 0 0 1 .8-1.53a5 5 0 0 1-1.3-.88a.15.15 0 0 1 0-.19a.16.16 0 0 1 .18-.06a10 10 0 0 0 1.46.37a20 20 0 0 0 2.45.31c2.13.1 4.38-.9 5.05-2.81s.43-3.83-2.08-5s-3.66-2.5-5.69-3.32a5 5 0 0 0-4.3.62c-4.08 2.25-7.72 9.35-6 15.94a.21.21 0 0 1-.1.23a.2.2 0 0 1-.23 0a13 13 0 0 1-1.33-1.73a13 13 0 0 1-.82-1.49"
+        />
+        <path
+          fill="#f5f5f5"
+          fillRule="evenodd"
+          d="M16.65 2A14 14 0 1 1 2 15.35A14 14 0 0 1 16.65 2m3.27 16.85a20 20 0 0 1-2.45-.31a8.6 8.6 0 0 1-1.47-.35a.16.16 0 0 0-.18.06a.15.15 0 0 0 0 .19a5 5 0 0 0 1.3.88a3.4 3.4 0 0 0-.8 1.53a5.5 5.5 0 0 0-.14 1.61a4.58 4.58 0 0 0 1.63 3.09a4.68 4.68 0 0 0 2.88 1.09a6.62 6.62 0 0 0 4.72-2.07a12.73 12.73 0 1 0-18.84 0a.21.21 0 0 0 .35-.19c-1.68-6.59 2-13.69 6-15.94a5 5 0 0 1 4.3-.62c2 .82 3.18 2.18 5.69 3.32s2.78 3 2.08 5s-2.91 2.86-5.07 2.73ZM15.54 8.69c-.82.06-1.36 1.08-1.43 1.73s.25 1.73 1.32 1.71c1.25 0 1.64-1.09 1.5-2.13a1.39 1.39 0 0 0-1.39-1.31"
+        />
+        <path
+          fillRule="evenodd"
+          d="M15.54 8.68A1.4 1.4 0 0 1 16.93 10c.14 1-.24 2.12-1.49 2.14c-1.07 0-1.4-1.06-1.33-1.71s.61-1.68 1.43-1.75"
+        />
+      </svg>
+    ),
+  },
+] as const;
+
+export type PackageManager = (typeof packageManagers)[number]["value"];
+type PackageManagerPreference = readonly [
+  PackageManager,
+  (nextPackageManager: PackageManager) => void,
+];
+
+type PackageManagerCommandProps = {
+  getCommand: (packageManager: PackageManager) => string;
+  copyLabel: string;
+  className?: string;
+};
+
+type InstallCommandProps = {
+  item: {
+    name: string;
+  };
+  className?: string;
+};
+
+export function getInstallCommand(itemName: string, packageManager: PackageManager): string {
+  const registryItemUrl = getCanonicalRegistryItemUrl(itemName);
+
+  switch (packageManager) {
+    case "bun":
+      return `bunx --bun shadcn@latest add ${registryItemUrl}`;
+    case "pnpm":
+      return `pnpm dlx shadcn@latest add ${registryItemUrl}`;
+    case "yarn":
+      return `yarn dlx shadcn@latest add ${registryItemUrl}`;
+    case "npm":
+      return `npx shadcn@latest add ${registryItemUrl}`;
+    case "deno":
+      return `deno run -A npm:shadcn@latest add ${registryItemUrl}`;
+    case "vite-plus":
+      return `vpx shadcn@latest add ${registryItemUrl}`;
+  }
+
+  return assertNever(packageManager);
+}
+
+export function getPackageInstallCommand(
+  packages: readonly string[],
+  packageManager: PackageManager,
+  options: { dev?: boolean } = {},
+): string {
+  const packageNames = packages.map((packageName) => packageName.trim()).filter(Boolean);
+
+  if (packageNames.length === 0) {
+    return "";
+  }
+
+  switch (packageManager) {
+    case "bun":
+      return joinCommand(["bun", "add", options.dev ? "-d" : "", ...packageNames]);
+    case "pnpm":
+      return joinCommand(["pnpm", "add", options.dev ? "-D" : "", ...packageNames]);
+    case "yarn":
+      return joinCommand(["yarn", "add", options.dev ? "-D" : "", ...packageNames]);
+    case "npm":
+      return joinCommand(["npm", "install", options.dev ? "-D" : "", ...packageNames]);
+    case "deno":
+      return joinCommand([
+        "deno",
+        "add",
+        options.dev ? "-D" : "",
+        ...packageNames.map((name) => `npm:${name}`),
+      ]);
+    case "vite-plus":
+      return joinCommand(["vp", "install", options.dev ? "-D" : "", ...packageNames]);
+  }
+
+  return assertNever(packageManager);
+}
+
+export function getPackageInstallCommands(
+  item: {
+    dependencies?: readonly string[];
+    devDependencies?: readonly string[];
+  },
+  packageManager: PackageManager,
+): string[] {
+  return [
+    getPackageInstallCommand(item.dependencies ?? [], packageManager),
+    getPackageInstallCommand(item.devDependencies ?? [], packageManager, { dev: true }),
+  ].filter((command) => command.length > 0);
+}
+
+function setPackageManagerPreference(packageManager: PackageManager): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(PACKAGE_MANAGER_STORAGE_KEY, packageManager);
+  } catch {
+    // Ignore storage failures; the in-memory UI state still updates.
+  }
+
+  window.dispatchEvent(new Event(PACKAGE_MANAGER_CHANGE_EVENT));
+}
+
+function getPackageManagerPreference(): PackageManager {
+  if (typeof window === "undefined") {
+    return DEFAULT_PACKAGE_MANAGER;
+  }
+
+  try {
+    const storedPackageManager = window.localStorage.getItem(PACKAGE_MANAGER_STORAGE_KEY);
+
+    return isPackageManager(storedPackageManager) ? storedPackageManager : DEFAULT_PACKAGE_MANAGER;
+  } catch {
+    return DEFAULT_PACKAGE_MANAGER;
+  }
+}
+
+export function InstallCommand({ item, className }: InstallCommandProps) {
+  return (
+    <PackageManagerCommand
+      className={className}
+      copyLabel="Copy install command"
+      getCommand={(packageManager) => getInstallCommand(item.name, packageManager)}
+    />
+  );
+}
+
+export function PackageManagerCommand({
+  className,
+  copyLabel,
+  getCommand,
+}: PackageManagerCommandProps) {
+  const [packageManager, setPackageManager] = usePackageManagerPreference();
+  const selectedPackageManager =
+    packageManagers.find((option) => option.value === packageManager) ?? packageManagers[0];
+  const command = getCommand(packageManager);
+  const SelectedLogo = selectedPackageManager.logo;
+
+  return (
+    <div className={cn("min-w-0 overflow-hidden rounded-lg border bg-muted/40", className)}>
+      <div className="flex min-h-10 items-center justify-between gap-2 border-b px-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger render={<Button variant="ghost" size="sm" />}>
+            <SelectedLogo data-icon="inline-start" aria-hidden="true" />
+            {selectedPackageManager.label}
+            <IconChevronDown data-icon="inline-end" aria-hidden="true" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="min-w-40">
+            <DropdownMenuGroup>
+              <DropdownMenuRadioGroup
+                value={packageManager}
+                onValueChange={(value) => {
+                  if (isPackageManager(value)) {
+                    setPackageManager(value);
+                  }
+                }}
+              >
+                {packageManagers.map((option) => {
+                  const Logo = option.logo;
+
+                  return (
+                    <DropdownMenuRadioItem
+                      key={option.value}
+                      value={option.value}
+                      closeOnClick
+                      className="cursor-pointer"
+                    >
+                      <Logo data-icon="inline-start" aria-hidden="true" />
+                      {option.label}
+                    </DropdownMenuRadioItem>
+                  );
+                })}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <CopyButton
+          value={command}
+          copyLabel={copyLabel}
+          copiedLabel="Copied"
+          resetDelay={1200}
+          variant="ghost"
+          size="icon-sm"
+        />
+      </div>
+      <pre className="overflow-x-auto p-4 text-[13px] text-foreground/80">
+        <code>{command}</code>
+      </pre>
+    </div>
+  );
+}
+
+function usePackageManagerPreference(): PackageManagerPreference {
+  const [packageManager, setPackageManagerState] = React.useState<PackageManager>(
+    getPackageManagerPreference,
+  );
+
+  React.useEffect(() => {
+    function syncPackageManagerPreference() {
+      setPackageManagerState(getPackageManagerPreference());
+    }
+
+    function handleStorage(event: StorageEvent) {
+      if (event.key === PACKAGE_MANAGER_STORAGE_KEY) {
+        syncPackageManagerPreference();
+      }
+    }
+
+    syncPackageManagerPreference();
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener(PACKAGE_MANAGER_CHANGE_EVENT, syncPackageManagerPreference);
+
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener(PACKAGE_MANAGER_CHANGE_EVENT, syncPackageManagerPreference);
+    };
+  }, []);
+
+  const setPackageManager = React.useCallback((nextPackageManager: PackageManager) => {
+    setPackageManagerState(nextPackageManager);
+    setPackageManagerPreference(nextPackageManager);
+  }, []);
+
+  return [packageManager, setPackageManager] as const;
+}
+
+function isPackageManager(value: string | null): value is PackageManager {
+  return packageManagers.some((option) => option.value === value);
+}
+
+function assertNever(value: never): never {
+  throw new Error(`Unhandled package manager: ${String(value)}`);
+}
+
+function joinCommand(parts: readonly string[]): string {
+  return parts.filter(Boolean).join(" ");
+}

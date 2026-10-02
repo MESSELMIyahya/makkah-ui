@@ -1,0 +1,215 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import '@fontsource-variable/rubik';
+@import "@fontsource-variable/geist-mono";
+@import "@fontsource-variable/noto-sans";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Rubik Variable", sans-serif;
+  --font-mono: "Geist Mono Variable", monospace;
+  --font-heading: var(--font-sans);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-selection: var(--selection);
+  --color-selection-foreground: var(--selection-foreground);
+}
+:root {
+  --radius: 0.575rem;
+  --background: oklch(0.987 0.004 85);              /* white marble */
+  --foreground: oklch(0.17 0.006 70);               /* Kiswa black */
+  --card: oklch(0.995 0.003 85);
+  --card-foreground: oklch(0.17 0.006 70);
+  --popover: oklch(0.995 0.003 85);
+  --popover-foreground: oklch(0.17 0.006 70);
+  --primary: oklch(0.76 0.13 85);             /* Kiswa */
+  --primary-foreground: oklch(0.2 0.02 80);        /* warm cream */
+  --secondary: oklch(0.955 0.012 85);               /* sand */
+  --secondary-foreground: oklch(0.24 0.01 70);
+  --muted: oklch(0.962 0.008 85);
+  --muted-foreground: oklch(0.5 0.02 75);
+  --accent: oklch(0.945 0.045 90);                  /* soft gold wash */
+  --accent-foreground: oklch(0.32 0.06 75);         /* deep bronze */
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.97 0.01 17);
+ --border: oklch(0.88 0.022 85); 
+  --input: oklch(0.85 0.026 85);
+  --ring: oklch(0.6 0.12 80);                      /* gold focus ring */
+  --chart-1: oklch(0.78 0.14 85);                   /* gold */
+  --chart-2: oklch(0.62 0.12 65);                   /* bronze / desert dusk */
+  --chart-3: oklch(0.5 0.07 55);                    /* Makkah mountain rock */
+  --chart-4: oklch(0.68 0.08 190);                  /* Zamzam teal */
+  --chart-5: oklch(0.3 0.01 70);                    /* Kiswa */
+  --sidebar: oklch(0.975 0.008 85);
+  --sidebar-foreground: oklch(0.17 0.006 70);
+  --sidebar-primary: oklch(0.76 0.13 85);
+  --sidebar-primary-foreground: oklch(0.2 0.02 80);
+  --sidebar-accent: oklch(0.945 0.045 90);
+  --sidebar-accent-foreground: oklch(0.32 0.06 75);
+  --sidebar-border: oklch(0.88 0.022 85);
+  --sidebar-ring: oklch(0.6 0.12 80);
+  --selection: oklch(0.86 0.12 88);
+  --selection-foreground: oklch(0.2 0.02 75);
+}
+
+.dark {
+  --background: oklch(0.145 0.005 70);              /* night at the Haram */
+  --foreground: oklch(0.975 0.01 88);
+  --card: oklch(0.2 0.007 70);
+  --card-foreground: oklch(0.975 0.01 88);
+  --popover: oklch(0.2 0.007 70);
+  --popover-foreground: oklch(0.975 0.01 88);
+  --primary: oklch(0.8 0.13 85);                  /* gold on black, like the embroidery */
+  --primary-foreground: oklch(0.2 0.02 80);
+  --secondary: oklch(0.26 0.01 70);
+  --secondary-foreground: oklch(0.975 0.01 88);
+  --muted: oklch(0.26 0.01 70);
+  --muted-foreground: oklch(0.72 0.02 80);
+  --accent: oklch(0.3 0.035 85);
+  --accent-foreground: oklch(0.9 0.09 88);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.58 0.22 27);
+  --border: oklch(0.95 0.03 88 / 14%);  
+  --input: oklch(0.95 0.03 88 / 20%);
+  --ring: oklch(0.75 0.12 85);
+  --chart-1: oklch(0.82 0.14 88);
+  --chart-2: oklch(0.68 0.12 65);
+  --chart-3: oklch(0.58 0.07 55);
+  --chart-4: oklch(0.72 0.09 190);
+  --chart-5: oklch(0.9 0.02 85);
+  --sidebar: oklch(0.2 0.007 70);
+  --sidebar-foreground: oklch(0.975 0.01 88);
+  --sidebar-primary: oklch(0.8 0.13 85);
+  --sidebar-primary-foreground: oklch(0.2 0.02 80);
+  --sidebar-accent: oklch(0.3 0.035 85);
+  --sidebar-accent-foreground: oklch(0.9 0.09 88);
+  --sidebar-border: oklch(0.95 0.03 88 / 14%);
+  --sidebar-ring: oklch(0.72 0.125 85);
+  --selection: oklch(0.8 0.13 85);
+  --selection-foreground: oklch(0.2 0.02 75);
+}
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  ::selection {
+    @apply bg-selection text-selection-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+@layer components {
+  /* Restore hand cursor on interactive elements */
+  /* https://ui.shadcn.com/docs/components/radix/button#cursor */
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  [role="switch"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+
+  /* Code highlighting */
+  .shiki {
+    --line-number-gap: 1.25rem;
+    --line-number-width: 1ch;
+
+    margin: 0;
+    min-width: max-content;
+    background-color: transparent !important;
+    font: inherit;
+  }
+  .shiki code {
+    counter-reset: code-line;
+    display: grid;
+    gap: 0;
+  }
+  .shiki .line {
+    display: block;
+    min-height: 1.5rem;
+  }
+  .shiki:not(.shiki-plain) .line {
+    counter-increment: code-line;
+    min-width: max-content;
+    padding-inline-start: calc(
+      var(--line-number-width) + var(--line-number-gap)
+    );
+    position: relative;
+  }
+  .shiki:not(.shiki-plain) .line::before {
+    color: var(--muted-foreground);
+    content: counter(code-line);
+    font-style: normal;
+    font-variant-numeric: tabular-nums;
+    font-weight: 400;
+    inset-inline-start: 0;
+    opacity: 0.55;
+    pointer-events: none;
+    position: absolute;
+    text-align: end;
+    text-decoration: none;
+    user-select: none;
+    width: var(--line-number-width);
+  }
+  .dark .shiki,
+  .dark .shiki span {
+    color: var(--shiki-dark) !important;
+    background-color: transparent !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}

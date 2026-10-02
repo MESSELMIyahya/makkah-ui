@@ -1,0 +1,242 @@
+import { describe, expect, test } from "vite-plus/test";
+
+import { getRegistryDiagnostics } from "./diagnostics";
+import {
+  createRegistryScaffoldPlan,
+  getRegistryScaffoldConflicts,
+  registryScaffoldItemTypes,
+  validateRegistryScaffoldName,
+  type RegistryScaffoldInput,
+  type RegistryScaffoldItemType,
+  type RegistryScaffoldPlan,
+} from "./scaffold";
+
+describe("registry scaffold", () => {
+  test("plans each supported registry item type in the expected folder", () => {
+    const expectedSourcePaths = new Map<RegistryScaffoldItemType, string | null>([
+      ["registry:base", null],
+      ["registry:block", "registry/items/blocks/example-item/example-item.tsx"],
+      ["registry:component", "registry/items/components/example-item/example-item.tsx"],
+      ["registry:font", null],
+      ["registry:lib", "registry/items/lib/example-item/example-item.ts"],
+      ["registry:hook", "registry/items/hooks/example-item/example-item.ts"],
+      ["registry:ui", "registry/items/components/example-item/example-item.tsx"],
+      ["registry:page", "registry/items/pages/example-item/page.tsx"],
+      ["registry:file", "registry/items/files/example-item/example-item.ts"],
+      ["registry:style", null],
+      ["registry:theme", null],
+      ["registry:item", null],
+    ]);
+
+    for (const type of registryScaffoldItemTypes) {
+      const plan = createRegistryScaffoldPlan(getScaffoldInput({ type }));
+      const expectedSourcePath = expectedSourcePaths.get(type);
+      const expectedPreviewPath = expectedSourcePath ? `${plan.itemRoot}/_preview.tsx` : null;
+      const expectedFilePaths = [
+        ...(expectedSourcePath ? [expectedSourcePath] : []),
+        ...(expectedPreviewPath ? [expectedPreviewPath] : []),
+        `${plan.itemRoot}/_registry.mdx`,
+      ].toSorted();
+
+      expect(plan.files.map((file) => file.path).toSorted()).toEqual(expectedFilePaths);
+    }
+  });
+
+  test("omits explicit files for default registry ui items", () => {
+    const plan = createRegistryScaffoldPlan(getScaffoldInput({ type: "registry:ui" }));
+
+    expect(getRegistryMdx(plan)).not.toContain("files:");
+  });
+
+  test("includes explicit files for registry ui items with target placeholders", () => {
+    const plan = createRegistryScaffoldPlan(
+      getScaffoldInput({ type: "registry:ui", target: "@ui/ai/example-item.tsx" }),
+    );
+
+    expect(getRegistryMdx(plan)).toContain("files:");
+    expect(getRegistryMdx(plan)).toContain("path: example-item.tsx");
+    expect(getRegistryMdx(plan)).toContain("type: registry:ui");
+    expect(getRegistryMdx(plan)).toContain(`target: "@ui/ai/example-item.tsx"`);
+    expect(getRegistryMdx(plan)).toContain(
+      `import { ExampleItem } from "@/components/ui/ai/example-item";`,
+    );
+    expect(getRegistryPreview(plan)).toContain(`import { ExampleItem } from "./example-item";`);
+  });
+
+  test("includes explicit files for item types that need them", () => {
+    for (const type of [
+      "registry:block",
+      "registry:component",
+      "registry:hook",
+      "registry:lib",
+      "registry:page",
+      "registry:file",
+    ] as const) {
+      const plan = createRegistryScaffoldPlan(getScaffoldInput({ type }));
+
+      expect(getRegistryMdx(plan)).toContain("files:");
+      expect(getRegistryMdx(plan)).toContain(
+        type === "registry:page" ? "path: page.tsx" : "path: example-item.",
+      );
+      expect(getRegistryMdx(plan)).toContain(`type: ${type}`);
+      expect(getRegistryMdx(plan)).not.toContain("sourcePath:");
+    }
+  });
+
+  test("uses public install import paths in generated usage snippets", () => {
+    const expectations = new Map<RegistryScaffoldItemType, string>([
+      ["registry:ui", `import { ExampleItem } from "@/components/ui/example-item";`],
+      ["registry:component", `import { ExampleItem } from "@/components/example-item";`],
+      ["registry:block", `import { ExampleItem } from "@/components/example-item";`],
+      ["registry:hook", `import { useExampleItem } from "@/hooks/example-item";`],
+      ["registry:lib", `import { exampleItem } from "@/lib/example-item";`],
+    ]);
+
+    for (const [type, importSnippet] of expectations) {
+      const plan = createRegistryScaffoldPlan(getScaffoldInput({ type }));
+
+      expect(getRegistryMdx(plan)).toContain(importSnippet);
+      expect(getRegistryPreview(plan)).not.toContain(importSnippet);
+    }
+  });
+
+  test("keeps previews in explicit client files", () => {
+    const plan = createRegistryScaffoldPlan(getScaffoldInput({ type: "registry:hook" }));
+
+    expect(getRegistryMdx(plan)).not.toContain("export function Preview");
+    expect(getRegistryMdx(plan)).not.toContain(`from "./example-item"`);
+    expect(getRegistryPreview(plan)).toContain(`"use client";`);
+    expect(getRegistryPreview(plan)).toContain(`import { useExampleItem } from "./example-item";`);
+    expect(getRegistryPreview(plan)).toContain("export function Preview");
+  });
+
+  test("requires targets for page and file items", () => {
+    expect(() =>
+      createRegistryScaffoldPlan(getScaffoldInput({ type: "registry:page", target: "" })),
+    ).toThrow(/requires an install target/u);
+    expect(() =>
+      createRegistryScaffoldPlan(getScaffoldInput({ type: "registry:file", target: "" })),
+    ).toThrow(/requires an install target/u);
+  });
+
+  test("scaffolds targeted universal items with registry file targets", () => {
+    const plan = createRegistryScaffoldPlan(
+      getScaffoldInput({
+        type: "registry:item",
+        target: "~/.cursor/rules/example-item.mdc",
+        fileExtension: "mdc",
+      }),
+    );
+
+    expect(plan.files.map((file) => file.path)).toContain(
+      "registry/items/items/example-item/example-item.mdc",
+    );
+    expect(getRegistryMdx(plan)).toContain("type: registry:file");
+    expect(getRegistryMdx(plan)).toContain("path: example-item.mdc");
+    expect(getRegistryMdx(plan)).not.toContain("sourcePath:");
+    expect(getRegistryMdx(plan)).toContain(`target: "~/.cursor/rules/example-item.mdc"`);
+  });
+
+  test("requires font metadata for registry font items", () => {
+    expect(() =>
+      createRegistryScaffoldPlan({
+        ...getScaffoldInput({ type: "registry:font" }),
+        font: undefined,
+      }),
+    ).toThrow(/require font metadata/u);
+
+    const plan = createRegistryScaffoldPlan(getScaffoldInput({ type: "registry:font" }));
+
+    expect(getRegistryMdx(plan)).toContain("font:");
+    expect(getRegistryMdx(plan)).toContain("provider: google");
+  });
+
+  test("rejects non-kebab-case names", () => {
+    expect(validateRegistryScaffoldName("Example Item")).toMatch(/kebab-case/u);
+    expect(() => createRegistryScaffoldPlan(getScaffoldInput({ name: "Example Item" }))).toThrow(
+      /kebab-case/u,
+    );
+  });
+
+  test("reports existing planned file conflicts", () => {
+    const plan = createRegistryScaffoldPlan(getScaffoldInput());
+    const registryMdx = plan.files[0];
+
+    expect(getRegistryScaffoldConflicts(plan, [registryMdx.path])).toEqual([
+      {
+        path: registryMdx.path,
+        message: `File already exists: ${registryMdx.path}`,
+      },
+    ]);
+  });
+
+  test("generated registry mdx parses through diagnostics", () => {
+    for (const type of registryScaffoldItemTypes) {
+      const plan = createRegistryScaffoldPlan(getScaffoldInput({ type }));
+      const diagnostics = getRegistryDiagnostics({ files: getScaffoldFiles(plan) });
+
+      expect(diagnostics.errors).toEqual([]);
+    }
+  });
+
+  test("uses selected file extension for registry file items", () => {
+    const plan = createRegistryScaffoldPlan(
+      getScaffoldInput({ type: "registry:file", fileExtension: "css", target: "styles/item.css" }),
+    );
+
+    expect(plan.files.map((file) => file.path)).toContain(
+      "registry/items/files/example-item/example-item.css",
+    );
+  });
+});
+
+function getScaffoldInput(input: Partial<RegistryScaffoldInput> = {}): RegistryScaffoldInput {
+  const type = input.type ?? "registry:ui";
+  let target = input.target;
+
+  if (target === undefined && (type === "registry:page" || type === "registry:file")) {
+    target = "app/example/page.tsx";
+  }
+
+  return {
+    type,
+    name: input.name ?? "example-item",
+    title: input.title ?? "Example Item",
+    description: input.description ?? "A generated registry item.",
+    ...(target ? { target } : {}),
+    ...(input.fileExtension ? { fileExtension: input.fileExtension } : {}),
+    ...(type === "registry:font"
+      ? {
+          font: input.font ?? {
+            family: "'Inter Variable', sans-serif",
+            import: "Inter",
+            variable: "--font-sans",
+          },
+        }
+      : {}),
+  };
+}
+
+function getRegistryMdx(plan: RegistryScaffoldPlan): string {
+  const registryMdx = plan.files.find((file) => file.path.endsWith("/_registry.mdx"));
+
+  if (!registryMdx) {
+    throw new Error("Expected registry mdx file.");
+  }
+
+  return registryMdx.content;
+}
+
+function getRegistryPreview(plan: RegistryScaffoldPlan): string {
+  const registryPreview = plan.files.find((file) => file.path.endsWith("/_preview.tsx"));
+
+  if (!registryPreview) {
+    throw new Error("Expected registry preview file.");
+  }
+
+  return registryPreview.content;
+}
+
+function getScaffoldFiles(plan: RegistryScaffoldPlan): Record<string, string> {
+  return Object.fromEntries(plan.files.map((file) => [file.path, file.content]));
+}

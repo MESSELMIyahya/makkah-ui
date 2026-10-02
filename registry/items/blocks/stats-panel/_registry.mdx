@@ -1,0 +1,25 @@
+---
+name: stats-panel
+type: registry:block
+title: Stats Panel
+description: A simple multi-file block with a component and local data helper.
+registryDependencies:
+  - badge
+  - card
+localRegistryDependencies:
+  - example-card
+files:
+  - path: stats-panel.tsx
+    type: registry:block
+  - path: stats-data.ts
+    type: registry:lib
+---
+
+Use the panel as a dashboard summary block. It installs the component and the local data helper
+together, plus its local `example-card` dependency.
+
+```tsx
+import { StatsPanel } from "@/components/stats-panel";
+
+<StatsPanel />
+```
