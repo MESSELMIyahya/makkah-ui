@@ -20,7 +20,7 @@
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[javascriptreact]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
@@ -29,7 +29,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[jsonc]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
@@ -38,6 +38,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "conventionalCommits.scopes": [
-    "Home"
+    "Home",
+    "UI"
   ]
 }

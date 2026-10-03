@@ -7,22 +7,19 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
 import rsc from "@vitejs/plugin-rsc";
 import { cloudflare } from "@cloudflare/vite-plugin";
+// import { nitro } from "nitro/vite";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import { defineConfig } from "vite-plus";
-
 import { getPrerenderPages } from "./src/lib/prerender-pages.ts";
 import { shouldExcludeFromSitemap } from "./src/lib/seo.ts";
 import { siteConfig } from "./src/lib/site-config.ts";
-
-const isBuild =
-  process.env.NODE_ENV === "production" || process.env.COMMAND === "build";
-const isTest = process.env.VITEST === "true";
 
 const config = defineConfig({
   run: {
     tasks: {
       "registry:new": {
+        // TODO: fix TTY weirdness -- for now, run `./scripts/new.ts` from the command line directly.
         command: "bun --bun ./scripts/new.ts",
       },
       "registry:doctor": {
@@ -107,6 +104,7 @@ const config = defineConfig({
         },
       },
       {
+        // content-collections exposes document metadata as `_meta`.
         files: ["content-collections.ts"],
         rules: {
           "no-underscore-dangle": ["warn", { allow: ["_meta"] }],
@@ -133,6 +131,9 @@ const config = defineConfig({
       output: {
         codeSplitting: {
           groups: [
+            // The RSC browser decoder imports React DOM during module initialization.
+            // Keep it out of the app entry chunk, using Rolldown's native
+            // replacement for Rollup manualChunks.
             {
               name: "react-dom",
               test: /node_modules[\\/]react-dom[\\/]/u,
@@ -156,12 +157,20 @@ const config = defineConfig({
   resolve: {
     tsconfigPaths: true,
     alias: [
+      // shadcn/schema is compiled against Zod v3 and still calls deepPartial().
+      // Keep bare zod imports on the v3 entry even when another dependency
+      // hoists Zod v4 to the workspace root. see: https://github.com/shadcn-ui/ui/pull/9311
       { find: /^zod$/, replacement: "zod/v3" },
+      // tslib's CJS UMD sets __esModule: true without providing a default
+      // export, which breaks Vite 8 / Rolldown's consistent CJS interop.
+      // Alias to the native ESM build to avoid the interop entirely.
       { find: /^tslib$/, replacement: "tslib/tslib.es6.js" },
     ],
   },
   plugins: [
-    cloudflare({ viteEnvironment: { name: "ssr" } }),
+    cloudflare({
+      viteEnvironment: { name: "ssr", childEnvironments: ["rsc"] },
+    }),
     devtools(),
     contentCollections(),
     createMdx({
@@ -172,18 +181,16 @@ const config = defineConfig({
       remarkPlugins: [remarkFrontmatter, remarkGfm],
     }),
     tailwindcss(),
-    ...(isTest
+    ...(process.env.VITEST === "true"
       ? []
       : [
           tanstackStart({
             rsc: {
               enabled: true,
             },
-            // Disable heavy worker-based prerendering during fast builds
-            // Set PRERENDER=true when you explicitly want static exports
-            pages: process.env.PRERENDER === "true" ? getPrerenderPages() : [],
+            pages: getPrerenderPages(),
             prerender: {
-              enabled: process.env.PRERENDER === "true",
+              enabled: true,
               autoStaticPathsDiscovery: false,
               crawlLinks: false,
               onSuccess: ({ page }) => {
@@ -207,15 +214,10 @@ const config = defineConfig({
           rsc(),
         ]),
     viteReact(),
-    // Keep Babel/React Compiler in dev only if it slows down production bundling
-    ...(!isBuild
-      ? [
-          babel({
-            presets: [reactCompilerPreset()],
-          }),
-        ]
-      : []),
-    // Removed nitro() since @cloudflare/vite-plugin manages SSR environments
+    babel({
+      presets: [reactCompilerPreset()],
+    }),
+    // ...(process.env.VITEST === "true" ? [] : [nitro()]),
   ],
 });
 
