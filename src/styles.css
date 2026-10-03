@@ -11,6 +11,7 @@
 
 @theme inline {
   --font-sans: "Rubik Variable", sans-serif;
+  /* --font-sans: "IBM Plex Sans Arabic", sans-serif; */
   --font-mono: "Geist Mono Variable", monospace;
   --font-heading: var(--font-sans);
   --radius-sm: calc(var(--radius) * 0.6);
