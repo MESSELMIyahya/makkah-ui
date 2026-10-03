@@ -20,7 +20,9 @@
     "start": "node .output/server/index.mjs",
     "preview": "vp preview",
     "test": "vp test",
-    "prepare": "vp config"
+    "prepare": "vp config",
+    "deploy": "pnpm build && wrangler deploy",
+    "cf-typegen": "wrangler types"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
@@ -58,6 +60,7 @@
   },
   "devDependencies": {
     "@clack/prompts": "^1.8.1",
+    "@cloudflare/vite-plugin": "^1.62.5",
     "@content-collections/core": "0.15.3",
     "@content-collections/vite": "0.3.1",
     "@rolldown/plugin-babel": "^0.2.4",
