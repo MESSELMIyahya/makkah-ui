@@ -193,7 +193,7 @@ function NotFoundSectionLink({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html dir="rtl" lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
