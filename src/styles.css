@@ -2,8 +2,14 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-@import '@fontsource-variable/rubik';
+@import "@fontsource-variable/rubik";
 @import "@fontsource-variable/geist-mono";
+/* @import "@fontsource/ibm-plex-serif"; */
+@import "@fontsource/ibm-plex-serif/300.css"; /* Light */
+@import "@fontsource/ibm-plex-serif/400.css"; /* Regular */
+@import "@fontsource/ibm-plex-serif/500.css"; /* Regular */
+@import "@fontsource/ibm-plex-serif/600.css"; /* Semi-Bold */
+@import "@fontsource/ibm-plex-serif/700.css"; /* Bold */
 @import "@fontsource-variable/noto-sans";
 @plugin "@tailwindcss/typography";
 
@@ -11,6 +17,7 @@
 
 @theme inline {
   --font-sans: "Rubik Variable", sans-serif;
+  --font-IBM: "IBM Plex Serif", sans-serif;
   /* --font-sans: "IBM Plex Sans Arabic", sans-serif; */
   --font-mono: "Geist Mono Variable", monospace;
   --font-heading: var(--font-sans);
@@ -58,13 +65,13 @@
 }
 :root {
   --radius: 0.575rem;
-  --background: oklch(0.987 0.004 88);              /* white marble */
-  --foreground: oklch(0.148 0.006 80);              /* Kiswa black */
+  --background: oklch(0.987 0.004 88); /* white marble */
+  --foreground: oklch(0.148 0.006 80); /* Kiswa black */
   --card: oklch(0.995 0.003 88);
   --card-foreground: oklch(0.148 0.006 80);
   --popover: oklch(0.995 0.003 88);
   --popover-foreground: oklch(0.148 0.006 80);
-  --primary: oklch(0.76 0.13 85);                   /* gold */
+  --primary: oklch(0.76 0.13 85); /* gold */
   --primary-foreground: oklch(0.2 0.02 80);
   --secondary: oklch(0.967 0.003 88);
   --secondary-foreground: oklch(0.21 0.008 80);
@@ -76,12 +83,12 @@
   --destructive-foreground: oklch(0.97 0.01 17);
   --border: oklch(0.925 0.006 88);
   --input: oklch(0.925 0.006 88);
-  --ring: oklch(0.6 0.12 80);                       /* bronze */
-  --chart-1: oklch(0.78 0.14 85);                   /* gold */
-  --chart-2: oklch(0.62 0.12 65);                   /* bronze / desert dusk */
-  --chart-3: oklch(0.5 0.07 55);                    /* Makkah mountain rock */
-  --chart-4: oklch(0.68 0.08 190);                  /* Zamzam teal */
-  --chart-5: oklch(0.3 0.01 70);                    /* Kiswa */
+  --ring: oklch(0.6 0.12 80); /* bronze */
+  --chart-1: oklch(0.78 0.14 85); /* gold */
+  --chart-2: oklch(0.62 0.12 65); /* bronze / desert dusk */
+  --chart-3: oklch(0.5 0.07 55); /* Makkah mountain rock */
+  --chart-4: oklch(0.68 0.08 190); /* Zamzam teal */
+  --chart-5: oklch(0.3 0.01 70); /* Kiswa */
   --sidebar: oklch(0.987 0.003 88);
   --sidebar-foreground: oklch(0.148 0.006 80);
   --sidebar-primary: oklch(0.76 0.13 85);
@@ -95,13 +102,13 @@
 }
 
 .dark {
-  --background: oklch(0.148 0.005 85);              /* night at the Haram */
+  --background: oklch(0.148 0.005 85); /* night at the Haram */
   --foreground: oklch(0.987 0.002 88);
   --card: oklch(0.218 0.008 85);
   --card-foreground: oklch(0.987 0.002 88);
   --popover: oklch(0.218 0.008 85);
   --popover-foreground: oklch(0.987 0.002 88);
-  --primary: oklch(0.8 0.13 85);                    /* gold on black */
+  --primary: oklch(0.8 0.13 85); /* gold on black */
   --primary-foreground: oklch(0.2 0.02 80);
   --secondary: oklch(0.274 0.008 85);
   --secondary-foreground: oklch(0.985 0.002 88);
