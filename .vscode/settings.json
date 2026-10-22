@@ -39,6 +39,7 @@
   },
   "conventionalCommits.scopes": [
     "Home",
-    "UI"
+    "UI",
+    "Public"
   ]
 }

@@ -13,6 +13,26 @@
 @import "@fontsource-variable/noto-sans";
 @plugin "@tailwindcss/typography";
 
+@keyframes home-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes home-drift {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -20,6 +40,7 @@
   --font-IBM: "IBM Plex Serif", sans-serif;
   /* --font-sans: "IBM Plex Sans Arabic", sans-serif; */
   --font-mono: "Geist Mono Variable", monospace;
+
   --font-heading: var(--font-sans);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -183,9 +204,7 @@
   .shiki:not(.shiki-plain) .line {
     counter-increment: code-line;
     min-width: max-content;
-    padding-inline-start: calc(
-      var(--line-number-width) + var(--line-number-gap)
-    );
+    padding-inline-start: calc(var(--line-number-width) + var(--line-number-gap));
     position: relative;
   }
   .shiki:not(.shiki-plain) .line::before {
@@ -214,6 +233,30 @@
 }
 
 @layer utilities {
+  .home-reveal {
+    @apply motion-safe:animate-[home-enter_.8s_cubic-bezier(.2,.7,.2,1)_both];
+  }
+
+  /* Slow settle-in of the hero photograph. */
+  .home-drift {
+    @apply motion-safe:animate-[home-drift_2.4s_cubic-bezier(.2,.7,.2,1)_both];
+  }
+
+  /* Eight-point star (khatam) lattice behind homepage previews. */
+  .home-pattern {
+    isolation: isolate;
+  }
+  .home-pattern::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--primary);
+    opacity: 0.3;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23000'%3E%3Crect x='16' y='16' width='24' height='24'/%3E%3Crect x='16' y='16' width='24' height='24' transform='rotate(45 28 28)'/%3E%3C/g%3E%3C/svg%3E")
+      center / 56px 56px;
+  }
+
   .no-scrollbar {
     scrollbar-width: none;
   }
