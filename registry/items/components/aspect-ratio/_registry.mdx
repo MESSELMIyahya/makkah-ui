@@ -1,0 +1,64 @@
+---
+name: aspect-ratio
+type: registry:ui
+title: Aspect Ratio
+description: Displays content within a desired ratio.
+categories:
+  - core
+dependencies:
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/aspect-ratio
+---
+
+## Anatomy
+
+```tsx
+<AspectRatio ratio={16 / 9}>{children}</AspectRatio>
+```
+
+## Usage
+
+```tsx
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+```
+
+```tsx
+<AspectRatio ratio={16 / 9} className="rounded-xl bg-muted">
+  <img src="/masjid-quba.jpg" alt="Masjid Quba" className="size-full object-cover" />
+</AspectRatio>
+```
+
+The component sets the CSS `aspect-ratio` through a `--ratio` variable. Its width comes from the
+parent, and the height follows.
+
+## Examples
+
+### Square
+
+<Preview name="square" />
+
+### Portrait
+
+<Preview name="portrait" />
+
+### Wide
+
+<Preview name="wide" />
+
+## API Reference
+
+### AspectRatio
+
+A `div` that keeps the given ratio. Accepts every native `div` attribute.
+
+<PropsTable
+  rows={[
+    {
+      prop: "ratio",
+      type: "number",
+      description: "Width divided by height, e.g. 16 / 9 or 1.",
+    },
+    { prop: "className", type: "string", description: "Additional classes." },
+  ]}
+/>

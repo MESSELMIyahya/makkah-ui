@@ -1,0 +1,221 @@
+---
+name: dialog
+type: registry:ui
+title: Dialog
+description: A window overlaid on the primary window, rendering the content underneath inert.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - "@tabler/icons-react"
+  - cn
+localRegistryDependencies:
+  - button
+links:
+  baseUi: https://base-ui.com/react/components/dialog
+  shadcn: https://ui.shadcn.com/docs/components/base/dialog
+---
+
+## Anatomy
+
+```tsx
+<Dialog>
+  <DialogTrigger />
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle />
+      <DialogDescription />
+    </DialogHeader>
+    <DialogFooter>
+      <DialogClose />
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+## Usage
+
+```tsx
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+```
+
+```tsx
+<Dialog>
+  <DialogTrigger render={<Button variant="outline" />}>Booking details</DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Umrah trip booking</DialogTitle>
+      <DialogDescription>Review your trip before confirming.</DialogDescription>
+    </DialogHeader>
+    <DialogFooter>
+      <DialogClose render={<Button variant="outline" />}>Cancel</DialogClose>
+      <Button>Confirm booking</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+Use the `render` prop on `DialogTrigger` and `DialogClose` to render them as a `Button`. Focus is
+trapped inside the dialog while it is open and returns to the trigger when it closes.
+
+## Examples
+
+### Footer Close Button
+
+Set `showCloseButton` on `DialogFooter` to append an outline Close button.
+
+<Preview name="footer-close-button" />
+
+### Without Close Button
+
+Set `showCloseButton={false}` on `DialogContent` to hide the corner close button when the footer
+provides its own actions.
+
+<Preview name="no-close-button" />
+
+### Scrollable Content
+
+<Preview name="scrollable" />
+
+### Controlled
+
+Pass `open` and `onOpenChange` to control the dialog from state, for example after a mutation succeeds.
+
+<Preview name="controlled" />
+
+## API Reference
+
+### Dialog
+
+The root that holds the open state. Built on Base UI `Dialog.Root`.
+
+<PropsTable
+  rows={[
+    { prop: "open", type: "boolean", description: "Controlled open state." },
+    {
+      prop: "defaultOpen",
+      type: "boolean",
+      default: "false",
+      description: "Initial open state when uncontrolled.",
+    },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean, eventDetails) => void",
+      description: "Called when the dialog opens or closes.",
+    },
+    {
+      prop: "modal",
+      type: 'boolean | "trap-focus"',
+      default: "true",
+      description: "Locks scroll and traps focus while open.",
+    },
+    {
+      prop: "disablePointerDismissal",
+      type: "boolean",
+      default: "false",
+      description: "Prevents clicking outside from closing the dialog.",
+    },
+  ]}
+/>
+
+### DialogTrigger
+
+Opens the dialog. Built on Base UI `Dialog.Trigger`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Renders the trigger as another element, such as a Button.",
+    },
+  ]}
+/>
+
+### DialogContent
+
+The popup, rendered in a portal with an overlay. Built on Base UI `Dialog.Popup`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "showCloseButton",
+      type: "boolean",
+      default: "true",
+      description: "Shows an icon close button in the top inline-end corner.",
+    },
+    {
+      prop: "initialFocus",
+      type: "boolean | RefObject<HTMLElement> | (() => HTMLElement)",
+      description: "Element to focus when the dialog opens.",
+    },
+    {
+      prop: "finalFocus",
+      type: "boolean | RefObject<HTMLElement> | (() => HTMLElement)",
+      description: "Element to focus when the dialog closes.",
+    },
+    { prop: "className", type: "string", description: "Additional classes for the popup." },
+  ]}
+/>
+
+### DialogFooter
+
+A layout container for actions. Stacks on mobile and aligns to the inline end on larger screens.
+
+<PropsTable
+  rows={[
+    {
+      prop: "showCloseButton",
+      type: "boolean",
+      default: "false",
+      description: "Appends an outline Close button.",
+    },
+    { prop: "className", type: "string", description: "Additional classes." },
+  ]}
+/>
+
+### DialogClose
+
+Closes the dialog. Built on Base UI `Dialog.Close`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Renders the close control as another element, such as a Button.",
+    },
+  ]}
+/>
+
+### DialogHeader, DialogTitle, DialogDescription
+
+`DialogHeader` is a layout container. `DialogTitle` and `DialogDescription` are built on Base UI
+`Dialog.Title` and `Dialog.Description` and label the popup for assistive technology.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### DialogPortal, DialogOverlay
+
+Lower-level parts used by `DialogContent`. Use them when composing a custom popup.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes for the overlay." }]} />
+
+## RTL
+
+The popup is centered with `start-1/2` and a mirrored translate, and the close button sits at
+`end-4`, so it appears in the top-left corner in Arabic and the top-right corner in English.
+
+The dialog is rendered in a portal outside your RTL subtree, so it follows the nearest
+`DirectionProvider`. Wrap RTL apps with `<DirectionProvider direction="rtl">` from the
+`direction` item so the dialog mirrors correctly.

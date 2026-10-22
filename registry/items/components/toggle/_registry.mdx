@@ -1,0 +1,132 @@
+---
+name: toggle
+type: registry:ui
+title: Toggle
+description: A two-state button that can be either on or off.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - class-variance-authority
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/toggle
+  shadcn: https://ui.shadcn.com/docs/components/base/toggle
+---
+
+## Anatomy
+
+```tsx
+<Toggle>
+  <Icon data-icon="inline-start" />
+  Label
+</Toggle>
+```
+
+## Usage
+
+```tsx
+import { IconBell } from "@tabler/icons-react";
+
+import { Toggle } from "@/components/ui/toggle";
+```
+
+```tsx
+<Toggle aria-label="Adhan reminder">
+  <IconBell />
+</Toggle>
+```
+
+The pressed state is exposed as `aria-pressed`, which also drives the pressed background. Give
+icon-only toggles an `aria-label`.
+
+## Variants
+
+### Default
+
+<Preview name="default-variant" />
+
+### Outline
+
+<Preview name="outline" />
+
+## Sizes
+
+<Preview name="sizes" />
+
+## States
+
+### Controlled
+
+Use `pressed` and `onPressedChange` to drive the toggle from your own state.
+
+<Preview name="controlled" />
+
+### Disabled
+
+<Preview name="disabled" />
+
+## API Reference
+
+### Toggle
+
+Built on the Base UI [Toggle](https://base-ui.com/react/components/toggle). Renders a `<button>`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "variant",
+      type: '"default" | "outline"',
+      default: '"default"',
+      description: "Transparent or bordered style.",
+    },
+    {
+      prop: "size",
+      type: '"default" | "sm" | "lg"',
+      default: '"default"',
+      description: "Height and padding of the toggle.",
+    },
+    {
+      prop: "pressed",
+      type: "boolean",
+      description: "Whether the toggle is pressed when controlled.",
+    },
+    {
+      prop: "defaultPressed",
+      type: "boolean",
+      default: "false",
+      description: "Whether the toggle is pressed on first render when uncontrolled.",
+    },
+    {
+      prop: "onPressedChange",
+      type: "(pressed, eventDetails) => void",
+      description: "Called when the pressed state changes.",
+    },
+    {
+      prop: "value",
+      type: "string",
+      description: "Identifies the toggle inside a toggle group.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Prevents the user from interacting with the toggle.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the variant classes.",
+    },
+  ]}
+/>
+
+### toggleVariants
+
+A `cva` helper that returns the toggle classes for a given `variant` and `size`. It is also used by
+`ToggleGroupItem`.
+
+## RTL
+
+Icons marked with `data-icon="inline-start"` or `data-icon="inline-end"` get logical padding
+(`ps`/`pe`), so they sit on the correct side in Arabic and English layouts.

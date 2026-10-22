@@ -1,0 +1,91 @@
+---
+name: textarea
+type: registry:ui
+title: Textarea
+description: Displays a form textarea or a component that looks like a textarea.
+categories:
+  - core
+dependencies:
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/textarea
+---
+
+## Anatomy
+
+```tsx
+<Textarea />
+```
+
+## Usage
+
+```tsx
+import { Textarea } from "@/components/ui/textarea";
+```
+
+```tsx
+<Textarea placeholder="Suggest a topic for the Friday halaqa" />
+```
+
+The textarea grows with its content through `field-sizing: content`, starting from a minimum height.
+Set a `max-h-*` class to cap it.
+
+## Examples
+
+### With Description
+
+<Preview name="with-description" />
+
+### Disabled
+
+<Preview name="disabled" />
+
+### Invalid
+
+<Preview name="invalid" />
+
+### With Button
+
+<Preview name="with-button" />
+
+## API Reference
+
+### Textarea
+
+A styled native `<textarea>`. Accepts every native textarea attribute.
+
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "string",
+      description: "Controlled value.",
+    },
+    {
+      prop: "defaultValue",
+      type: "string",
+      description: "Initial value when uncontrolled.",
+    },
+    {
+      prop: "placeholder",
+      type: "string",
+      description: "Hint text shown while the textarea is empty.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables the textarea and dims it.",
+    },
+    {
+      prop: "aria-invalid",
+      type: "boolean",
+      description: "Applies the destructive border and ring.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes, e.g. min-h-32 or max-h-60.",
+    },
+  ]}
+/>

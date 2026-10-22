@@ -1,0 +1,212 @@
+---
+name: alert-dialog
+type: registry:ui
+title: Alert Dialog
+description: A modal dialog that interrupts the user with important content and expects a response.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - cn
+localRegistryDependencies:
+  - button
+links:
+  baseUi: https://base-ui.com/react/components/alert-dialog
+  shadcn: https://ui.shadcn.com/docs/components/base/alert-dialog
+---
+
+## Anatomy
+
+```tsx
+<AlertDialog>
+  <AlertDialogTrigger />
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogMedia />
+      <AlertDialogTitle />
+      <AlertDialogDescription />
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel />
+      <AlertDialogAction />
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+## Usage
+
+```tsx
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+```
+
+```tsx
+<AlertDialog>
+  <AlertDialogTrigger render={<Button variant="outline" />}>Cancel Umrah booking</AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Cancel your Umrah booking?</AlertDialogTitle>
+      <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Keep booking</AlertDialogCancel>
+      <AlertDialogAction>Yes, cancel booking</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+Unlike `Dialog`, an alert dialog does not close when the user clicks outside. The user must choose
+one of the actions.
+
+## Sizes
+
+### Small
+
+Set `size="sm"` on `AlertDialogContent` for short confirmations. The header is centered and the
+footer buttons share the width equally.
+
+<Preview name="small" />
+
+## Examples
+
+### With Media
+
+Place an icon inside `AlertDialogMedia` to give the dialog a visual anchor.
+
+<Preview name="with-media" />
+
+### Destructive
+
+Pass `variant="destructive"` to `AlertDialogAction` for irreversible actions.
+
+<Preview name="destructive" />
+
+## API Reference
+
+### AlertDialog
+
+The root that holds the open state. Built on Base UI `AlertDialog.Root`.
+
+<PropsTable
+  rows={[
+    { prop: "open", type: "boolean", description: "Controlled open state." },
+    {
+      prop: "defaultOpen",
+      type: "boolean",
+      default: "false",
+      description: "Initial open state when uncontrolled.",
+    },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean, eventDetails) => void",
+      description: "Called when the alert dialog opens or closes.",
+    },
+  ]}
+/>
+
+### AlertDialogTrigger
+
+Opens the alert dialog. Built on Base UI `AlertDialog.Trigger`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Renders the trigger as another element, such as a Button.",
+    },
+  ]}
+/>
+
+### AlertDialogContent
+
+The popup, rendered in a portal with an overlay. Built on Base UI `AlertDialog.Popup`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "size",
+      type: '"default" | "sm"',
+      default: '"default"',
+      description: "Width and layout of the popup. Small centers the header and splits the footer.",
+    },
+    { prop: "className", type: "string", description: "Additional classes for the popup." },
+  ]}
+/>
+
+### AlertDialogAction
+
+A `Button` for the confirming action. Accepts every Button prop.
+
+<PropsTable
+  rows={[
+    {
+      prop: "variant",
+      type: '"default" | "secondary" | "outline" | "ghost" | "destructive" | "link"',
+      default: '"default"',
+      description: "Visual style of the action button.",
+    },
+    { prop: "size", type: "ButtonSize", default: '"default"', description: "Size of the action button." },
+  ]}
+/>
+
+### AlertDialogCancel
+
+Closes the alert dialog. Built on Base UI `AlertDialog.Close`, rendered as a `Button`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "variant",
+      type: '"default" | "secondary" | "outline" | "ghost" | "destructive" | "link"',
+      default: '"outline"',
+      description: "Visual style of the cancel button.",
+    },
+    { prop: "size", type: "ButtonSize", default: '"default"', description: "Size of the cancel button." },
+  ]}
+/>
+
+### AlertDialogHeader, AlertDialogFooter, AlertDialogMedia
+
+Layout containers. `AlertDialogMedia` renders a round icon slot that sits beside the title on the
+default size and above it on the small size.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### AlertDialogTitle, AlertDialogDescription
+
+Built on Base UI `AlertDialog.Title` and `AlertDialog.Description`. They label the popup for
+assistive technology.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### AlertDialogPortal, AlertDialogOverlay
+
+Lower-level parts used by `AlertDialogContent`.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes for the overlay." }]} />
+
+## Accessibility
+
+The popup uses `role="alertdialog"`, and focus moves into it when it opens. Always provide an
+`AlertDialogTitle` and `AlertDialogDescription` so screen readers announce the consequence of the
+action.
+
+## RTL
+
+The dialog is rendered in a portal outside your RTL subtree, so it follows the nearest
+`DirectionProvider`. Wrap RTL apps with `<DirectionProvider direction="rtl">` from the
+`direction` item so the dialog mirrors correctly.

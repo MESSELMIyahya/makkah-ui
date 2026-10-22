@@ -1,0 +1,168 @@
+---
+name: pagination
+type: registry:ui
+title: Pagination
+description: Pagination with page navigation, next and previous links.
+categories:
+  - core
+dependencies:
+  - "@tabler/icons-react"
+  - cn
+localRegistryDependencies:
+  - button
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/pagination
+---
+
+## Anatomy
+
+```tsx
+<Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationEllipsis />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>
+```
+
+## Usage
+
+```tsx
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+```
+
+```tsx
+<Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious href="?page=1" />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="?page=2" isActive>
+        2
+      </PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext href="?page=3" />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>
+```
+
+Every link renders a styled `Button` as an `<a>`, so pass `href` (or your router's link through the
+native anchor props). `PaginationPrevious` and `PaginationNext` default to English labels; pass `text`
+and `aria-label` to localize them.
+
+## Examples
+
+### Previous and Next Only
+
+<Preview name="simple" />
+
+### Numbers Only
+
+<Preview name="numbers-only" />
+
+### Controlled
+
+Handle `onClick` and call `preventDefault()` to paginate client-side state instead of navigating.
+
+<Preview name="controlled" />
+
+## API Reference
+
+### Pagination
+
+A `<nav>` landmark with `aria-label="pagination"`. Override `aria-label` with a localized label.
+
+<PropsTable
+  rows={[
+    { prop: "aria-label", type: "string", default: '"pagination"', description: "Accessible name of the navigation landmark." },
+    { prop: "className", type: "string", description: "Additional classes for the nav." },
+  ]}
+/>
+
+### PaginationContent and PaginationItem
+
+A `<ul>` and its `<li>` items. Both accept native list attributes.
+
+<PropsTable
+  rows={[{ prop: "className", type: "string", description: "Additional classes for the list." }]}
+/>
+
+### PaginationLink
+
+Renders the Makkah UI `Button` as an `<a>` element and accepts every native anchor attribute.
+
+<PropsTable
+  rows={[
+    {
+      prop: "isActive",
+      type: "boolean",
+      description: "Marks the current page with the outline style and aria-current=\"page\".",
+    },
+    {
+      prop: "size",
+      type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',
+      default: '"icon"',
+      description: "Button size used for the link.",
+    },
+    { prop: "href", type: "string", description: "Destination of the page link." },
+    { prop: "className", type: "string", description: "Additional classes for the link." },
+  ]}
+/>
+
+### PaginationPrevious and PaginationNext
+
+A `PaginationLink` with a chevron and a label that is hidden on small screens.
+
+<PropsTable
+  rows={[
+    {
+      prop: "text",
+      type: "string",
+      default: '"Previous" | "Next"',
+      description: "Visible label next to the chevron.",
+    },
+    {
+      prop: "aria-label",
+      type: "string",
+      default: '"Go to previous page" | "Go to next page"',
+      description: "Accessible name. Localize it together with text.",
+    },
+    { prop: "href", type: "string", description: "Destination of the link." },
+    { prop: "isActive", type: "boolean", description: "Applies the active style." },
+  ]}
+/>
+
+### PaginationEllipsis
+
+A presentational icon for skipped pages, with a screen-reader label.
+
+<PropsTable
+  rows={[{ prop: "className", type: "string", description: "Additional classes for the ellipsis." }]}
+/>
+
+## RTL
+
+The previous and next chevrons are rotated with `rtl:rotate-180`, so "previous" always points
+toward the start of the reading direction. Padding uses `ps`/`pe`, which keeps the chevron spacing
+correct on both sides.

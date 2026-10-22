@@ -1,0 +1,400 @@
+---
+name: combobox
+type: registry:ui
+title: Combobox
+description: An input combined with a filterable list of options, with single or multiple selection.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - "@tabler/icons-react"
+  - cn
+localRegistryDependencies:
+  - button
+  - input-group
+links:
+  baseUi: https://base-ui.com/react/components/combobox
+  shadcn: https://ui.shadcn.com/docs/components/base/combobox
+---
+
+## Anatomy
+
+```tsx
+<Combobox>
+  <ComboboxInput />
+  <ComboboxContent>
+    <ComboboxEmpty />
+    <ComboboxList>
+      <ComboboxGroup>
+        <ComboboxLabel />
+        <ComboboxCollection>
+          <ComboboxItem />
+        </ComboboxCollection>
+      </ComboboxGroup>
+      <ComboboxSeparator />
+    </ComboboxList>
+  </ComboboxContent>
+</Combobox>
+```
+
+For multiple selection, replace `ComboboxInput` with chips anchored to the popup:
+
+```tsx
+<Combobox multiple>
+  <ComboboxChips>
+    <ComboboxValue>
+      <ComboboxChip />
+      <ComboboxChipsInput />
+    </ComboboxValue>
+  </ComboboxChips>
+  <ComboboxContent>
+    <ComboboxList>
+      <ComboboxItem />
+    </ComboboxList>
+  </ComboboxContent>
+</Combobox>
+```
+
+## Usage
+
+```tsx
+import {
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxCollection,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxGroup,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxLabel,
+  ComboboxList,
+  ComboboxSeparator,
+  ComboboxValue,
+  useComboboxAnchor,
+} from "@/components/ui/combobox";
+```
+
+```tsx
+const masjids = [
+  { value: "haram", label: "Masjid al-Haram" },
+  { value: "nabawi", label: "Masjid an-Nabawi" },
+  { value: "quba", label: "Masjid Quba" },
+];
+
+<Combobox items={masjids}>
+  <ComboboxInput placeholder="Choose a masjid" aria-label="Masjid" />
+  <ComboboxContent>
+    <ComboboxEmpty>No masjid found.</ComboboxEmpty>
+    <ComboboxList>
+      {(item) => (
+        <ComboboxItem key={item.value} value={item}>
+          {item.label}
+        </ComboboxItem>
+      )}
+    </ComboboxList>
+  </ComboboxContent>
+</Combobox>;
+```
+
+Pass the options to `items` and render them with a function child of `ComboboxList`. The input
+filters the list as the user types. Objects shaped like `{ value, label }` are matched and displayed by
+their `label` without extra configuration.
+
+## Examples
+
+### Groups
+
+Pass groups shaped like `{ value, items }` and render each one with `ComboboxGroup`, `ComboboxLabel` and
+`ComboboxCollection`.
+
+<Preview name="groups" />
+
+### Multiple
+
+Set `multiple` and render the selected values as chips. Anchor the popup to the chips container with
+`useComboboxAnchor`.
+
+<Preview name="multiple" />
+
+### With Clear Button
+
+`showClear` adds a button that clears the value. It replaces the trigger while a value is selected.
+
+<Preview name="with-clear" />
+
+### Disabled
+
+<Preview name="disabled" />
+
+### Invalid
+
+<Preview name="invalid" />
+
+## API Reference
+
+### Combobox
+
+Built on Base UI `Combobox.Root`. Manages the value, the input text and the open state.
+
+<PropsTable
+  rows={[
+    {
+      prop: "items",
+      type: "Array<Item> | Array<{ value, items }>",
+      description: "Options to filter and render. Groups are objects with an items array.",
+    },
+    {
+      prop: "value",
+      type: "Item | Item[] | null",
+      description: "Controlled selected value. An array when multiple is set.",
+    },
+    {
+      prop: "defaultValue",
+      type: "Item | Item[] | null",
+      description: "Initial value when uncontrolled.",
+    },
+    {
+      prop: "onValueChange",
+      type: "(value, eventDetails) => void",
+      description: "Called when the selected value changes.",
+    },
+    {
+      prop: "multiple",
+      type: "boolean",
+      default: "false",
+      description: "Allows selecting several values.",
+    },
+    {
+      prop: "autoHighlight",
+      type: "boolean",
+      default: "false",
+      description: "Highlights the first matching option while typing.",
+    },
+    {
+      prop: "itemToStringLabel",
+      type: "(item) => string",
+      description: "Converts an object item to the text shown and filtered on.",
+    },
+    {
+      prop: "open",
+      type: "boolean",
+      description: "Controlled open state.",
+    },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean, eventDetails) => void",
+      description: "Called when the popup opens or closes.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables the combobox.",
+    },
+    {
+      prop: "name",
+      type: "string",
+      description: "Field name submitted with the form.",
+    },
+  ]}
+/>
+
+### ComboboxInput
+
+Built on Base UI `Combobox.Input`, rendered inside an `InputGroup` with a trigger and an optional clear
+button at the inline end.
+
+<PropsTable
+  rows={[
+    {
+      prop: "showTrigger",
+      type: "boolean",
+      default: "true",
+      description: "Shows the chevron button that toggles the popup.",
+    },
+    {
+      prop: "showClear",
+      type: "boolean",
+      default: "false",
+      description: "Shows a button that clears the value.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables the input, trigger and clear button.",
+    },
+    {
+      prop: "placeholder",
+      type: "string",
+      description: "Placeholder text of the input.",
+    },
+    {
+      prop: "aria-invalid",
+      type: "boolean",
+      description: "Applies the destructive border and ring.",
+    },
+  ]}
+/>
+
+### ComboboxContent
+
+Built on Base UI `Combobox.Popup` inside a portal and positioner.
+
+<PropsTable
+  rows={[
+    {
+      prop: "side",
+      type: '"top" | "bottom" | "left" | "right" | "inline-start" | "inline-end"',
+      default: '"bottom"',
+      description: "Preferred side of the input.",
+    },
+    {
+      prop: "sideOffset",
+      type: "number",
+      default: "6",
+      description: "Distance from the input in pixels.",
+    },
+    {
+      prop: "align",
+      type: '"start" | "center" | "end"',
+      default: '"start"',
+      description: "Alignment against the input.",
+    },
+    {
+      prop: "alignOffset",
+      type: "number",
+      default: "0",
+      description: "Offset along the alignment axis.",
+    },
+    {
+      prop: "anchor",
+      type: "RefObject<HTMLElement>",
+      description: "Element to position against, e.g. the chips container from useComboboxAnchor.",
+    },
+  ]}
+/>
+
+### ComboboxList and ComboboxCollection
+
+`ComboboxList` is the scrollable list of options, built on Base UI `Combobox.List`. `ComboboxCollection`
+renders the items of a group.
+
+<PropsTable
+  rows={[
+    {
+      prop: "children",
+      type: "ReactNode | (item, index) => ReactNode",
+      description: "Static items, or a function that renders each filtered item.",
+    },
+  ]}
+/>
+
+### ComboboxItem
+
+Built on Base UI `Combobox.Item`. Shows a check at the inline end when selected.
+
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "Item",
+      description: "The value this option represents.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Prevents selecting this option.",
+    },
+  ]}
+/>
+
+### ComboboxGroup
+
+Built on Base UI `Combobox.Group`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "items",
+      type: "Array<Item>",
+      description: "Items of the group, rendered by ComboboxCollection.",
+    },
+  ]}
+/>
+
+### ComboboxChips, ComboboxChip and ComboboxChipsInput
+
+`ComboboxChips` is the field that holds the selected chips and the `ComboboxChipsInput`. Each
+`ComboboxChip` is a selected value with a remove button.
+
+<PropsTable
+  rows={[
+    {
+      prop: "showRemove",
+      type: "boolean",
+      default: "true",
+      description: "ComboboxChip only. Shows the button that removes the chip.",
+    },
+    {
+      prop: "ref",
+      type: "Ref<HTMLDivElement>",
+      description: "ComboboxChips only. Pass the anchor from useComboboxAnchor.",
+    },
+  ]}
+/>
+
+### ComboboxValue
+
+Built on Base UI `Combobox.Value`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "children",
+      type: "ReactNode | (value) => ReactNode",
+      description: "Renders the selected value, e.g. a chip per selected item.",
+    },
+  ]}
+/>
+
+### ComboboxLabel, ComboboxEmpty, ComboboxSeparator and ComboboxTrigger
+
+`ComboboxLabel` names a group, `ComboboxEmpty` is shown when no option matches, `ComboboxSeparator` draws a
+line between groups and `ComboboxTrigger` is the chevron button used inside `ComboboxInput`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default styles.",
+    },
+  ]}
+/>
+
+### useComboboxAnchor
+
+Returns a ref for `ComboboxChips` that `ComboboxContent` uses as its `anchor`.
+
+<PropsTable
+  nameLabel="Return value"
+  rows={[
+    {
+      prop: "anchor",
+      type: "RefObject<HTMLDivElement | null>",
+      description: "Pass to ComboboxChips ref and ComboboxContent anchor.",
+    },
+  ]}
+/>
+
+## RTL
+
+Item padding, the check indicator, the chip remove button and the input addons use logical properties,
+so the combobox mirrors in Arabic without changes. The popup is portaled to the body and follows the
+nearest `DirectionProvider`, so wrap RTL apps with `<DirectionProvider direction="rtl">` from the
+`direction` item.

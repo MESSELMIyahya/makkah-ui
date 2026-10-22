@@ -1,0 +1,157 @@
+---
+name: tooltip
+type: registry:ui
+title: Tooltip
+description: A popup that displays information related to an element when it receives keyboard focus or the mouse hovers over it.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/tooltip
+  shadcn: https://ui.shadcn.com/docs/components/base/tooltip
+---
+
+## Anatomy
+
+```tsx
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger />
+    <TooltipContent />
+  </Tooltip>
+</TooltipProvider>
+```
+
+## Usage
+
+```tsx
+import { IconCompass } from "@tabler/icons-react";
+
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+```
+
+```tsx
+<Tooltip>
+  <TooltipTrigger render={<Button variant="outline" size="icon" aria-label="Qibla direction" />}>
+    <IconCompass />
+  </TooltipTrigger>
+  <TooltipContent>Qibla direction</TooltipContent>
+</Tooltip>
+```
+
+Wrap your app, or a group of tooltips, in `TooltipProvider` so that moving between triggers opens the
+next tooltip instantly. Tooltips are for short, non-essential hints; icon buttons still need an
+`aria-label`.
+
+## Examples
+
+### Sides
+
+Use `side` on `TooltipContent`. The arrow follows the chosen side.
+
+<Preview name="sides" />
+
+### Disabled Trigger
+
+Disabled buttons do not fire pointer events. Wrap them in a `span` and use it as the trigger.
+
+<Preview name="disabled" />
+
+### Provider Delay
+
+Set `delay` and `closeDelay` on `TooltipProvider` to share timing between tooltips in a group.
+
+<Preview name="provider" />
+
+## API Reference
+
+### TooltipProvider
+
+Shares delays between tooltips. Built on Base UI `Tooltip.Provider`.
+
+<PropsTable
+  rows={[
+    { prop: "delay", type: "number", default: "0", description: "Milliseconds to wait before opening." },
+    { prop: "closeDelay", type: "number", description: "Milliseconds to wait before closing." },
+    {
+      prop: "timeout",
+      type: "number",
+      description: "Window in which another tooltip opens instantly after one closes.",
+    },
+  ]}
+/>
+
+### Tooltip
+
+The root that holds the open state. Built on Base UI `Tooltip.Root`.
+
+<PropsTable
+  rows={[
+    { prop: "open", type: "boolean", description: "Controlled open state." },
+    {
+      prop: "defaultOpen",
+      type: "boolean",
+      default: "false",
+      description: "Initial open state when uncontrolled.",
+    },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean, eventDetails) => void",
+      description: "Called when the tooltip opens or closes.",
+    },
+    { prop: "disabled", type: "boolean", default: "false", description: "Prevents the tooltip from opening." },
+  ]}
+/>
+
+### TooltipTrigger
+
+The element that opens the tooltip on hover or focus. Built on Base UI `Tooltip.Trigger`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Renders the trigger as another element, such as a Button.",
+    },
+    { prop: "delay", type: "number", description: "Overrides the provider open delay for this trigger." },
+    { prop: "closeOnClick", type: "boolean", description: "Closes the tooltip when the trigger is clicked." },
+  ]}
+/>
+
+### TooltipContent
+
+The floating label with an arrow, rendered in a portal. Built on Base UI `Tooltip.Popup` and
+`Tooltip.Positioner`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "side",
+      type: '"top" | "bottom" | "left" | "right" | "inline-start" | "inline-end"',
+      default: '"top"',
+      description: "Side of the trigger to place the tooltip on.",
+    },
+    { prop: "sideOffset", type: "number", default: "4", description: "Distance from the trigger in pixels." },
+    {
+      prop: "align",
+      type: '"start" | "center" | "end"',
+      default: '"center"',
+      description: "Alignment along the trigger edge.",
+    },
+    { prop: "alignOffset", type: "number", default: "0", description: "Offset along the alignment axis." },
+    { prop: "className", type: "string", description: "Additional classes for the tooltip." },
+  ]}
+/>
+
+## RTL
+
+`inline-start` and `inline-end` resolve against the nearest direction, and the arrow offset is
+mirrored with `rtl:` variants, so the arrow always points at the trigger.
+
+The tooltip is rendered in a portal outside your RTL subtree, so it follows the nearest
+`DirectionProvider`. Wrap RTL apps with `<DirectionProvider direction="rtl">` from the
+`direction` item so the tooltip mirrors correctly.

@@ -1,0 +1,219 @@
+---
+name: navigation-menu
+type: registry:ui
+title: Navigation Menu
+description: A collection of links for navigating websites, with panels that open from the menu bar.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - "@tabler/icons-react"
+  - class-variance-authority
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/navigation-menu
+  shadcn: https://ui.shadcn.com/docs/components/base/navigation-menu
+---
+
+## Anatomy
+
+```tsx
+<NavigationMenu>
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuTrigger />
+      <NavigationMenuContent>
+        <NavigationMenuLink />
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+    <NavigationMenuItem>
+      <NavigationMenuLink className={navigationMenuTriggerStyle()} />
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>
+```
+
+## Usage
+
+```tsx
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+```
+
+```tsx
+<NavigationMenu>
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuTrigger>Journeys</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <NavigationMenuLink href="/umrah">Umrah packages</NavigationMenuLink>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>
+```
+
+`NavigationMenu` renders the shared positioner, popup, and viewport for you, so the content of the
+open item animates inside one floating panel. Style a top-level link like a trigger with
+`navigationMenuTriggerStyle()`.
+
+## Examples
+
+### Links Only
+
+<Preview name="links-only" />
+
+### With Icons
+
+<Preview name="with-icons" />
+
+## API Reference
+
+### NavigationMenu
+
+Built on the Base UI [Navigation Menu](https://base-ui.com/react/components/navigation-menu) `Root`.
+Also renders `NavigationMenuPositioner`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "align",
+      type: '"start" | "center" | "end"',
+      default: '"start"',
+      description: "Alignment of the popup relative to the open trigger.",
+    },
+    {
+      prop: "value",
+      type: "any",
+      description: "The value of the open item when controlled.",
+    },
+    {
+      prop: "defaultValue",
+      type: "any",
+      default: "null",
+      description: "The item that is open on first render when uncontrolled.",
+    },
+    {
+      prop: "onValueChange",
+      type: "(value, eventDetails) => void",
+      description: "Called when an item opens or the menu closes.",
+    },
+    {
+      prop: "delay",
+      type: "number",
+      default: "50",
+      description: "Milliseconds to wait before opening on hover.",
+    },
+    {
+      prop: "closeDelay",
+      type: "number",
+      default: "50",
+      description: "Milliseconds to wait before closing after the pointer leaves.",
+    },
+    {
+      prop: "orientation",
+      type: '"horizontal" | "vertical"',
+      default: '"horizontal"',
+      description: "Orientation of the menu and its arrow key navigation.",
+    },
+  ]}
+/>
+
+### NavigationMenuList and NavigationMenuItem
+
+Built on Base UI `NavigationMenu.List` and `NavigationMenu.Item`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "any",
+      description: "Item only. Identifies the item for controlled menus.",
+    },
+    { prop: "className", type: "string", description: "Additional classes." },
+  ]}
+/>
+
+### NavigationMenuTrigger
+
+Built on Base UI `NavigationMenu.Trigger`. Appends a chevron that rotates when the item is open.
+
+<PropsTable
+  rows={[
+    { prop: "disabled", type: "boolean", default: "false", description: "Disables the trigger." },
+    { prop: "className", type: "string", description: "Additional classes merged with the trigger style." },
+  ]}
+/>
+
+### NavigationMenuContent
+
+Built on Base UI `NavigationMenu.Content`. Its children are shown inside the shared popup.
+
+<PropsTable
+  rows={[{ prop: "className", type: "string", description: "Additional classes for the content." }]}
+/>
+
+### NavigationMenuLink
+
+Built on Base UI `NavigationMenu.Link`. Renders an `<a>` element.
+
+<PropsTable
+  rows={[
+    { prop: "href", type: "string", description: "Destination of the link." },
+    {
+      prop: "active",
+      type: "boolean",
+      default: "false",
+      description: "Marks the link as the current page with aria-current.",
+    },
+    {
+      prop: "closeOnClick",
+      type: "boolean",
+      default: "false",
+      description: "Closes the menu when the link is clicked.",
+    },
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Replaces the rendered element, e.g. with a router link.",
+    },
+  ]}
+/>
+
+### NavigationMenuPositioner
+
+Built on Base UI `NavigationMenu.Positioner`, `Popup`, and `Viewport`. Rendered by `NavigationMenu`;
+export it only for custom layouts.
+
+<PropsTable
+  rows={[
+    { prop: "side", type: '"top" | "bottom" | "left" | "right" | "inline-start" | "inline-end"', default: '"bottom"', description: "Side of the trigger the popup opens on." },
+    { prop: "sideOffset", type: "number", default: "8", description: "Distance from the trigger in pixels." },
+    { prop: "align", type: '"start" | "center" | "end"', default: '"start"', description: "Alignment along the trigger." },
+    { prop: "alignOffset", type: "number", default: "0", description: "Offset along the alignment axis." },
+  ]}
+/>
+
+### NavigationMenuIndicator
+
+Built on Base UI `NavigationMenu.Icon`. A small arrow that can be placed in a trigger.
+
+### navigationMenuTriggerStyle
+
+A `cva` helper that returns the trigger classes, used to style top-level links like triggers.
+
+## RTL
+
+`align="start"` follows the reading direction, so the popup lines up with the start edge of the
+trigger in Arabic layouts. Content transitions mirror their horizontal slide in RTL.
+
+The popup is rendered in a portal outside your RTL subtree, so it follows the nearest
+`DirectionProvider`. Wrap RTL apps with `<DirectionProvider direction="rtl">` from the
+`direction` item so the popup mirrors correctly.

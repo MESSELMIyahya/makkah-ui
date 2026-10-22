@@ -1,0 +1,188 @@
+---
+name: command
+type: registry:ui
+title: Command
+description: Fast, composable command menu with search, groups and keyboard navigation.
+categories:
+  - core
+dependencies:
+  - cmdk
+  - "@tabler/icons-react"
+  - cn
+localRegistryDependencies:
+  - dialog
+  - input-group
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/command
+---
+
+## Anatomy
+
+```tsx
+<Command>
+  <CommandInput />
+  <CommandList>
+    <CommandEmpty />
+    <CommandGroup>
+      <CommandItem>
+        <CommandShortcut />
+      </CommandItem>
+    </CommandGroup>
+    <CommandSeparator />
+  </CommandList>
+</Command>
+```
+
+## Usage
+
+```tsx
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
+```
+
+```tsx
+<Command>
+  <CommandInput placeholder="Search masjids or cities..." />
+  <CommandList>
+    <CommandEmpty>No results found.</CommandEmpty>
+    <CommandGroup heading="Masjids">
+      <CommandItem>Masjid al-Haram</CommandItem>
+      <CommandItem>Quba Mosque</CommandItem>
+    </CommandGroup>
+  </CommandList>
+</Command>
+```
+
+Built on [cmdk](https://github.com/pacocoursey/cmdk). Items are filtered and ranked as the user
+types, and the arrow keys move the selection. Arabic text is matched as typed.
+
+## Examples
+
+### Dialog
+
+Wrap a `Command` in `CommandDialog` to build a command palette. This example also opens with
+`Ctrl+J` or `⌘J`.
+
+<Preview name="dialog" />
+
+### Shortcuts and Disabled Items
+
+Add a `CommandShortcut` inside an item to show its keyboard shortcut, and set `disabled` to make an
+item unselectable.
+
+<Preview name="shortcuts" />
+
+## API Reference
+
+### Command
+
+The root that holds the search state. Built on cmdk `Command`.
+
+<PropsTable
+  rows={[
+    { prop: "value", type: "string", description: "Controlled value of the selected item." },
+    { prop: "onValueChange", type: "(value: string) => void", description: "Called when the selected item changes." },
+    {
+      prop: "filter",
+      type: "(value: string, search: string, keywords?: string[]) => number",
+      description: "Custom ranking function. Return 0 to hide an item.",
+    },
+    { prop: "shouldFilter", type: "boolean", default: "true", description: "Set to false to filter items yourself." },
+    { prop: "loop", type: "boolean", default: "false", description: "Wraps keyboard selection at the ends of the list." },
+    { prop: "label", type: "string", description: "Accessible label for the command menu." },
+  ]}
+/>
+
+### CommandDialog
+
+A `Dialog` positioned in the upper third of the screen. Accepts every Dialog root prop.
+
+<PropsTable
+  rows={[
+    { prop: "open", type: "boolean", description: "Controlled open state." },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean, eventDetails) => void",
+      description: "Called when the dialog opens or closes.",
+    },
+    {
+      prop: "title",
+      type: "string",
+      default: '"Command Palette"',
+      description: "Visually hidden dialog title for assistive technology.",
+    },
+    {
+      prop: "description",
+      type: "string",
+      default: '"Search for a command to run..."',
+      description: "Visually hidden dialog description.",
+    },
+    { prop: "showCloseButton", type: "boolean", default: "false", description: "Shows the dialog close button." },
+    { prop: "className", type: "string", description: "Additional classes for the dialog content." },
+  ]}
+/>
+
+### CommandInput
+
+The search field, rendered inside an `InputGroup` with a search icon.
+
+<PropsTable
+  rows={[
+    { prop: "placeholder", type: "string", description: "Placeholder text." },
+    { prop: "value", type: "string", description: "Controlled search text." },
+    { prop: "onValueChange", type: "(search: string) => void", description: "Called when the search text changes." },
+  ]}
+/>
+
+### CommandList, CommandEmpty, CommandSeparator
+
+`CommandList` is the scrollable results area. `CommandEmpty` renders only when no item matches.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### CommandGroup
+
+A labelled group of items.
+
+<PropsTable
+  rows={[
+    { prop: "heading", type: "ReactNode", description: "Group heading shown above the items." },
+    { prop: "forceMount", type: "boolean", description: "Keeps the group rendered when no item matches." },
+  ]}
+/>
+
+### CommandItem
+
+A selectable item. Shows a check icon at the inline end when `data-checked="true"` is set.
+
+<PropsTable
+  rows={[
+    { prop: "onSelect", type: "(value: string) => void", description: "Called when the item is chosen." },
+    { prop: "value", type: "string", description: "Value used for filtering. Defaults to the text content." },
+    { prop: "keywords", type: "string[]", description: "Extra terms that match this item, such as English names." },
+    { prop: "disabled", type: "boolean", default: "false", description: "Makes the item unselectable." },
+  ]}
+/>
+
+### CommandShortcut
+
+A muted span pushed to the inline end of an item.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+## RTL
+
+Icons, shortcuts and the check indicator use logical spacing. Add transliterated `keywords` to
+Arabic items so that users can find them with either script.
+
+The command dialog is rendered in a portal outside your RTL subtree, so it follows the nearest
+`DirectionProvider`. Wrap RTL apps with `<DirectionProvider direction="rtl">` from the
+`direction` item so the command dialog mirrors correctly.

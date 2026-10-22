@@ -1,0 +1,148 @@
+---
+name: radio-group
+type: registry:ui
+title: Radio Group
+description: A set of checkable buttons where no more than one can be checked at a time.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/radio
+  shadcn: https://ui.shadcn.com/docs/components/base/radio-group
+---
+
+## Anatomy
+
+```tsx
+<RadioGroup>
+  <RadioGroupItem value="option" id="option" />
+  <Label htmlFor="option">Label</Label>
+</RadioGroup>
+```
+
+## Usage
+
+```tsx
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+```
+
+```tsx
+<RadioGroup defaultValue="umm-al-qura">
+  <div className="flex items-center gap-3">
+    <RadioGroupItem value="umm-al-qura" id="umm-al-qura" />
+    <Label htmlFor="umm-al-qura">Umm al-Qura, Makkah</Label>
+  </div>
+  <div className="flex items-center gap-3">
+    <RadioGroupItem value="mwl" id="mwl" />
+    <Label htmlFor="mwl">Muslim World League</Label>
+  </div>
+</RadioGroup>
+```
+
+Give the group an accessible name with `aria-label`, or wrap it in a `FieldSet` with a
+`FieldLegend`. Arrow keys move between items.
+
+## Examples
+
+### With Description
+
+<Preview name="with-description" />
+
+### Choice Card
+
+<Preview name="choice-card" />
+
+### Disabled
+
+<Preview name="disabled" />
+
+### Invalid
+
+<Preview name="invalid" />
+
+## API Reference
+
+### RadioGroup
+
+Built on the Base UI [Radio Group](https://base-ui.com/react/components/radio). Lays its items out
+in a grid.
+
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "unknown",
+      description: "Controlled value of the checked item.",
+    },
+    {
+      prop: "defaultValue",
+      type: "unknown",
+      description: "Initial value when uncontrolled.",
+    },
+    {
+      prop: "onValueChange",
+      type: "(value: unknown, eventDetails) => void",
+      description: "Called when a different item is checked.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables every item.",
+    },
+    {
+      prop: "name",
+      type: "string",
+      description: "Field name submitted with the form.",
+    },
+    {
+      prop: "required",
+      type: "boolean",
+      default: "false",
+      description: "Requires a value before submitting.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the grid layout.",
+    },
+  ]}
+/>
+
+### RadioGroupItem
+
+Built on Base UI `Radio.Root` with a dot indicator.
+
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "unknown",
+      description: "The value this item represents. Required.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables this item only.",
+    },
+    {
+      prop: "aria-invalid",
+      type: "boolean",
+      description: "Applies the destructive border and ring.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default styles.",
+    },
+  ]}
+/>
+
+## RTL
+
+The indicator dot is centered with logical positioning and a direction-aware translate, so it stays
+centered in both directions. Arrow key navigation follows the text direction.

@@ -1,0 +1,112 @@
+---
+name: input
+type: registry:ui
+title: Input
+description: Displays a form input field or a component that looks like an input field.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/input
+  shadcn: https://ui.shadcn.com/docs/components/base/input
+---
+
+## Anatomy
+
+```tsx
+<Input type="text" />
+```
+
+## Usage
+
+```tsx
+import { Input } from "@/components/ui/input";
+```
+
+```tsx
+<Input type="email" placeholder="name@example.com" />
+```
+
+Pair every input with a `Label` (or `Field`) and use `type` and `inputMode` to bring up the right
+keyboard on mobile, for example `type="number"` for zakat amounts.
+
+## Examples
+
+### Number
+
+<Preview name="number" />
+
+### File
+
+<Preview name="file" />
+
+### Disabled
+
+<Preview name="disabled" />
+
+### Invalid
+
+Set `aria-invalid` to show the error style, and link the message with `aria-describedby`.
+
+<Preview name="invalid" />
+
+### With Button
+
+<Preview name="with-button" />
+
+## API Reference
+
+### Input
+
+Built on the Base UI [Input](https://base-ui.com/react/components/input). Accepts every native
+`<input>` attribute.
+
+<PropsTable
+  rows={[
+    {
+      prop: "type",
+      type: "string",
+      default: '"text"',
+      description: "Native input type such as email, number, tel, date or file.",
+    },
+    {
+      prop: "value",
+      type: "string | number",
+      description: "Controlled value.",
+    },
+    {
+      prop: "defaultValue",
+      type: "string | number",
+      description: "Initial value when uncontrolled.",
+    },
+    {
+      prop: "placeholder",
+      type: "string",
+      description: "Hint text shown while the input is empty.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables the input and dims it.",
+    },
+    {
+      prop: "aria-invalid",
+      type: "boolean",
+      description: "Applies the destructive border and ring.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default styles.",
+    },
+  ]}
+/>
+
+## RTL
+
+Text alignment and padding follow the document direction. Values that are always left-to-right,
+such as email addresses or URLs, can keep `dir="ltr"` on the input itself while the rest of the
+form stays right-to-left.

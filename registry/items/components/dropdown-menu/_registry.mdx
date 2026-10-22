@@ -1,0 +1,253 @@
+---
+name: dropdown-menu
+type: registry:ui
+title: Dropdown Menu
+description: Displays a menu to the user, such as a set of actions or functions, triggered by a button.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - "@tabler/icons-react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/menu
+  shadcn: https://ui.shadcn.com/docs/components/base/dropdown-menu
+---
+
+## Anatomy
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger />
+  <DropdownMenuContent>
+    <DropdownMenuGroup>
+      <DropdownMenuLabel />
+      <DropdownMenuItem>
+        <DropdownMenuShortcut />
+      </DropdownMenuItem>
+    </DropdownMenuGroup>
+    <DropdownMenuSeparator />
+    <DropdownMenuCheckboxItem />
+    <DropdownMenuRadioGroup>
+      <DropdownMenuRadioItem />
+    </DropdownMenuRadioGroup>
+    <DropdownMenuSub>
+      <DropdownMenuSubTrigger />
+      <DropdownMenuSubContent />
+    </DropdownMenuSub>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## Usage
+
+```tsx
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+```
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger render={<Button variant="outline" />}>My account</DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem>Profile</DropdownMenuItem>
+    <DropdownMenuItem>Umrah bookings</DropdownMenuItem>
+    <DropdownMenuItem variant="destructive">Log out</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+`DropdownMenuLabel` must be placed inside a `DropdownMenuGroup`, which gives the group its accessible
+name.
+
+## Examples
+
+### Checkboxes
+
+<Preview name="checkboxes" />
+
+### Radio Group
+
+<Preview name="radio-group" />
+
+### Submenu
+
+<Preview name="submenu" />
+
+### Destructive and Disabled Items
+
+Set `variant="destructive"` for dangerous actions and `disabled` for unavailable ones.
+
+<Preview name="destructive" />
+
+## API Reference
+
+### DropdownMenu
+
+The root that holds the open state. Built on Base UI `Menu.Root`.
+
+<PropsTable
+  rows={[
+    { prop: "open", type: "boolean", description: "Controlled open state." },
+    {
+      prop: "defaultOpen",
+      type: "boolean",
+      default: "false",
+      description: "Initial open state when uncontrolled.",
+    },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean, eventDetails) => void",
+      description: "Called when the menu opens or closes.",
+    },
+    { prop: "modal", type: "boolean", default: "true", description: "Locks page scroll and outside interaction while open." },
+    { prop: "loopFocus", type: "boolean", default: "true", description: "Wraps keyboard focus at the ends of the list." },
+    { prop: "disabled", type: "boolean", default: "false", description: "Disables the whole menu." },
+  ]}
+/>
+
+### DropdownMenuTrigger
+
+Toggles the menu. Built on Base UI `Menu.Trigger`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Renders the trigger as another element, such as a Button.",
+    },
+  ]}
+/>
+
+### DropdownMenuContent
+
+The floating list, rendered in a portal. Built on Base UI `Menu.Popup` and `Menu.Positioner`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "side",
+      type: '"top" | "bottom" | "left" | "right" | "inline-start" | "inline-end"',
+      default: '"bottom"',
+      description: "Side of the trigger to place the menu on.",
+    },
+    { prop: "sideOffset", type: "number", default: "4", description: "Distance from the trigger in pixels." },
+    {
+      prop: "align",
+      type: '"start" | "center" | "end"',
+      default: '"start"',
+      description: "Alignment along the trigger edge.",
+    },
+    { prop: "alignOffset", type: "number", default: "0", description: "Offset along the alignment axis." },
+    { prop: "className", type: "string", description: "Additional classes for the list." },
+  ]}
+/>
+
+### DropdownMenuItem
+
+A single action. Built on Base UI `Menu.Item`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "variant",
+      type: '"default" | "destructive"',
+      default: '"default"',
+      description: "Visual style of the item.",
+    },
+    { prop: "inset", type: "boolean", description: "Adds start padding to align with items that have icons." },
+    { prop: "disabled", type: "boolean", default: "false", description: "Disables the item." },
+    { prop: "closeOnClick", type: "boolean", default: "true", description: "Closes the menu when the item is clicked." },
+    { prop: "onClick", type: "(event) => void", description: "Called when the item is activated." },
+  ]}
+/>
+
+### DropdownMenuCheckboxItem
+
+A toggleable item with a check indicator at the inline end. Built on Base UI `Menu.CheckboxItem`.
+
+<PropsTable
+  rows={[
+    { prop: "checked", type: "boolean", description: "Controlled checked state." },
+    { prop: "defaultChecked", type: "boolean", default: "false", description: "Initial checked state." },
+    {
+      prop: "onCheckedChange",
+      type: "(checked: boolean, eventDetails) => void",
+      description: "Called when the checked state changes.",
+    },
+    { prop: "inset", type: "boolean", description: "Adds start padding." },
+  ]}
+/>
+
+### DropdownMenuRadioGroup, DropdownMenuRadioItem
+
+A group of mutually exclusive items. Built on Base UI `Menu.RadioGroup` and `Menu.RadioItem`.
+
+<PropsTable
+  rows={[
+    { prop: "value", type: "any", description: "Controlled selected value, set on the group." },
+    { prop: "defaultValue", type: "any", description: "Initial selected value, set on the group." },
+    {
+      prop: "onValueChange",
+      type: "(value, eventDetails) => void",
+      description: "Called on the group when the selection changes.",
+    },
+    { prop: "value (item)", type: "any", description: "Value of a radio item." },
+  ]}
+/>
+
+### DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent
+
+A nested menu. Built on Base UI `Menu.SubmenuRoot` and `Menu.SubmenuTrigger`. The sub content opens
+on the `inline-end` side by default.
+
+<PropsTable
+  rows={[
+    { prop: "inset", type: "boolean", description: "Adds start padding to the sub trigger." },
+    {
+      prop: "side",
+      type: '"top" | "bottom" | "left" | "right" | "inline-start" | "inline-end"',
+      default: '"inline-end"',
+      description: "Side of the sub trigger to place the sub content on.",
+    },
+    { prop: "alignOffset", type: "number", default: "-3", description: "Offset of the sub content." },
+  ]}
+/>
+
+### DropdownMenuGroup, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut
+
+`DropdownMenuGroup` and `DropdownMenuLabel` are built on Base UI `Menu.Group` and `Menu.GroupLabel`.
+`DropdownMenuShortcut` is a muted span pushed to the inline end of an item.
+
+<PropsTable
+  rows={[
+    { prop: "inset", type: "boolean", description: "Adds start padding to the label." },
+    { prop: "className", type: "string", description: "Additional classes." },
+  ]}
+/>
+
+## RTL
+
+Indicators, shortcuts and insets use logical properties, and submenus open on the `inline-end` side,
+so the menu layout mirrors in Arabic without extra props. The submenu chevron is rotated with
+`rtl:rotate-180` so it always points toward the submenu.
+
+The menu is rendered in a portal outside your RTL subtree, so it follows the nearest
+`DirectionProvider`. Wrap RTL apps with `<DirectionProvider direction="rtl">` from the
+`direction` item so the menu mirrors correctly.

@@ -1,0 +1,175 @@
+---
+name: breadcrumb
+type: registry:ui
+title: Breadcrumb
+description: Displays the path to the current resource using a hierarchy of links.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - "@tabler/icons-react"
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/breadcrumb
+---
+
+## Anatomy
+
+```tsx
+<Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+      <BreadcrumbLink />
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbEllipsis />
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbPage />
+    </BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
+```
+
+## Usage
+
+```tsx
+import {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+```
+
+```tsx
+<Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+      <BreadcrumbLink href="/masjids">Masjids</BreadcrumbLink>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbPage>Masjid Quba</BreadcrumbPage>
+    </BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
+```
+
+Use `BreadcrumbLink` for every ancestor and `BreadcrumbPage` for the current page, which is marked
+with `aria-current="page"`.
+
+## Examples
+
+### Custom Separator
+
+Pass any element as the children of `BreadcrumbSeparator` to replace the default chevron.
+
+<Preview name="custom-separator" />
+
+### Collapsed
+
+Use `BreadcrumbEllipsis` to shorten long paths.
+
+<Preview name="collapsed" />
+
+### With Icon
+
+<Preview name="with-icon" />
+
+## API Reference
+
+### Breadcrumb
+
+A `<nav>` element with `aria-label="breadcrumb"`. Accepts every native `<nav>` attribute.
+
+<PropsTable
+  rows={[{ prop: "className", type: "string", description: "Additional classes for the nav." }]}
+/>
+
+### BreadcrumbList
+
+An ordered list (`<ol>`) that wraps and spaces the items.
+
+<PropsTable
+  rows={[{ prop: "className", type: "string", description: "Additional classes for the list." }]}
+/>
+
+### BreadcrumbItem
+
+A list item (`<li>`) holding one link or page.
+
+<PropsTable
+  rows={[{ prop: "className", type: "string", description: "Additional classes for the item." }]}
+/>
+
+### BreadcrumbLink
+
+Renders an `<a>` by default through the Base UI `useRender` hook.
+
+<PropsTable
+  rows={[
+    {
+      prop: "href",
+      type: "string",
+      description: "Destination of the link.",
+    },
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Replaces the rendered element, e.g. with a router link component.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes for the link.",
+    },
+  ]}
+/>
+
+### BreadcrumbPage
+
+The current page. Renders a `<span>` with `aria-current="page"`.
+
+<PropsTable
+  rows={[{ prop: "className", type: "string", description: "Additional classes for the page label." }]}
+/>
+
+### BreadcrumbSeparator
+
+A presentational `<li>` hidden from assistive technology.
+
+<PropsTable
+  rows={[
+    {
+      prop: "children",
+      type: "ReactNode",
+      default: "<IconChevronRight />",
+      description: "Custom separator content.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes for the separator.",
+    },
+  ]}
+/>
+
+### BreadcrumbEllipsis
+
+A presentational icon that stands in for collapsed items, with a screen-reader label.
+
+<PropsTable
+  rows={[{ prop: "className", type: "string", description: "Additional classes for the ellipsis." }]}
+/>
+
+## RTL
+
+The list follows the document direction, and the default chevron separator is rotated with
+`rtl:rotate-180` so it always points along the reading direction. When you pass a custom
+directional separator as children, mirror it yourself with `rtl:-scale-x-100`.

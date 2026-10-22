@@ -1,0 +1,128 @@
+---
+name: slider
+type: registry:ui
+title: Slider
+description: An input where the user selects a value from within a given range.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/slider
+  shadcn: https://ui.shadcn.com/docs/components/base/slider
+---
+
+## Anatomy
+
+```tsx
+<Slider defaultValue={[50]} min={0} max={100} step={1} />
+```
+
+## Usage
+
+```tsx
+import { Slider } from "@/components/ui/slider";
+```
+
+```tsx
+<Slider aria-label="Sadaqah amount" defaultValue={[250]} min={10} max={1000} step={10} />
+```
+
+Always pass `value` or `defaultValue` as an array: the number of entries sets the number of thumbs.
+Without either, the slider renders two thumbs at `min` and `max`.
+
+## Examples
+
+### Range
+
+<Preview name="range" />
+
+### Step
+
+<Preview name="step" />
+
+### Vertical
+
+<Preview name="vertical" />
+
+### Disabled
+
+<Preview name="disabled" />
+
+## API Reference
+
+### Slider
+
+Built on the Base UI [Slider](https://base-ui.com/react/components/slider). Renders the control,
+track, range indicator and one thumb per value.
+
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "number[]",
+      description: "Controlled values, one per thumb.",
+    },
+    {
+      prop: "defaultValue",
+      type: "number[]",
+      description: "Initial values when uncontrolled.",
+    },
+    {
+      prop: "onValueChange",
+      type: "(value: number | number[], eventDetails) => void",
+      description: "Called continuously while a thumb moves.",
+    },
+    {
+      prop: "onValueCommitted",
+      type: "(value: number | number[], eventDetails) => void",
+      description: "Called when the user releases a thumb.",
+    },
+    {
+      prop: "min",
+      type: "number",
+      default: "0",
+      description: "Minimum value.",
+    },
+    {
+      prop: "max",
+      type: "number",
+      default: "100",
+      description: "Maximum value.",
+    },
+    {
+      prop: "step",
+      type: "number",
+      default: "1",
+      description: "Amount the value changes per step.",
+    },
+    {
+      prop: "orientation",
+      type: '"horizontal" | "vertical"',
+      default: '"horizontal"',
+      description: "Direction of the track. Vertical sliders need a parent with a height.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Prevents interaction and dims the slider.",
+    },
+    {
+      prop: "name",
+      type: "string",
+      description: "Field name submitted with the form.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes for the root.",
+    },
+  ]}
+/>
+
+## RTL
+
+Horizontal sliders read the nearest `dir` and fill from the inline start: from the right in
+Arabic and from the left in English.

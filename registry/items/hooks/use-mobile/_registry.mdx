@@ -1,0 +1,48 @@
+---
+name: use-mobile
+type: registry:hook
+title: useIsMobile
+description: A hook that reports whether the viewport is below the desktop breakpoint.
+categories:
+  - hooks
+files:
+  - path: use-mobile.ts
+    type: registry:hook
+---
+
+## Usage
+
+Call `useIsMobile` to switch between compact and full layouts. The hook subscribes to a
+`matchMedia` query with `useSyncExternalStore`, so it updates when the viewport crosses the
+breakpoint and returns `false` during server rendering.
+
+```tsx
+import { useIsMobile } from "@/hooks/use-mobile";
+
+// Your own app components.
+import { CompactPrayerTimes, WeeklyPrayerTimesTable } from "@/components/prayer-times";
+
+export function PrayerTimes() {
+  const isMobile = useIsMobile();
+
+  return isMobile ? <CompactPrayerTimes /> : <WeeklyPrayerTimesTable />;
+}
+```
+
+## API Reference
+
+### useIsMobile
+
+Takes no arguments. The breakpoint query is `(max-width: 63.999rem)`, matching the Tailwind `lg` breakpoint.
+
+<PropsTable
+  nameLabel="Return value"
+  rows={[
+    {
+      prop: "isMobile",
+      type: "boolean",
+      default: "false",
+      description: "True when the viewport is narrower than 64rem. Always false on the server.",
+    },
+  ]}
+/>

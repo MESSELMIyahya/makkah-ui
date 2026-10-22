@@ -3,10 +3,14 @@ name: use-copy-to-clipboard
 type: registry:hook
 title: useCopyToClipboard
 description: A small hook that copies text and tracks the latest copy result.
+categories:
+  - hooks
 files:
   - path: use-copy-to-clipboard.ts
     type: registry:hook
 ---
+
+## Usage
 
 Call `copy` with the text you want to place on the clipboard. The hook exposes the latest copy
 status so your UI can respond after the operation completes.
@@ -14,13 +18,53 @@ status so your UI can respond after the operation completes.
 ```tsx
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 
-export function CopyButton() {
+export function CopyAddress({ address }: { address: string }) {
   const copyState = useCopyToClipboard();
 
   return (
-    <button onClick={() => void copyState.copy("Copied from my app")}>
-      {copyState.status === "copied" ? "Copied" : "Copy"}
+    <button onClick={() => void copyState.copy(address)}>
+      {copyState.status === "copied" ? "Copied" : "Copy address"}
     </button>
   );
 }
 ```
+
+## API Reference
+
+### useCopyToClipboard
+
+Takes no arguments and returns the current state plus two actions.
+
+<PropsTable
+  nameLabel="Return value"
+  rows={[
+    {
+      prop: "status",
+      type: '"idle" | "copied" | "error"',
+      default: '"idle"',
+      description: "Result of the latest copy attempt.",
+    },
+    {
+      prop: "value",
+      type: "string | null",
+      default: "null",
+      description: "The text that was copied, when status is copied.",
+    },
+    {
+      prop: "error",
+      type: "Error | null",
+      default: "null",
+      description: "The failure, when status is error.",
+    },
+    {
+      prop: "copy",
+      type: "(value: string) => Promise<boolean>",
+      description: "Writes text to the clipboard and resolves to whether it succeeded.",
+    },
+    {
+      prop: "reset",
+      type: "() => void",
+      description: "Returns the state to idle.",
+    },
+  ]}
+/>

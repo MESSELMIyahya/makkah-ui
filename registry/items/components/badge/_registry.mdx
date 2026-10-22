@@ -1,0 +1,116 @@
+---
+name: badge
+type: registry:ui
+title: Badge
+description: Displays a badge or a component that looks like a badge.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - class-variance-authority
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/badge
+---
+
+## Anatomy
+
+```tsx
+<Badge>
+  <Icon data-icon="inline-start" />
+  Label
+</Badge>
+```
+
+## Usage
+
+```tsx
+import { Badge } from "@/components/ui/badge";
+```
+
+```tsx
+<Badge variant="secondary">Zakat paid</Badge>
+```
+
+Badges render a `span` by default. Use the `render` prop to turn one into a link while keeping its
+styles.
+
+## Variants
+
+### Default
+
+<Preview name="default-variant" />
+
+### Secondary
+
+<Preview name="secondary" />
+
+### Destructive
+
+<Preview name="destructive" />
+
+### Outline
+
+<Preview name="outline" />
+
+### Ghost
+
+<Preview name="ghost" />
+
+### Link
+
+<Preview name="link" />
+
+## States
+
+### With Icon
+
+Mark icons with `data-icon="inline-start"` or `data-icon="inline-end"` to tighten the padding on that side.
+
+<Preview name="with-icon" />
+
+### As Link
+
+<Preview name="as-link" />
+
+## API Reference
+
+### Badge
+
+Built with the Base UI `useRender` hook, so it accepts a `render` prop and every native `span` attribute.
+
+<PropsTable
+  rows={[
+    {
+      prop: "variant",
+      type: '"default" | "secondary" | "destructive" | "outline" | "ghost" | "link"',
+      default: '"default"',
+      description: "Visual style of the badge.",
+    },
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Replaces the rendered span, for example with a link.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the variant classes.",
+    },
+  ]}
+/>
+
+### badgeVariants
+
+A `cva` helper that returns the badge classes for use on other elements.
+
+```tsx
+import { badgeVariants } from "@/components/ui/badge";
+
+<span className={badgeVariants({ variant: "outline" })}>Ramadan 1448</span>;
+```
+
+## RTL
+
+Icon padding uses logical properties (`ps`/`pe`). Mirror directional icons such as arrows with
+`rtl:-scale-x-100`, as in the With Icon example.

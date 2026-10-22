@@ -1,0 +1,173 @@
+---
+name: calendar
+type: registry:ui
+title: Calendar
+description: A date field component that allows users to enter and edit a date, built on React DayPicker.
+categories:
+  - core
+dependencies:
+  - react-day-picker
+  - "@tabler/icons-react"
+  - cn
+localRegistryDependencies:
+  - button
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/calendar
+---
+
+## Anatomy
+
+```tsx
+<Calendar mode="single" selected={date} onSelect={setDate} />
+```
+
+## Usage
+
+```tsx
+import * as React from "react";
+
+import { Calendar } from "@/components/ui/calendar";
+```
+
+```tsx
+const [date, setDate] = React.useState<Date | undefined>(new Date());
+
+<Calendar mode="single" selected={date} onSelect={setDate} className="rounded-3xl border" />;
+```
+
+`Calendar` wraps [React DayPicker](https://daypicker.dev) and accepts all of its props. Localize it
+with a locale from `react-day-picker/locale`, such as `arSA`, and pass `numerals="arab"` for
+Arabic-Indic digits.
+
+## Examples
+
+### Range
+
+Set `mode="range"` and `numberOfMonths={2}` to pick the start and end of a trip.
+
+<Preview name="range" />
+
+### Month and Year Dropdowns
+
+Set `captionLayout="dropdown"` with `startMonth` and `endMonth` to jump between months and years.
+
+<Preview name="dropdown" />
+
+### Disabled Days
+
+Pass matchers to `disabled`, such as a day of the week or a date range.
+
+<Preview name="disabled-days" />
+
+### Arabic Locale and Hijri Date
+
+The grid uses the Gregorian calendar with the `arSA` locale and Arabic-Indic numerals. The matching
+Hijri date is formatted with `Intl.DateTimeFormat` and the `islamic-umalqura` calendar.
+
+<Preview name="arabic-locale" />
+
+## API Reference
+
+### Calendar
+
+Built on the React DayPicker `DayPicker` component. Every DayPicker prop is supported; the most common
+ones are listed here.
+
+<PropsTable
+  rows={[
+    {
+      prop: "mode",
+      type: '"single" | "multiple" | "range"',
+      description: "Selection mode.",
+    },
+    {
+      prop: "selected",
+      type: "Date | Date[] | DateRange",
+      description: "The selected value for the current mode.",
+    },
+    {
+      prop: "onSelect",
+      type: "(selected, triggerDate, modifiers, event) => void",
+      description: "Called when the selection changes.",
+    },
+    {
+      prop: "captionLayout",
+      type: '"label" | "dropdown" | "dropdown-months" | "dropdown-years"',
+      default: '"label"',
+      description: "Shows the month caption as text or as dropdowns.",
+    },
+    {
+      prop: "buttonVariant",
+      type: '"default" | "secondary" | "outline" | "ghost" | "destructive" | "link"',
+      default: '"ghost"',
+      description: "Button variant for the previous and next month buttons.",
+    },
+    {
+      prop: "showOutsideDays",
+      type: "boolean",
+      default: "true",
+      description: "Shows days from the previous and next months.",
+    },
+    {
+      prop: "locale",
+      type: "DayPickerLocale",
+      description: "Locale for month and weekday names, e.g. arSA from react-day-picker/locale.",
+    },
+    {
+      prop: "numerals",
+      type: '"latn" | "arab" | "arabext" | ...',
+      default: '"latn"',
+      description: "Numbering system for the day numbers.",
+    },
+    {
+      prop: "numberOfMonths",
+      type: "number",
+      default: "1",
+      description: "How many months to show side by side.",
+    },
+    {
+      prop: "disabled",
+      type: "Matcher | Matcher[]",
+      description: "Days that cannot be selected.",
+    },
+    {
+      prop: "defaultMonth",
+      type: "Date",
+      description: "The month shown on first render.",
+    },
+    {
+      prop: "startMonth / endMonth",
+      type: "Date",
+      description: "Limits navigation and the dropdown range.",
+    },
+    {
+      prop: "showWeekNumber",
+      type: "boolean",
+      default: "false",
+      description: "Shows the week number column.",
+    },
+    {
+      prop: "classNames",
+      type: "Partial<ClassNames>",
+      description: "Overrides the classes of individual DayPicker parts.",
+    },
+  ]}
+/>
+
+### CalendarDayButton
+
+The `Button` used for each day. Use it when replacing the `DayButton` component through `components`.
+
+<PropsTable
+  rows={[
+    { prop: "day", type: "CalendarDay", description: "The day rendered by the button." },
+    { prop: "modifiers", type: "Modifiers", description: "Selection and state modifiers for the day." },
+    { prop: "locale", type: "Partial<Locale>", description: "Locale used to format the data-day attribute." },
+  ]}
+/>
+
+## RTL
+
+The calendar inherits the direction from the nearest `dir` attribute, so weekdays run from right to
+left in Arabic layouts. The previous and next chevrons are mirrored with CSS, so do not also pass
+`dir="rtl"` to `Calendar`: DayPicker would swap the chevrons a second time.

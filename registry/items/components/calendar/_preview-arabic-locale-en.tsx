@@ -1,0 +1,29 @@
+"use client";
+
+import * as React from "react";
+import { arSA } from "react-day-picker/locale";
+
+import { Calendar } from "./calendar";
+
+const hijri = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", { dateStyle: "long" });
+
+export function Preview() {
+  const [date, setDate] = React.useState<Date | undefined>(new Date(2027, 1, 8));
+
+  return (
+    <div className="flex flex-col items-center gap-3">
+      <Calendar
+        mode="single"
+        selected={date}
+        onSelect={setDate}
+        locale={arSA}
+        numerals="arab"
+        defaultMonth={new Date(2027, 1, 1)}
+        className="rounded-3xl border"
+      />
+      <p className="text-sm text-muted-foreground">
+        {date ? `Hijri date: ${hijri.format(date)}` : "Choose a date"}
+      </p>
+    </div>
+  );
+}

@@ -1,0 +1,111 @@
+---
+name: direction
+type: registry:ui
+title: Direction
+description: Sets the text direction for Base UI components and reads it anywhere in the tree.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+links:
+  baseUi: https://base-ui.com/react/utils/direction-provider
+  shadcn: https://ui.shadcn.com/docs/components/base/direction
+---
+
+## Anatomy
+
+```tsx
+<DirectionProvider direction="rtl">{children}</DirectionProvider>
+```
+
+## Usage
+
+```tsx
+import { DirectionProvider, useDirection } from "@/components/ui/direction";
+```
+
+Base UI reads the text direction from React context, not from the `dir` attribute. Wrap your app in
+`DirectionProvider` next to `<html dir="rtl" lang="ar">` so popups, sliders, menus and keyboard
+navigation behave correctly in right-to-left layouts.
+
+```tsx
+import { DirectionProvider } from "@/components/ui/direction";
+
+export function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html dir="rtl" lang="ar">
+      <body>
+        <DirectionProvider direction="rtl">{children}</DirectionProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+Read the current direction anywhere below the provider with `useDirection`. Compare it with `"rtl"`
+when you need a boolean.
+
+```tsx
+import { useDirection } from "@/components/ui/direction";
+
+export function NextPrayerLabel() {
+  const isRtl = useDirection() === "rtl";
+
+  return <span>{isRtl ? "الصلاة القادمة" : "Next prayer"}</span>;
+}
+```
+
+## Examples
+
+### Nested Providers
+
+Each subtree can set its own direction, for example an English widget inside an Arabic page. Keep the
+`dir` attribute and the provider in sync.
+
+<Preview name="nested" />
+
+## API Reference
+
+### DirectionProvider
+
+Re-exported from the Base UI [DirectionProvider](https://base-ui.com/react/utils/direction-provider).
+
+<PropsTable
+  rows={[
+    {
+      prop: "direction",
+      type: '"ltr" | "rtl"',
+      default: '"ltr"',
+      description: "The text direction applied to Base UI components in this subtree.",
+    },
+    {
+      prop: "children",
+      type: "React.ReactNode",
+      description: "The subtree that reads the direction.",
+    },
+  ]}
+/>
+
+### useDirection
+
+Takes no arguments. Re-exported from Base UI.
+
+<PropsTable
+  nameLabel="Return value"
+  rows={[
+    {
+      prop: "direction",
+      type: '"ltr" | "rtl"',
+      default: '"ltr"',
+      description: "The direction from the nearest DirectionProvider, or ltr without one.",
+    },
+  ]}
+/>
+
+## RTL
+
+The `dir` attribute controls browser layout and logical CSS properties, while `DirectionProvider`
+controls Base UI behavior such as arrow-key navigation, slider value direction and popup alignment. Set
+both. Popups such as select, combobox and menus are portaled to the body, outside your `dir` subtree;
+Makkah UI components read `useDirection()` and set `dir="rtl"` on the portaled popup, so they only mirror
+when a `DirectionProvider` is present. Mirror directional icons with `rtl:-scale-x-100`.

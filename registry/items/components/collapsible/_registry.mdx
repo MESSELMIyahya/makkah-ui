@@ -1,0 +1,122 @@
+---
+name: collapsible
+type: registry:ui
+title: Collapsible
+description: An interactive component which expands and collapses a panel.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+links:
+  baseUi: https://base-ui.com/react/components/collapsible
+  shadcn: https://ui.shadcn.com/docs/components/base/collapsible
+---
+
+## Anatomy
+
+```tsx
+<Collapsible>
+  <CollapsibleTrigger />
+  <CollapsibleContent />
+</Collapsible>
+```
+
+## Usage
+
+```tsx
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+```
+
+```tsx
+<Collapsible>
+  <CollapsibleTrigger>Package includes</CollapsibleTrigger>
+  <CollapsibleContent>Flights, hotel, and visa processing.</CollapsibleContent>
+</Collapsible>
+```
+
+The parts are unstyled. Use the `render` prop on `CollapsibleTrigger` to render a `Button`, and the
+`data-panel-open` attribute on the trigger to style the open state.
+
+## Examples
+
+### Default Open
+
+<Preview name="default-open" />
+
+### Controlled
+
+<Preview name="controlled" />
+
+### Disabled
+
+<Preview name="disabled" />
+
+## API Reference
+
+### Collapsible
+
+Built on Base UI `Collapsible.Root`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "defaultOpen",
+      type: "boolean",
+      default: "false",
+      description: "Whether the panel is open on first render, when uncontrolled.",
+    },
+    { prop: "open", type: "boolean", description: "Whether the panel is open, when controlled." },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean, eventDetails) => void",
+      description: "Called when the panel opens or closes.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Prevents the panel from being toggled.",
+    },
+  ]}
+/>
+
+### CollapsibleTrigger
+
+Built on Base UI `Collapsible.Trigger`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Replaces the rendered button, for example with a Button component.",
+    },
+    { prop: "className", type: "string", description: "Additional classes." },
+  ]}
+/>
+
+### CollapsibleContent
+
+Built on Base UI `Collapsible.Panel`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "keepMounted",
+      type: "boolean",
+      default: "false",
+      description: "Keeps the panel in the DOM while closed.",
+    },
+    {
+      prop: "hiddenUntilFound",
+      type: "boolean",
+      default: "false",
+      description: "Lets the browser find-in-page search open the panel.",
+    },
+    { prop: "className", type: "string", description: "Additional classes." },
+  ]}
+/>

@@ -1,0 +1,162 @@
+---
+name: popover
+type: registry:ui
+title: Popover
+description: Displays rich content in a floating panel, triggered by a button.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/popover
+  shadcn: https://ui.shadcn.com/docs/components/base/popover
+---
+
+## Anatomy
+
+```tsx
+<Popover>
+  <PopoverTrigger />
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle />
+      <PopoverDescription />
+    </PopoverHeader>
+  </PopoverContent>
+</Popover>
+```
+
+## Usage
+
+```tsx
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+```
+
+```tsx
+<Popover>
+  <PopoverTrigger render={<Button variant="outline" />}>Adjust times</PopoverTrigger>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Prayer time adjustments</PopoverTitle>
+      <PopoverDescription>Shift each time to match your local masjid.</PopoverDescription>
+    </PopoverHeader>
+  </PopoverContent>
+</Popover>
+```
+
+The popover is positioned next to its trigger, flips when there is not enough space, and closes on
+outside click or Escape.
+
+## Examples
+
+### Sides
+
+Use `side` on `PopoverContent`. Prefer `inline-start` and `inline-end` over `left` and `right` so
+the popover follows the reading direction.
+
+<Preview name="sides" />
+
+### Alignment
+
+Use `align` to line the popover up with the start, center, or end of the trigger.
+
+<Preview name="align" />
+
+## API Reference
+
+### Popover
+
+The root that holds the open state. Built on Base UI `Popover.Root`.
+
+<PropsTable
+  rows={[
+    { prop: "open", type: "boolean", description: "Controlled open state." },
+    {
+      prop: "defaultOpen",
+      type: "boolean",
+      default: "false",
+      description: "Initial open state when uncontrolled.",
+    },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean, eventDetails) => void",
+      description: "Called when the popover opens or closes.",
+    },
+    {
+      prop: "modal",
+      type: 'boolean | "trap-focus"',
+      default: "false",
+      description: "Locks scroll and traps focus while open.",
+    },
+  ]}
+/>
+
+### PopoverTrigger
+
+Toggles the popover. Built on Base UI `Popover.Trigger`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Renders the trigger as another element, such as a Button.",
+    },
+    {
+      prop: "openOnHover",
+      type: "boolean",
+      default: "false",
+      description: "Also opens the popover when the trigger is hovered.",
+    },
+    { prop: "delay", type: "number", description: "Hover delay in milliseconds when openOnHover is set." },
+  ]}
+/>
+
+### PopoverContent
+
+The floating panel, rendered in a portal. Built on Base UI `Popover.Popup` and `Popover.Positioner`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "side",
+      type: '"top" | "bottom" | "left" | "right" | "inline-start" | "inline-end"',
+      default: '"bottom"',
+      description: "Side of the trigger to place the popover on.",
+    },
+    { prop: "sideOffset", type: "number", default: "4", description: "Distance from the trigger in pixels." },
+    {
+      prop: "align",
+      type: '"start" | "center" | "end"',
+      default: '"center"',
+      description: "Alignment along the trigger edge.",
+    },
+    { prop: "alignOffset", type: "number", default: "0", description: "Offset along the alignment axis." },
+    { prop: "className", type: "string", description: "Additional classes for the panel." },
+  ]}
+/>
+
+### PopoverHeader, PopoverTitle, PopoverDescription
+
+`PopoverHeader` is a layout container. `PopoverTitle` and `PopoverDescription` are built on Base UI
+`Popover.Title` and `Popover.Description` and label the popup for assistive technology.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+## RTL
+
+`inline-start` and `inline-end` resolve against the nearest direction, so the same code opens the
+popover on the right in Arabic and on the left in English. `align="start"` is also logical.
+
+The popover is rendered in a portal outside your RTL subtree, so it follows the nearest
+`DirectionProvider`. Wrap RTL apps with `<DirectionProvider direction="rtl">` from the
+`direction` item so the popover mirrors correctly.

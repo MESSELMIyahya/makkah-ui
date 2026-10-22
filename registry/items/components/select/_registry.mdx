@@ -1,0 +1,286 @@
+---
+name: select
+type: registry:ui
+title: Select
+description: Displays a list of options for the user to pick from, triggered by a button.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - "@tabler/icons-react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/select
+  shadcn: https://ui.shadcn.com/docs/components/base/select
+---
+
+## Anatomy
+
+```tsx
+<Select>
+  <SelectTrigger>
+    <SelectValue />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectGroup>
+      <SelectLabel />
+      <SelectItem />
+    </SelectGroup>
+    <SelectSeparator />
+  </SelectContent>
+</Select>
+```
+
+## Usage
+
+```tsx
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+```
+
+```tsx
+const cities = [
+  { label: "Makkah", value: "makkah" },
+  { label: "Madinah", value: "madinah" },
+];
+
+<Select items={cities}>
+  <SelectTrigger aria-label="City">
+    <SelectValue placeholder="Select a city" />
+  </SelectTrigger>
+  <SelectContent>
+    {cities.map((city) => (
+      <SelectItem key={city.value} value={city.value}>
+        {city.label}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>;
+```
+
+Pass `items` to `Select` so `SelectValue` can show the label of the selected value before the
+popup has opened.
+
+## Examples
+
+### Groups
+
+<Preview name="groups" />
+
+### Multiple
+
+Set `multiple` to let the user pick several options. The value becomes an array, so pass an array to
+`defaultValue` or `value`, and give `SelectValue` a function child to summarize the selection, for
+example by joining the labels or counting them.
+
+<Preview name="multiple" />
+
+### Sizes
+
+<Preview name="sizes" />
+
+### Disabled
+
+Disable the whole select with `disabled` on `Select`, or a single option with `disabled` on
+`SelectItem`.
+
+<Preview name="disabled" />
+
+### Invalid
+
+<Preview name="invalid" />
+
+## API Reference
+
+### Select
+
+Built on Base UI `Select.Root`. Manages the value and open state.
+
+<PropsTable
+  rows={[
+    {
+      prop: "items",
+      type: "Array<{ value, label }> | Record<string, ReactNode>",
+      description: "Value to label map used by SelectValue.",
+    },
+    {
+      prop: "value",
+      type: "unknown | unknown[]",
+      description: "Controlled selected value. An array when multiple is set.",
+    },
+    {
+      prop: "defaultValue",
+      type: "unknown | unknown[]",
+      description: "Initial value when uncontrolled. An array when multiple is set.",
+    },
+    {
+      prop: "onValueChange",
+      type: "(value, eventDetails) => void",
+      description: "Called when the selected value changes.",
+    },
+    {
+      prop: "multiple",
+      type: "boolean",
+      default: "false",
+      description: "Allows selecting several values. The value becomes an array.",
+    },
+    {
+      prop: "open",
+      type: "boolean",
+      description: "Controlled open state.",
+    },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean, eventDetails) => void",
+      description: "Called when the popup opens or closes.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables the select.",
+    },
+    {
+      prop: "name",
+      type: "string",
+      description: "Field name submitted with the form.",
+    },
+  ]}
+/>
+
+### SelectTrigger
+
+Built on Base UI `Select.Trigger`. Renders a selector icon at the inline end.
+
+<PropsTable
+  rows={[
+    {
+      prop: "size",
+      type: '"sm" | "default"',
+      default: '"default"',
+      description: "Trigger height.",
+    },
+    {
+      prop: "aria-invalid",
+      type: "boolean",
+      description: "Applies the destructive border and ring.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes, e.g. a width.",
+    },
+  ]}
+/>
+
+### SelectValue
+
+Built on Base UI `Select.Value`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "placeholder",
+      type: "ReactNode",
+      description: "Shown when no value is selected.",
+    },
+    {
+      prop: "children",
+      type: "ReactNode | (value) => ReactNode",
+      description: "Custom rendering of the selected value. Receives an array when multiple is set.",
+    },
+  ]}
+/>
+
+### SelectContent
+
+Built on Base UI `Select.Popup` inside a portal and positioner, with scroll arrows.
+
+<PropsTable
+  rows={[
+    {
+      prop: "side",
+      type: '"top" | "bottom" | "left" | "right" | "inline-start" | "inline-end"',
+      default: '"bottom"',
+      description: "Preferred side of the trigger.",
+    },
+    {
+      prop: "sideOffset",
+      type: "number",
+      default: "4",
+      description: "Distance from the trigger in pixels.",
+    },
+    {
+      prop: "align",
+      type: '"start" | "center" | "end"',
+      default: '"center"',
+      description: "Alignment against the trigger.",
+    },
+    {
+      prop: "alignOffset",
+      type: "number",
+      default: "0",
+      description: "Offset along the alignment axis.",
+    },
+    {
+      prop: "alignItemWithTrigger",
+      type: "boolean",
+      default: "true",
+      description: "Positions the popup so the selected item overlaps the trigger.",
+    },
+  ]}
+/>
+
+### SelectItem
+
+Built on Base UI `Select.Item`. Shows a check at the inline end when selected.
+
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "unknown",
+      description: "The value this option represents.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Prevents selecting this option.",
+    },
+  ]}
+/>
+
+### SelectGroup, SelectLabel and SelectSeparator
+
+`SelectGroup` groups related items, `SelectLabel` names a group, and `SelectSeparator` draws a line
+between groups.
+
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default styles.",
+    },
+  ]}
+/>
+
+## RTL
+
+The trigger icon, item padding and check indicator use logical properties, and item text aligns to
+the inline start, so the select mirrors in Arabic without changes. The popup is portaled to the body
+and follows the nearest `DirectionProvider`, so wrap RTL apps with `<DirectionProvider direction="rtl">`
+from the `direction` item.
+
+The item list is rendered in a portal outside your RTL subtree, so it follows the nearest
+`DirectionProvider`. Wrap RTL apps with `<DirectionProvider direction="rtl">` from the
+`direction` item so the item list mirrors correctly.

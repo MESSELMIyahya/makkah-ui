@@ -1,0 +1,116 @@
+---
+name: switch
+type: registry:ui
+title: Switch
+description: A control that allows the user to toggle a setting on or off.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/switch
+  shadcn: https://ui.shadcn.com/docs/components/base/switch
+---
+
+## Anatomy
+
+```tsx
+<Switch id="setting" />
+<Label htmlFor="setting">Label</Label>
+```
+
+## Usage
+
+```tsx
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+```
+
+```tsx
+<Switch id="adhan-alerts" defaultChecked />
+<Label htmlFor="adhan-alerts">Adhan notifications</Label>
+```
+
+Use a switch for settings that apply immediately, such as notifications. For choices that are
+submitted with a form, prefer a checkbox.
+
+## Sizes
+
+<Preview name="sizes" />
+
+## Examples
+
+### With Description
+
+<Preview name="with-description" />
+
+### Prayer Notifications
+
+A controlled list of switches with `checked` and `onCheckedChange`.
+
+<Preview name="prayer-notifications" />
+
+### Disabled
+
+<Preview name="disabled" />
+
+## API Reference
+
+### Switch
+
+Built on the Base UI [Switch](https://base-ui.com/react/components/switch). Renders the root and
+its thumb.
+
+<PropsTable
+  rows={[
+    {
+      prop: "size",
+      type: '"sm" | "default"',
+      default: '"default"',
+      description: "Track and thumb size.",
+    },
+    {
+      prop: "checked",
+      type: "boolean",
+      description: "Controlled checked state.",
+    },
+    {
+      prop: "defaultChecked",
+      type: "boolean",
+      default: "false",
+      description: "Initial checked state when uncontrolled.",
+    },
+    {
+      prop: "onCheckedChange",
+      type: "(checked: boolean, eventDetails) => void",
+      description: "Called when the switch is toggled.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Prevents interaction and dims the switch.",
+    },
+    {
+      prop: "name",
+      type: "string",
+      description: "Field name submitted with the form.",
+    },
+    {
+      prop: "aria-invalid",
+      type: "boolean",
+      description: "Applies the destructive border and ring.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default styles.",
+    },
+  ]}
+/>
+
+## RTL
+
+The thumb moves toward the inline end when checked: to the left in Arabic and to the right in
+English. No extra classes are needed.

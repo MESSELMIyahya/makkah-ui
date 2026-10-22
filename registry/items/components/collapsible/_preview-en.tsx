@@ -1,0 +1,27 @@
+"use client";
+
+import { IconSelector } from "@tabler/icons-react";
+
+import { Button } from "../button/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./collapsible";
+
+export function Preview() {
+  return (
+    <Collapsible className="grid w-full max-w-sm gap-2">
+      <div className="flex items-center justify-between gap-4 px-1">
+        <h4 className="text-sm font-medium">Adhan alerts enabled for 4 prayers</h4>
+        <CollapsibleTrigger
+          render={<Button variant="ghost" size="icon-sm" aria-label="Toggle adhan alerts" />}
+        >
+          <IconSelector />
+        </CollapsibleTrigger>
+      </div>
+      <div className="rounded-lg border px-4 py-2 text-sm">Fajr · full adhan</div>
+      <CollapsibleContent className="grid gap-2">
+        <div className="rounded-lg border px-4 py-2 text-sm">Dhuhr · short tone</div>
+        <div className="rounded-lg border px-4 py-2 text-sm">Asr · short tone</div>
+        <div className="rounded-lg border px-4 py-2 text-sm">Maghrib · full adhan</div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}

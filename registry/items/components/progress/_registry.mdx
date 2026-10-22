@@ -1,0 +1,131 @@
+---
+name: progress
+type: registry:ui
+title: Progress
+description: Displays an indicator showing the completion progress of a task.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/progress
+  shadcn: https://ui.shadcn.com/docs/components/base/progress
+---
+
+## Anatomy
+
+```tsx
+<Progress>
+  <ProgressLabel />
+  <ProgressValue />
+</Progress>
+```
+
+`Progress` renders `ProgressTrack` and `ProgressIndicator` for you after its children.
+
+## Usage
+
+```tsx
+import { Progress, ProgressLabel, ProgressValue } from "@/components/ui/progress";
+```
+
+```tsx
+<Progress value={12} max={30}>
+  <ProgressLabel>Ramadan fasts</ProgressLabel>
+  <ProgressValue />
+</Progress>
+```
+
+Give every progress bar a name, either with `ProgressLabel` or an `aria-label`.
+
+## Examples
+
+### Basic
+
+<Preview name="basic" />
+
+### With Label
+
+`ProgressValue` shows the formatted percentage by default.
+
+<Preview name="with-label" />
+
+### Indeterminate
+
+Pass `value={null}` when the amount of work is unknown.
+
+<Preview name="indeterminate" />
+
+### Controlled
+
+Pass a function to `ProgressValue` to format the value yourself.
+
+<Preview name="controlled" />
+
+## API Reference
+
+### Progress
+
+Built on Base UI `Progress.Root`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "number | null",
+      description: "Current value. Use null for an indeterminate state.",
+    },
+    { prop: "min", type: "number", default: "0", description: "Minimum value." },
+    { prop: "max", type: "number", default: "100", description: "Maximum value." },
+    {
+      prop: "format",
+      type: "Intl.NumberFormatOptions",
+      description: "Options used to format the value shown by ProgressValue.",
+    },
+    {
+      prop: "locale",
+      type: "Intl.LocalesArgument",
+      description: "Locale used to format the value, e.g. ar-SA.",
+    },
+    {
+      prop: "getAriaValueText",
+      type: "(formattedValue: string, value: number | null) => string",
+      description: "Builds a custom accessible value text.",
+    },
+    { prop: "className", type: "string", description: "Additional classes." },
+  ]}
+/>
+
+### ProgressLabel
+
+Built on Base UI `Progress.Label`. Labels the progress bar.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### ProgressValue
+
+Built on Base UI `Progress.Value`. Pushed to the end of the row with `ms-auto`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "children",
+      type: "(formattedValue: string | null, value: number | null) => ReactNode",
+      description: "Custom renderer for the value text.",
+    },
+    { prop: "className", type: "string", description: "Additional classes." },
+  ]}
+/>
+
+### ProgressTrack, ProgressIndicator
+
+Built on Base UI `Progress.Track` and `Progress.Indicator`. Rendered automatically by `Progress`;
+export them to compose a custom layout.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+## RTL
+
+The indicator fills from the inline start, so it grows from right to left in Arabic. The value sits
+at the inline end with `ms-auto`.

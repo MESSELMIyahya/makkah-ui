@@ -1,0 +1,121 @@
+---
+name: checkbox
+type: registry:ui
+title: Checkbox
+description: A control that allows the user to toggle between checked and not checked.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - "@tabler/icons-react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/checkbox
+  shadcn: https://ui.shadcn.com/docs/components/base/checkbox
+---
+
+## Anatomy
+
+```tsx
+<Checkbox id="option" />
+<Label htmlFor="option">Label</Label>
+```
+
+## Usage
+
+```tsx
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+```
+
+```tsx
+<Checkbox id="taraweeh-reminder" defaultChecked />
+<Label htmlFor="taraweeh-reminder">Remind me of Taraweeh prayer</Label>
+```
+
+Use `defaultChecked` for uncontrolled checkboxes, or `checked` with `onCheckedChange` to control
+the state.
+
+## Examples
+
+### With Description
+
+<Preview name="with-description" />
+
+### Group
+
+<Preview name="group" />
+
+### Disabled
+
+<Preview name="disabled" />
+
+### Invalid
+
+<Preview name="invalid" />
+
+## API Reference
+
+### Checkbox
+
+Built on the Base UI [Checkbox](https://base-ui.com/react/components/checkbox). Renders the root
+with a check icon indicator.
+
+<PropsTable
+  rows={[
+    {
+      prop: "checked",
+      type: "boolean",
+      description: "Controlled checked state.",
+    },
+    {
+      prop: "defaultChecked",
+      type: "boolean",
+      default: "false",
+      description: "Initial checked state when uncontrolled.",
+    },
+    {
+      prop: "onCheckedChange",
+      type: "(checked: boolean, eventDetails) => void",
+      description: "Called when the checked state changes.",
+    },
+    {
+      prop: "indeterminate",
+      type: "boolean",
+      default: "false",
+      description: "Shows the mixed state.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Prevents interaction.",
+    },
+    {
+      prop: "name",
+      type: "string",
+      description: "Field name submitted with the form.",
+    },
+    {
+      prop: "value",
+      type: "string",
+      description: "Value submitted with the form when checked.",
+    },
+    {
+      prop: "required",
+      type: "boolean",
+      default: "false",
+      description: "Requires the checkbox to be checked before submitting.",
+    },
+    {
+      prop: "aria-invalid",
+      type: "boolean",
+      description: "Applies the destructive border and ring.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default styles.",
+    },
+  ]}
+/>

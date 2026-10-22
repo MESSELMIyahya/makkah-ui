@@ -1,0 +1,156 @@
+---
+name: accordion
+type: registry:ui
+title: Accordion
+description: A vertically stacked set of interactive headings that each reveal a section of content.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - "@tabler/icons-react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/accordion
+  shadcn: https://ui.shadcn.com/docs/components/base/accordion
+---
+
+## Anatomy
+
+```tsx
+<Accordion>
+  <AccordionItem>
+    <AccordionTrigger />
+    <AccordionContent />
+  </AccordionItem>
+</Accordion>
+```
+
+## Usage
+
+```tsx
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+```
+
+```tsx
+<Accordion>
+  <AccordionItem value="ihram">
+    <AccordionTrigger>Where do I enter ihram?</AccordionTrigger>
+    <AccordionContent>At the miqat on your route.</AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+Give each item a unique `value`. The open state is an array of those values, even when only one
+item can be open.
+
+## Examples
+
+### Multiple
+
+<Preview name="multiple" />
+
+### Default Open
+
+<Preview name="default-open" />
+
+### Disabled
+
+<Preview name="disabled" />
+
+### Controlled
+
+<Preview name="controlled" />
+
+## API Reference
+
+### Accordion
+
+Built on Base UI `Accordion.Root`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "multiple",
+      type: "boolean",
+      default: "false",
+      description: "Allows more than one item to be open at a time.",
+    },
+    {
+      prop: "defaultValue",
+      type: "any[]",
+      description: "Values of the items open on first render, when uncontrolled.",
+    },
+    { prop: "value", type: "any[]", description: "Values of the open items, when controlled." },
+    {
+      prop: "onValueChange",
+      type: "(value: any[], eventDetails) => void",
+      description: "Called when an item opens or closes.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables every item.",
+    },
+    {
+      prop: "hiddenUntilFound",
+      type: "boolean",
+      default: "false",
+      description: "Lets the browser find-in-page search open closed panels.",
+    },
+    { prop: "className", type: "string", description: "Additional classes." },
+  ]}
+/>
+
+### AccordionItem
+
+Built on Base UI `Accordion.Item`.
+
+<PropsTable
+  rows={[
+    { prop: "value", type: "any", description: "Unique value that identifies the item." },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Prevents the item from opening or closing.",
+    },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean, eventDetails) => void",
+      description: "Called when this item opens or closes.",
+    },
+  ]}
+/>
+
+### AccordionTrigger
+
+Built on Base UI `Accordion.Header` and `Accordion.Trigger`. Renders a chevron that flips when open.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### AccordionContent
+
+Built on Base UI `Accordion.Panel`, with height animations driven by `--accordion-panel-height`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "keepMounted",
+      type: "boolean",
+      default: "false",
+      description: "Keeps the panel in the DOM while closed.",
+    },
+    { prop: "className", type: "string", description: "Classes applied to the inner content wrapper." },
+  ]}
+/>
+
+## RTL
+
+Triggers align with `text-start` and the chevron is pushed to the inline end with `ms-auto`. Up and
+down chevrons need no mirroring.

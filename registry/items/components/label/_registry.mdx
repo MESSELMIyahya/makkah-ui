@@ -1,0 +1,76 @@
+---
+name: label
+type: registry:ui
+title: Label
+description: Renders an accessible label associated with a form control.
+categories:
+  - core
+dependencies:
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/label
+---
+
+## Anatomy
+
+```tsx
+<Label htmlFor="control-id">Label text</Label>
+```
+
+## Usage
+
+```tsx
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+```
+
+```tsx
+<Label htmlFor="pilgrim-name">Full name</Label>
+<Input id="pilgrim-name" />
+```
+
+Point `htmlFor` at the `id` of the control so clicking the label focuses or toggles it and screen
+readers announce the label with the control.
+
+## Examples
+
+### With Checkbox
+
+<Preview name="with-checkbox" />
+
+### With Switch
+
+<Preview name="with-switch" />
+
+### Disabled
+
+Set `data-disabled="true"` on a parent with the `group` class, or place the label after a
+disabled `peer` control, to dim the label.
+
+<Preview name="disabled" />
+
+## API Reference
+
+### Label
+
+A styled native `<label>` element. Accepts every native label attribute.
+
+<PropsTable
+  rows={[
+    {
+      prop: "htmlFor",
+      type: "string",
+      description: "The id of the form control this label describes.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default label styles.",
+    },
+  ]}
+/>
+
+## Accessibility
+
+Every form control needs an accessible name. Prefer a visible `Label` linked with `htmlFor`; use
+`aria-label` only when there is no room for visible text.

@@ -1,0 +1,134 @@
+---
+name: avatar
+type: registry:ui
+title: Avatar
+description: An image element with a fallback for representing the user.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/avatar
+  shadcn: https://ui.shadcn.com/docs/components/base/avatar
+---
+
+## Anatomy
+
+```tsx
+<AvatarGroup>
+  <Avatar>
+    <AvatarImage />
+    <AvatarFallback />
+    <AvatarBadge />
+  </Avatar>
+  <AvatarGroupCount />
+</AvatarGroup>
+```
+
+## Usage
+
+```tsx
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
+  AvatarImage,
+} from "@/components/ui/avatar";
+```
+
+```tsx
+<Avatar>
+  <AvatarImage src="/teachers/abdullah.jpg" alt="Abdullah Hassan" />
+  <AvatarFallback>AH</AvatarFallback>
+</Avatar>
+```
+
+`AvatarFallback` shows while the image loads or when it fails, so always provide initials. Arabic
+initials work the same way, for example `عح`.
+
+## Sizes
+
+<Preview name="sizes" />
+
+## Examples
+
+### With Badge
+
+<Preview name="with-badge" />
+
+### Group
+
+<Preview name="group" />
+
+## API Reference
+
+### Avatar
+
+Built on Base UI `Avatar.Root`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "size",
+      type: '"default" | "sm" | "lg"',
+      default: '"default"',
+      description: "Size of the avatar. Also sizes the fallback text and badge.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes.",
+    },
+  ]}
+/>
+
+### AvatarImage
+
+Built on Base UI `Avatar.Image`. Renders only once the image has loaded.
+
+<PropsTable
+  rows={[
+    { prop: "src", type: "string", description: "Image URL." },
+    { prop: "alt", type: "string", description: "Accessible description of the image." },
+    {
+      prop: "onLoadingStatusChange",
+      type: '(status: "idle" | "loading" | "loaded" | "error") => void',
+      description: "Called when the image loading status changes.",
+    },
+  ]}
+/>
+
+### AvatarFallback
+
+Built on Base UI `Avatar.Fallback`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "delay",
+      type: "number",
+      description: "Milliseconds to wait before showing the fallback, to avoid a flash on fast connections.",
+    },
+    { prop: "className", type: "string", description: "Additional classes." },
+  ]}
+/>
+
+### AvatarBadge
+
+A status dot pinned to the bottom end corner. Put an icon or screen-reader text inside.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes, e.g. a status color." }]} />
+
+### AvatarGroup, AvatarGroupCount
+
+Overlaps avatars with a ring and shows the number of hidden members.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+## RTL
+
+`AvatarBadge` is placed with `end-0`, so it sits on the bottom left in Arabic and the bottom right in
+English.

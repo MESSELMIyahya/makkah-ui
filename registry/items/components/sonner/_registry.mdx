@@ -1,0 +1,124 @@
+---
+name: sonner
+type: registry:ui
+title: Sonner
+description: An opinionated toast component for React.
+categories:
+  - core
+dependencies:
+  - sonner
+  - next-themes
+  - "@tabler/icons-react"
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/sonner
+---
+
+## Anatomy
+
+```tsx
+<>
+  <Toaster />
+  <Button onClick={() => toast("Event has been created")} />
+</>
+```
+
+## Usage
+
+Render the `Toaster` once, near the root of your app.
+
+```tsx
+import { Toaster } from "@/components/ui/sonner";
+```
+
+```tsx
+<Toaster />
+```
+
+Then call `toast` from anywhere.
+
+```tsx
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
+
+<Button
+  onClick={() =>
+    toast("Your seat is reserved", {
+      description: "Seerah lesson, Monday after Isha prayer.",
+    })
+  }
+>
+  Reserve a seat
+</Button>;
+```
+
+The `Toaster` reads the current theme from `next-themes` and uses the theme popover colors and icons
+from Tabler. The previews on this page render their own `Toaster` with an `id` and pass a matching
+`toasterId` so that their toasts stay separate.
+
+## Examples
+
+### Types
+
+<Preview name="types" />
+
+### Promise
+
+Pass a promise to `toast.promise` to show loading, success and error states automatically.
+
+<Preview name="promise" />
+
+### Position
+
+<Preview name="position" />
+
+## API Reference
+
+### Toaster
+
+Wraps the sonner `Toaster` with theme-aware colors and Tabler icons. Accepts every sonner Toaster
+prop.
+
+<PropsTable
+  rows={[
+    {
+      prop: "position",
+      type: '"top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right"',
+      default: '"bottom-right"',
+      description: "Where toasts appear on the screen.",
+    },
+    {
+      prop: "theme",
+      type: '"light" | "dark" | "system"',
+      description: "Overrides the theme read from next-themes.",
+    },
+    { prop: "richColors", type: "boolean", default: "false", description: "Colors toasts by their type." },
+    { prop: "expand", type: "boolean", default: "false", description: "Shows all toasts expanded instead of stacked." },
+    { prop: "closeButton", type: "boolean", default: "false", description: "Adds a close button to every toast." },
+    { prop: "duration", type: "number", default: "4000", description: "Time in milliseconds before a toast closes." },
+    { prop: "visibleToasts", type: "number", default: "3", description: "Maximum number of visible toasts." },
+    { prop: "dir", type: '"rtl" | "ltr" | "auto"', description: "Text direction of the toasts." },
+    { prop: "id", type: "string", description: "Scopes this Toaster to toasts sent with a matching toasterId." },
+  ]}
+/>
+
+### toast
+
+The function exported by `sonner` that shows a toast.
+
+<PropsTable
+  nameLabel="Function"
+  rows={[
+    { prop: "toast(message, options)", type: "string | number", description: "Shows a default toast and returns its id." },
+    { prop: "toast.success / info / warning / error", type: "string | number", description: "Shows a toast with a type icon." },
+    { prop: "toast.loading", type: "string | number", description: "Shows a toast with a spinning icon." },
+    { prop: "toast.promise(promise, messages)", type: "object", description: "Updates one toast as the promise settles." },
+    { prop: "toast.dismiss(id?)", type: "void", description: "Closes one toast, or all toasts when no id is given." },
+  ]}
+/>
+
+## RTL
+
+Sonner reads the document direction by default. Pass `dir="rtl"` to the `Toaster` when only part of
+the page is in Arabic, and prefer the `-center` positions so toasts sit in the same place in both
+directions.

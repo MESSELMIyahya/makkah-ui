@@ -1,0 +1,233 @@
+---
+name: field
+type: registry:ui
+title: Field
+description: Combines labels, controls, descriptions and errors into accessible form fields.
+categories:
+  - core
+dependencies:
+  - class-variance-authority
+  - cn
+localRegistryDependencies:
+  - label
+  - separator
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/field
+---
+
+## Anatomy
+
+```tsx
+<FieldSet>
+  <FieldLegend>Legend</FieldLegend>
+  <FieldDescription>Description</FieldDescription>
+  <FieldGroup>
+    <Field>
+      <FieldLabel htmlFor="control-id">Label</FieldLabel>
+      <Input id="control-id" />
+      <FieldDescription>Helper text</FieldDescription>
+      <FieldError>Error message</FieldError>
+    </Field>
+    <FieldSeparator>Or</FieldSeparator>
+    <Field orientation="horizontal">
+      <Checkbox id="option-id" />
+      <FieldContent>
+        <FieldLabel htmlFor="option-id">Label</FieldLabel>
+        <FieldDescription>Description</FieldDescription>
+      </FieldContent>
+    </Field>
+  </FieldGroup>
+</FieldSet>
+```
+
+## Usage
+
+```tsx
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSeparator,
+  FieldSet,
+  FieldTitle,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+```
+
+```tsx
+<Field>
+  <FieldLabel htmlFor="mobile-number">Mobile number</FieldLabel>
+  <Input id="mobile-number" type="tel" />
+  <FieldDescription>We send prayer time reminders by SMS.</FieldDescription>
+</Field>
+```
+
+`Field` handles layout only; it works with any control, including `Input`, `Textarea`, `Select`,
+`Checkbox`, `RadioGroup` and `Switch`, and with any form library.
+
+## Examples
+
+### Input
+
+<Preview name="input" />
+
+### Textarea
+
+<Preview name="textarea" />
+
+### Checkbox
+
+<Preview name="checkbox" />
+
+### Switch
+
+<Preview name="switch" />
+
+### Choice Card
+
+Wrap a horizontal `Field` in a `FieldLabel` to turn the whole card into the click target. The card
+highlights when its radio or checkbox is checked.
+
+<Preview name="choice-card" />
+
+### Fieldset
+
+<Preview name="fieldset" />
+
+### Separator
+
+<Preview name="separator" />
+
+### Error
+
+Set `data-invalid="true"` on `Field` and `aria-invalid` on the control.
+
+<Preview name="error" />
+
+## API Reference
+
+### Field
+
+The wrapper for a single field. Renders a `div` with `role="group"`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "orientation",
+      type: '"vertical" | "horizontal" | "responsive"',
+      default: '"vertical"',
+      description: "Stacks the parts, places them in a row, or switches to a row when the parent FieldGroup is wide enough.",
+    },
+    {
+      prop: "data-invalid",
+      type: "boolean",
+      description: "Colors the field text with the destructive color.",
+    },
+    {
+      prop: "data-disabled",
+      type: "boolean",
+      description: "Dims the field label.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the orientation styles.",
+    },
+  ]}
+/>
+
+### FieldLabel
+
+A `Label` styled for fields. When it wraps a `Field`, it renders as a selectable card.
+
+<PropsTable
+  rows={[
+    {
+      prop: "htmlFor",
+      type: "string",
+      description: "The id of the control this label describes.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default styles.",
+    },
+  ]}
+/>
+
+### FieldSet and FieldLegend
+
+`FieldSet` renders a native `<fieldset>` that groups related fields. `FieldLegend` renders its
+`<legend>`.
+
+<PropsTable
+  nameLabel="Prop (FieldLegend)"
+  rows={[
+    {
+      prop: "variant",
+      type: '"legend" | "label"',
+      default: '"legend"',
+      description: "Legend uses base text size; label matches the size of a field label.",
+    },
+  ]}
+/>
+
+### FieldError
+
+Renders a `div` with `role="alert"`. Shows its children, or the messages from `errors`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "errors",
+      type: "Array<{ message?: string } | undefined>",
+      description: "Validation errors, e.g. from a form library. Duplicates are removed and several messages render as a list.",
+    },
+    {
+      prop: "children",
+      type: "ReactNode",
+      description: "Custom error content. Takes precedence over errors.",
+    },
+  ]}
+/>
+
+### FieldSeparator
+
+A horizontal `Separator` between fields, with optional centered text.
+
+<PropsTable
+  rows={[
+    {
+      prop: "children",
+      type: "ReactNode",
+      description: "Text shown on top of the line, such as Or.",
+    },
+  ]}
+/>
+
+### FieldGroup, FieldContent, FieldTitle and FieldDescription
+
+`FieldGroup` stacks fields and acts as the container query for responsive fields. `FieldContent`
+groups a label and description next to a control. `FieldTitle` is a non-label title for choice
+cards. `FieldDescription` renders helper text in a `<p>`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default styles.",
+    },
+  ]}
+/>
+
+## Accessibility
+
+Link labels with `htmlFor`, and link descriptions or errors to the control with `aria-describedby`
+when they are not announced otherwise. `FieldError` uses `role="alert"`, so new errors are announced
+as they appear.

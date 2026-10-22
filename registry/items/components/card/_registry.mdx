@@ -1,0 +1,122 @@
+---
+name: card
+type: registry:ui
+title: Card
+description: Displays a card with header, content, and footer.
+categories:
+  - core
+dependencies:
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/card
+---
+
+## Anatomy
+
+```tsx
+<Card>
+  <CardHeader>
+    <CardTitle />
+    <CardDescription />
+    <CardAction />
+  </CardHeader>
+  <CardContent />
+  <CardFooter />
+</Card>
+```
+
+## Usage
+
+```tsx
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+```
+
+```tsx
+<Card>
+  <CardHeader>
+    <CardTitle>Masjid Quba</CardTitle>
+    <CardDescription>Quba, Madinah</CardDescription>
+  </CardHeader>
+  <CardContent>Next prayer: Asr at 3:28 PM</CardContent>
+</Card>
+```
+
+Every part is a plain `div` with a `data-slot` attribute. Spacing is driven by the `--card-spacing`
+variable, so the `size` prop adjusts all parts at once.
+
+## Examples
+
+### Small
+
+<Preview name="small" />
+
+### With Action
+
+`CardAction` sits at the end of the header, beside the title and description.
+
+<Preview name="with-action" />
+
+### Bordered Sections
+
+Add `border-b` to the header or `border-t` to the footer and the card adds matching padding.
+
+<Preview name="bordered" />
+
+## API Reference
+
+### Card
+
+The root container. Accepts every native `div` attribute.
+
+<PropsTable
+  rows={[
+    {
+      prop: "size",
+      type: '"default" | "sm"',
+      default: '"default"',
+      description: "Controls the inner spacing of every card part.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the card classes.",
+    },
+  ]}
+/>
+
+### CardHeader
+
+Grid wrapper for the title, description, and action. Switches to two columns when a `CardAction` is present.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### CardTitle, CardDescription
+
+Heading text and muted supporting text for the header.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### CardAction
+
+Places a button, badge, or menu at the end of the header.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### CardContent, CardFooter
+
+The main body and a flex row for actions at the bottom of the card.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+## RTL
+
+The header grid places `CardAction` with `justify-self-end`, so it sits on the left in Arabic and on
+the right in English without extra classes.

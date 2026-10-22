@@ -1,0 +1,57 @@
+---
+name: skeleton
+type: registry:ui
+title: Skeleton
+description: Use to show a placeholder while content is loading.
+categories:
+  - core
+dependencies:
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/skeleton
+---
+
+## Anatomy
+
+```tsx
+<Skeleton />
+```
+
+## Usage
+
+```tsx
+import { Skeleton } from "@/components/ui/skeleton";
+```
+
+```tsx
+<Skeleton className="h-4 w-48" />
+```
+
+Size and shape come from `className`. Wrap a group of skeletons in an element with `role="status"`
+and an `aria-label` so screen readers announce what is loading.
+
+## Examples
+
+### Card
+
+<Preview name="card" />
+
+### List
+
+<Preview name="list" />
+
+## API Reference
+
+### Skeleton
+
+A pulsing `div`. Accepts every native `div` attribute.
+
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      description: "Sets the size and shape, e.g. h-4 w-32 or size-12 rounded-full.",
+    },
+  ]}
+/>

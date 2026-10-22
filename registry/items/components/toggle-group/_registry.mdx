@@ -1,0 +1,171 @@
+---
+name: toggle-group
+type: registry:ui
+title: Toggle Group
+description: A set of two-state buttons that can be toggled on or off, with single or multiple selection.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - class-variance-authority
+  - cn
+localRegistryDependencies:
+  - toggle
+links:
+  baseUi: https://base-ui.com/react/components/toggle-group
+  shadcn: https://ui.shadcn.com/docs/components/base/toggle-group
+---
+
+## Anatomy
+
+```tsx
+<ToggleGroup>
+  <ToggleGroupItem />
+</ToggleGroup>
+```
+
+## Usage
+
+```tsx
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+```
+
+```tsx
+<ToggleGroup variant="outline" defaultValue={["standard"]}>
+  <ToggleGroupItem value="standard">Standard</ToggleGroupItem>
+  <ToggleGroupItem value="hanafi">Hanafi</ToggleGroupItem>
+</ToggleGroup>
+```
+
+The group value is always an array of item values. By default only one item can be pressed at a
+time; add `multiple` to allow several. `variant` and `size` set on the group apply to every item.
+
+## Variants
+
+### Default
+
+<Preview name="default-variant" />
+
+### Outline
+
+<Preview name="outline" />
+
+## Examples
+
+### Multiple
+
+<Preview name="multiple" />
+
+### Vertical
+
+Set `orientation="vertical"` and `spacing={0}` for a joined column.
+
+<Preview name="vertical" />
+
+### Disabled Item
+
+<Preview name="disabled" />
+
+## API Reference
+
+### ToggleGroup
+
+Built on the Base UI [Toggle Group](https://base-ui.com/react/components/toggle-group).
+
+<PropsTable
+  rows={[
+    {
+      prop: "variant",
+      type: '"default" | "outline"',
+      description: "Style applied to every item in the group.",
+    },
+    {
+      prop: "size",
+      type: '"default" | "sm" | "lg"',
+      description: "Size applied to every item in the group.",
+    },
+    {
+      prop: "spacing",
+      type: "number",
+      default: "2",
+      description: "Gap between items in spacing units. Use 0 to join the items into one control.",
+    },
+    {
+      prop: "orientation",
+      type: '"horizontal" | "vertical"',
+      default: '"horizontal"',
+      description: "Lays the items out in a row or a column.",
+    },
+    {
+      prop: "value",
+      type: "string[]",
+      description: "The pressed item values when controlled.",
+    },
+    {
+      prop: "defaultValue",
+      type: "string[]",
+      description: "The pressed item values on first render when uncontrolled.",
+    },
+    {
+      prop: "onValueChange",
+      type: "(groupValue, eventDetails) => void",
+      description: "Called when the pressed items change.",
+    },
+    {
+      prop: "multiple",
+      type: "boolean",
+      default: "false",
+      description: "Allows more than one item to be pressed at a time.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables every item in the group.",
+    },
+    {
+      prop: "loopFocus",
+      type: "boolean",
+      default: "true",
+      description: "Wraps arrow key focus from the last item back to the first.",
+    },
+  ]}
+/>
+
+### ToggleGroupItem
+
+Built on Base UI `Toggle`, styled with `toggleVariants`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "string",
+      description: "Identifies the item inside the group value.",
+    },
+    {
+      prop: "variant",
+      type: '"default" | "outline"',
+      default: '"default"',
+      description: "Item style when the group does not set one.",
+    },
+    {
+      prop: "size",
+      type: '"default" | "sm" | "lg"',
+      default: '"default"',
+      description: "Item size when the group does not set one.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables this item.",
+    },
+  ]}
+/>
+
+## RTL
+
+Joined groups (`spacing={0}`) round the first and last items with `rounded-s` and `rounded-e`, and
+remove the shared border with `border-s-0`, so the pill shape stays correct in Arabic layouts. Arrow
+key navigation follows the direction from the nearest `DirectionProvider`.

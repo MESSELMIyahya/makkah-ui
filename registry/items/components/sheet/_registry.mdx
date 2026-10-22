@@ -1,0 +1,167 @@
+---
+name: sheet
+type: registry:ui
+title: Sheet
+description: Extends the Dialog component to display content that complements the main content of the screen.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - "@tabler/icons-react"
+  - cn
+localRegistryDependencies:
+  - button
+links:
+  baseUi: https://base-ui.com/react/components/dialog
+  shadcn: https://ui.shadcn.com/docs/components/base/sheet
+---
+
+## Anatomy
+
+```tsx
+<Sheet>
+  <SheetTrigger />
+  <SheetContent>
+    <SheetHeader>
+      <SheetTitle />
+      <SheetDescription />
+    </SheetHeader>
+    <SheetFooter>
+      <SheetClose />
+    </SheetFooter>
+  </SheetContent>
+</Sheet>
+```
+
+## Usage
+
+```tsx
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+```
+
+```tsx
+<Sheet>
+  <SheetTrigger render={<Button variant="outline" />}>Masjid details</SheetTrigger>
+  <SheetContent>
+    <SheetHeader>
+      <SheetTitle>Quba Mosque</SheetTitle>
+      <SheetDescription>Quba district, Madinah</SheetDescription>
+    </SheetHeader>
+  </SheetContent>
+</Sheet>
+```
+
+A sheet is a dialog that slides in from an edge of the screen. It shares the focus trapping and
+dismissal behavior of `Dialog`.
+
+## Examples
+
+### Sides
+
+Use the `side` prop on `SheetContent` to choose the edge the sheet slides in from.
+
+<Preview name="sides" />
+
+### Without Close Button
+
+Set `showCloseButton={false}` when the footer already provides the actions.
+
+<Preview name="no-close-button" />
+
+## API Reference
+
+### Sheet
+
+The root that holds the open state. Built on Base UI `Dialog.Root`.
+
+<PropsTable
+  rows={[
+    { prop: "open", type: "boolean", description: "Controlled open state." },
+    {
+      prop: "defaultOpen",
+      type: "boolean",
+      default: "false",
+      description: "Initial open state when uncontrolled.",
+    },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean, eventDetails) => void",
+      description: "Called when the sheet opens or closes.",
+    },
+    {
+      prop: "modal",
+      type: 'boolean | "trap-focus"',
+      default: "true",
+      description: "Locks scroll and traps focus while open.",
+    },
+  ]}
+/>
+
+### SheetTrigger, SheetClose
+
+Open and close the sheet. Built on Base UI `Dialog.Trigger` and `Dialog.Close`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Renders the control as another element, such as a Button.",
+    },
+  ]}
+/>
+
+### SheetContent
+
+The sliding panel, rendered in a portal with an overlay. Built on Base UI `Dialog.Popup`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "side",
+      type: '"top" | "right" | "bottom" | "left"',
+      default: '"right"',
+      description: "Physical edge the sheet is attached to.",
+    },
+    {
+      prop: "showCloseButton",
+      type: "boolean",
+      default: "true",
+      description: "Shows an icon close button in the top inline-end corner.",
+    },
+    { prop: "className", type: "string", description: "Additional classes for the panel." },
+  ]}
+/>
+
+### SheetHeader, SheetFooter
+
+Padded layout containers. The footer is pushed to the bottom of the panel.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### SheetTitle, SheetDescription
+
+Built on Base UI `Dialog.Title` and `Dialog.Description`. They label the panel for assistive
+technology.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+## RTL
+
+`side` uses physical edges, so `side="right"` stays on the right in both directions. The borders
+and close button use logical properties. For a sheet that opens from the inline-end edge in both
+languages, pick the side from the current direction: `left` in Arabic and `right` in English.
+
+The sheet is rendered in a portal outside your RTL subtree, so it follows the nearest
+`DirectionProvider`. Wrap RTL apps with `<DirectionProvider direction="rtl">` from the
+`direction` item so the sheet mirrors correctly.

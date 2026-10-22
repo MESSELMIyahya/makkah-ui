@@ -1,0 +1,178 @@
+---
+name: carousel
+type: registry:ui
+title: Carousel
+description: A carousel with motion and swipe built using Embla.
+categories:
+  - core
+dependencies:
+  - embla-carousel-react
+  - "@tabler/icons-react"
+  - cn
+localRegistryDependencies:
+  - button
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/carousel
+---
+
+## Anatomy
+
+```tsx
+<Carousel>
+  <CarouselContent>
+    <CarouselItem />
+  </CarouselContent>
+  <CarouselPrevious />
+  <CarouselNext />
+</Carousel>
+```
+
+## Usage
+
+```tsx
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+```
+
+```tsx
+<Carousel opts={{ direction: "rtl" }}>
+  <CarouselContent>
+    <CarouselItem>Fajr</CarouselItem>
+    <CarouselItem>Dhuhr</CarouselItem>
+    <CarouselItem>Asr</CarouselItem>
+  </CarouselContent>
+  <CarouselPrevious />
+  <CarouselNext />
+</Carousel>
+```
+
+`opts` is passed to [Embla](https://www.embla-carousel.com/api/options/) and `plugins` accepts Embla
+plugins such as autoplay. Set the width of each slide with a `basis-*` class on `CarouselItem`.
+
+## Examples
+
+### Multiple Slides
+
+Use `basis-1/2` or `basis-1/3` to show several slides at once, and `align: "start"` to snap them to
+the start edge.
+
+<Preview name="multiple" />
+
+### Vertical
+
+Set `orientation="vertical"` and give `CarouselContent` a fixed height.
+
+<Preview name="vertical" />
+
+### API
+
+Pass `setApi` to get the Embla API, then read the selected slide or listen to its events.
+
+<Preview name="api" />
+
+## API Reference
+
+### Carousel
+
+The root region. Creates the Embla instance and shares it with the other parts.
+
+<PropsTable
+  rows={[
+    {
+      prop: "opts",
+      type: "EmblaOptionsType",
+      description: "Embla options such as direction, align, loop, and slidesToScroll.",
+    },
+    {
+      prop: "plugins",
+      type: "EmblaPluginType[]",
+      description: "Embla plugins such as autoplay or wheel gestures.",
+    },
+    {
+      prop: "orientation",
+      type: '"horizontal" | "vertical"',
+      default: '"horizontal"',
+      description: "Scroll axis. Sets the Embla axis option for you.",
+    },
+    {
+      prop: "setApi",
+      type: "(api: CarouselApi) => void",
+      description: "Receives the Embla API once the carousel is ready.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes for the root element.",
+    },
+  ]}
+/>
+
+### CarouselContent
+
+The scrolling viewport and its flex track.
+
+<PropsTable
+  rows={[{ prop: "className", type: "string", description: "Classes for the inner track, e.g. a height for vertical carousels." }]}
+/>
+
+### CarouselItem
+
+A single slide with `role="group"` and `aria-roledescription="slide"`.
+
+<PropsTable
+  rows={[{ prop: "className", type: "string", description: "Classes for the slide, e.g. basis-1/2." }]}
+/>
+
+### CarouselPrevious and CarouselNext
+
+Makkah UI `Button`s that scroll to the previous or next slide and disable themselves at the ends.
+
+<PropsTable
+  rows={[
+    {
+      prop: "variant",
+      type: '"default" | "secondary" | "outline" | "ghost" | "destructive" | "link"',
+      default: '"outline"',
+      description: "Button variant.",
+    },
+    {
+      prop: "size",
+      type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',
+      default: '"icon-sm"',
+      description: "Button size.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Classes for positioning the button.",
+    },
+  ]}
+/>
+
+### useCarousel
+
+Returns the carousel context (`api`, `scrollPrev`, `scrollNext`, `canScrollPrev`, `canScrollNext`,
+`orientation`) for building custom controls inside `Carousel`.
+
+## RTL
+
+Embla does not read the `dir` attribute on its own. Pass `opts={{ direction: "rtl" }}` in Arabic
+layouts so slides scroll and snap from the right edge. The examples read the direction from Base UI's
+`DirectionProvider`:
+
+```tsx
+import { useDirection } from "@base-ui/react/direction-provider";
+
+const direction = useDirection();
+
+<Carousel opts={{ direction }}>{/* ... */}</Carousel>;
+```
+
+The previous and next buttons are positioned with `start`/`end` and their chevrons rotate in RTL, so
+"previous" always sits on the start side. The built-in Arrow Left and Arrow Right key handlers are not
+direction-aware: Arrow Left always moves to the previous slide.

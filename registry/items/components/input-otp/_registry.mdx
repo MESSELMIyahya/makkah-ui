@@ -1,0 +1,172 @@
+---
+name: input-otp
+type: registry:ui
+title: Input OTP
+description: Accessible one-time password input with copy and paste support.
+categories:
+  - core
+dependencies:
+  - input-otp
+  - "@tabler/icons-react"
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/input-otp
+---
+
+## Anatomy
+
+```tsx
+<InputOTP maxLength={6}>
+  <InputOTPGroup>
+    <InputOTPSlot index={0} />
+    <InputOTPSlot index={1} />
+    <InputOTPSlot index={2} />
+  </InputOTPGroup>
+  <InputOTPSeparator />
+  <InputOTPGroup>
+    <InputOTPSlot index={3} />
+    <InputOTPSlot index={4} />
+    <InputOTPSlot index={5} />
+  </InputOTPGroup>
+</InputOTP>
+```
+
+## Usage
+
+```tsx
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
+```
+
+```tsx
+<InputOTP maxLength={4}>
+  <InputOTPGroup>
+    <InputOTPSlot index={0} />
+    <InputOTPSlot index={1} />
+    <InputOTPSlot index={2} />
+    <InputOTPSlot index={3} />
+  </InputOTPGroup>
+</InputOTP>
+```
+
+Render one `InputOTPSlot` per character, with indexes from `0` to `maxLength - 1`. A single hidden
+input handles typing, pasting and SMS autofill.
+
+## Examples
+
+### Digits Only
+
+Pass `pattern` to restrict accepted characters. The `input-otp` package exports
+`REGEXP_ONLY_DIGITS`, `REGEXP_ONLY_CHARS` and `REGEXP_ONLY_DIGITS_AND_CHARS`.
+
+<Preview name="digits-only" />
+
+### Controlled
+
+<Preview name="controlled" />
+
+### Disabled
+
+<Preview name="disabled" />
+
+### Invalid
+
+Set `aria-invalid` on each slot to show the error style.
+
+<Preview name="invalid" />
+
+## API Reference
+
+### InputOTP
+
+Built on `OTPInput` from [input-otp](https://input-otp.rodz.dev). Accepts every native input
+attribute.
+
+<PropsTable
+  rows={[
+    {
+      prop: "maxLength",
+      type: "number",
+      description: "Number of characters. Required.",
+    },
+    {
+      prop: "value",
+      type: "string",
+      description: "Controlled value.",
+    },
+    {
+      prop: "onChange",
+      type: "(value: string) => void",
+      description: "Called with the new value on every change.",
+    },
+    {
+      prop: "onComplete",
+      type: "(value: string) => void",
+      description: "Called when every slot is filled.",
+    },
+    {
+      prop: "pattern",
+      type: "string",
+      description: "Regular expression source that each character must match.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables the input and dims the slots.",
+    },
+    {
+      prop: "containerClassName",
+      type: "string",
+      description: "Classes for the container that holds the groups.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Classes for the hidden input.",
+    },
+  ]}
+/>
+
+### InputOTPSlot
+
+Shows one character, the active ring and a fake caret.
+
+<PropsTable
+  rows={[
+    {
+      prop: "index",
+      type: "number",
+      description: "Position of the character this slot displays. Required.",
+    },
+    {
+      prop: "aria-invalid",
+      type: "boolean",
+      description: "Applies the destructive border.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes, e.g. a larger size.",
+    },
+  ]}
+/>
+
+### InputOTPGroup and InputOTPSeparator
+
+`InputOTPGroup` joins adjacent slots into one rounded block. `InputOTPSeparator` renders a dash
+with `role="separator"` between groups.
+
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default styles (InputOTPGroup only).",
+    },
+  ]}
+/>
+
+## RTL
+
+Slot borders and rounded corners use logical properties. Slots follow the document direction, so
+in Arabic the first character fills the rightmost slot.

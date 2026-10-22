@@ -155,9 +155,11 @@ describe("registry search", () => {
     const records = getRegistrySearchRecords();
     const response = await searchRegistryItems({ query: "", limit: records.length + 1 });
 
+    // Results are capped at the search limit (50) even when the registry holds more records.
     expect(response.count).toBe(records.length);
+    expect(response.results).toHaveLength(Math.min(records.length, 50));
     expect(response.results.map((result) => result.name)).toEqual(
-      records.map((record) => record.name),
+      records.slice(0, response.results.length).map((record) => record.name),
     );
   });
 });

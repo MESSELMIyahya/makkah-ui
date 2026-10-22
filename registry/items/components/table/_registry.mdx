@@ -1,0 +1,132 @@
+---
+name: table
+type: registry:ui
+title: Table
+description: A responsive table component.
+categories:
+  - core
+dependencies:
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/table
+---
+
+## Anatomy
+
+```tsx
+<Table>
+  <TableCaption />
+  <TableHeader>
+    <TableRow>
+      <TableHead />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell />
+    </TableRow>
+  </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TableCell />
+    </TableRow>
+  </TableFooter>
+</Table>
+```
+
+## Usage
+
+```tsx
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+```
+
+```tsx
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Prayer</TableHead>
+      <TableHead>Adhan</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>Fajr</TableCell>
+      <TableCell>4:52 AM</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+The table is wrapped in a horizontally scrollable container, so wide tables stay usable on small
+screens.
+
+## Examples
+
+### With Footer
+
+<Preview name="with-footer" />
+
+### Selected Row
+
+Set `data-state="selected"` on a `TableRow` to highlight it.
+
+<Preview name="selected-row" />
+
+### With Badges
+
+<Preview name="with-badges" />
+
+## API Reference
+
+### Table
+
+Renders a scroll container and a native `table`. Accepts every native `table` attribute.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes for the table element." }]} />
+
+### TableHeader, TableBody, TableFooter
+
+Native `thead`, `tbody`, and `tfoot` with border and background styles.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### TableRow
+
+A native `tr` with hover styles.
+
+<PropsTable
+  rows={[
+    {
+      prop: "data-state",
+      type: '"selected"',
+      description: "Highlights the row as selected.",
+    },
+    { prop: "className", type: "string", description: "Additional classes." },
+  ]}
+/>
+
+### TableHead, TableCell
+
+Native `th` and `td` cells. Header cells align with `text-start`.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes, e.g. text-end for numbers." }]} />
+
+### TableCaption
+
+A native `caption` rendered below the table.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+## RTL
+
+Header cells use `text-start` and checkbox padding uses `pe-0`, so column order and alignment follow
+the reading direction. Use `text-end` for numeric columns instead of `text-right`.

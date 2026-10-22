@@ -1,0 +1,118 @@
+---
+name: arabic-format
+type: registry:lib
+title: Arabic Format
+description: Framework-free Intl helpers for Arabic numbers, digits, Hijri dates, riyal amounts and prayer times.
+categories:
+  - utils
+files:
+  - path: arabic-format.ts
+    type: registry:lib
+---
+
+## Usage
+
+Import the helper you need. Every function is a plain function built on `Intl`, so it works in
+React components, server code and scripts alike. Formatters are cached per locale and options.
+
+```tsx
+import { formatHijriDate, formatPrayerTime, formatSar } from "@/lib/arabic-format";
+
+export function ZakatSummary({ amount, dueDate }: { amount: number; dueDate: Date }) {
+  return (
+    <p>
+      {formatSar(amount)} · {formatHijriDate(dueDate)}
+    </p>
+  );
+}
+```
+
+Arabic output uses Arabic-Indic digits. Pass `locale: "en"` for English text with Latin digits.
+
+```ts
+formatHijriDate(new Date(2027, 1, 8)); // "١ رمضان ١٤٤٨ هـ"
+formatHijriDate(new Date(2027, 1, 8), { locale: "en" }); // "Ramadan 1, 1448 AH"
+formatPrayerTime(new Date(2027, 1, 8, 18, 12)); // "٦:١٢ م"
+formatSar(2500, { locale: "en" }); // "SAR 2,500.00"
+```
+
+## Examples
+
+### Converting digits
+
+Normalize user input typed with Arabic-Indic or Persian digits before validation, and convert
+back for display.
+
+<Preview name="digits" />
+
+## API Reference
+
+### Functions
+
+<PropsTable
+  nameLabel="Function"
+  rows={[
+    {
+      prop: "formatArabicNumber",
+      type: '(value: number, options?: Intl.NumberFormatOptions & { digits?: "arab" | "latn" }) => string',
+      description: "Formats a number in Arabic. Uses Arabic-Indic digits unless digits is latn.",
+    },
+    {
+      prop: "toArabicDigits",
+      type: "(input: string) => string",
+      description: "Replaces Western digits 0-9 with Arabic-Indic digits.",
+    },
+    {
+      prop: "toLatinDigits",
+      type: "(input: string) => string",
+      description: "Replaces Arabic-Indic and Persian digits with Western digits 0-9.",
+    },
+    {
+      prop: "formatHijriDate",
+      type: '(date: Date, options?: { locale?: "ar" | "en"; format?: "long" | "short" }) => string',
+      description: "Formats a date in the Umm al-Qura Hijri calendar.",
+    },
+    {
+      prop: "formatSar",
+      type: '(amount: number, options?: { locale?: "ar" | "en" }) => string',
+      description: "Formats an amount as Saudi riyals.",
+    },
+    {
+      prop: "formatPrayerTime",
+      type: '(date: Date, options?: { locale?: "ar" | "en" }) => string',
+      description: "Formats hour and minute with a localized AM or PM marker.",
+    },
+  ]}
+/>
+
+### Options
+
+<PropsTable
+  rows={[
+    {
+      prop: "locale",
+      type: '"ar" | "en"',
+      default: '"ar"',
+      description: "Output language for formatHijriDate, formatSar and formatPrayerTime.",
+    },
+    {
+      prop: "format",
+      type: '"long" | "short"',
+      default: '"long"',
+      description: "formatHijriDate only. Long spells out the month name, short uses numbers.",
+    },
+    {
+      prop: "digits",
+      type: '"arab" | "latn"',
+      default: '"arab"',
+      description: "formatArabicNumber only. The numbering system for the output.",
+    },
+  ]}
+/>
+
+## Notes
+
+Hijri dates use the `islamic-umalqura` calendar, the official calendar in Saudi Arabia. Dates are
+formatted in the runtime time zone, so build them with local components (for example
+`new Date(2027, 1, 8)`) rather than UTC strings. Actual month starts may differ from the calculated
+calendar where moon sighting is used.

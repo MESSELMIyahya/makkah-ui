@@ -1,0 +1,160 @@
+---
+name: native-select
+type: registry:ui
+title: Native Select
+description: A styled native HTML select element with consistent design.
+categories:
+  - core
+dependencies:
+  - "@tabler/icons-react"
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/native-select
+---
+
+## Anatomy
+
+```tsx
+<NativeSelect>
+  <NativeSelectOptGroup>
+    <NativeSelectOption />
+  </NativeSelectOptGroup>
+</NativeSelect>
+```
+
+## Usage
+
+```tsx
+import {
+  NativeSelect,
+  NativeSelectOptGroup,
+  NativeSelectOption,
+} from "@/components/ui/native-select";
+```
+
+```tsx
+<NativeSelect aria-label="City" defaultValue="makkah">
+  <NativeSelectOption value="makkah">Makkah</NativeSelectOption>
+  <NativeSelectOption value="madinah">Madinah</NativeSelectOption>
+</NativeSelect>
+```
+
+`NativeSelect` renders a real `<select>`, so it uses the platform picker on mobile and works in forms
+without JavaScript. Use the `Select` component when you need custom item content or styling of the popup.
+
+## Examples
+
+### Groups
+
+Group options with `NativeSelectOptGroup`.
+
+<Preview name="groups" />
+
+### Sizes
+
+<Preview name="sizes" />
+
+### Disabled
+
+Disable the whole select with `disabled`, or a single option with `disabled` on `NativeSelectOption`.
+
+<Preview name="disabled" />
+
+### Invalid
+
+<Preview name="invalid" />
+
+## API Reference
+
+### NativeSelect
+
+A `<select>` inside a wrapper `<div>` that draws the selector icon. Accepts every native `<select>`
+attribute except `size`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "size",
+      type: '"sm" | "default"',
+      default: '"default"',
+      description: "Height of the select.",
+    },
+    {
+      prop: "value",
+      type: "string",
+      description: "Controlled selected value.",
+    },
+    {
+      prop: "defaultValue",
+      type: "string",
+      description: "Initial value when uncontrolled.",
+    },
+    {
+      prop: "onChange",
+      type: "(event: ChangeEvent<HTMLSelectElement>) => void",
+      description: "Called when the selected value changes.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables the select and dims the wrapper.",
+    },
+    {
+      prop: "aria-invalid",
+      type: "boolean",
+      description: "Applies the destructive border and ring.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Classes for the wrapper, e.g. a width.",
+    },
+  ]}
+/>
+
+### NativeSelectOption
+
+A styled `<option>`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "string",
+      description: "The value submitted when this option is selected.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Prevents selecting this option.",
+    },
+  ]}
+/>
+
+### NativeSelectOptGroup
+
+A styled `<optgroup>`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "label",
+      type: "string",
+      description: "Name of the group shown in the picker.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables every option in the group.",
+    },
+  ]}
+/>
+
+## RTL
+
+The selector icon and the select padding use logical properties (`end-3.5`, `ps-3`, `pe-8`), so the icon
+sits on the inline end in Arabic. The options list is drawn by the browser and follows the `dir` of the
+page.

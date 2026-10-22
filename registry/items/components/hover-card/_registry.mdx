@@ -1,0 +1,128 @@
+---
+name: hover-card
+type: registry:ui
+title: Hover Card
+description: For sighted users to preview content available behind a link.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/preview-card
+  shadcn: https://ui.shadcn.com/docs/components/base/hover-card
+---
+
+## Anatomy
+
+```tsx
+<HoverCard>
+  <HoverCardTrigger />
+  <HoverCardContent />
+</HoverCard>
+```
+
+## Usage
+
+```tsx
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+```
+
+```tsx
+<HoverCard>
+  <HoverCardTrigger href="/masjids/an-nabawi">Masjid an-Nabawi</HoverCardTrigger>
+  <HoverCardContent>The second of the two holy masjids, in Madinah.</HoverCardContent>
+</HoverCard>
+```
+
+`HoverCardTrigger` renders a link by default. The card opens on hover or keyboard focus and is meant
+for supplementary content only, so keep the essential information reachable through the link.
+
+## Examples
+
+### Profile Card
+
+<Preview name="lecturer" />
+
+### Sides
+
+Use `side` on `HoverCardContent`. Prefer `inline-start` and `inline-end` for direction-aware
+placement.
+
+<Preview name="sides" />
+
+## API Reference
+
+### HoverCard
+
+The root that holds the open state. Built on Base UI `PreviewCard.Root`.
+
+<PropsTable
+  rows={[
+    { prop: "open", type: "boolean", description: "Controlled open state." },
+    {
+      prop: "defaultOpen",
+      type: "boolean",
+      default: "false",
+      description: "Initial open state when uncontrolled.",
+    },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean, eventDetails) => void",
+      description: "Called when the card opens or closes.",
+    },
+  ]}
+/>
+
+### HoverCardTrigger
+
+The link that opens the card. Built on Base UI `PreviewCard.Trigger`.
+
+<PropsTable
+  rows={[
+    { prop: "href", type: "string", description: "Destination of the link." },
+    { prop: "delay", type: "number", description: "Milliseconds to wait before opening." },
+    { prop: "closeDelay", type: "number", description: "Milliseconds to wait before closing." },
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Renders the trigger as another element, such as a router link.",
+    },
+  ]}
+/>
+
+### HoverCardContent
+
+The floating card, rendered in a portal. Built on Base UI `PreviewCard.Popup` and
+`PreviewCard.Positioner`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "side",
+      type: '"top" | "bottom" | "left" | "right" | "inline-start" | "inline-end"',
+      default: '"bottom"',
+      description: "Side of the trigger to place the card on.",
+    },
+    { prop: "sideOffset", type: "number", default: "4", description: "Distance from the trigger in pixels." },
+    {
+      prop: "align",
+      type: '"start" | "center" | "end"',
+      default: '"center"',
+      description: "Alignment along the trigger edge.",
+    },
+    { prop: "alignOffset", type: "number", default: "4", description: "Offset along the alignment axis." },
+    { prop: "className", type: "string", description: "Additional classes for the card." },
+  ]}
+/>
+
+## Accessibility
+
+Touch and screen reader users may never see the card. Do not put actions or information inside it
+that are not also available on the linked page.
+
+## RTL
+
+The card is rendered in a portal outside your RTL subtree, so it follows the nearest
+`DirectionProvider`. Wrap RTL apps with `<DirectionProvider direction="rtl">` from the
+`direction` item so the card mirrors correctly.

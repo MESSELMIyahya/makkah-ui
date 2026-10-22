@@ -1,0 +1,182 @@
+---
+name: drawer
+type: registry:ui
+title: Drawer
+description: A panel that slides in from the edge of the screen and can be dismissed with a swipe.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/drawer
+  shadcn: https://ui.shadcn.com/docs/components/base/drawer
+---
+
+## Anatomy
+
+```tsx
+<Drawer>
+  <DrawerTrigger />
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle />
+      <DrawerDescription />
+    </DrawerHeader>
+    <DrawerFooter>
+      <DrawerClose />
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+```
+
+## Usage
+
+```tsx
+import { Button } from "@/components/ui/button";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+```
+
+```tsx
+<Drawer>
+  <DrawerTrigger render={<Button variant="outline" />}>Reminder before adhan</DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Reminder before Fajr</DrawerTitle>
+      <DrawerDescription>Choose how many minutes before adhan.</DrawerDescription>
+    </DrawerHeader>
+    <DrawerFooter>
+      <DrawerClose render={<Button />}>Save</DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+```
+
+Drawers suit mobile layouts: they slide up from the bottom by default and close when the user swipes
+them back toward the edge.
+
+## Examples
+
+### Swipe Handle
+
+Set `showSwipeHandle` on `Drawer` to render a grab handle that hints the drawer can be swiped.
+
+<Preview name="swipe-handle" />
+
+### Directions
+
+Use `swipeDirection` to attach the drawer to another edge. The drawer opens from, and is dismissed
+toward, that edge.
+
+<Preview name="directions" />
+
+## API Reference
+
+### Drawer
+
+The root that holds the open state and swipe configuration. Built on Base UI `Drawer.Root`.
+
+<PropsTable
+  rows={[
+    { prop: "open", type: "boolean", description: "Controlled open state." },
+    {
+      prop: "defaultOpen",
+      type: "boolean",
+      default: "false",
+      description: "Initial open state when uncontrolled.",
+    },
+    {
+      prop: "onOpenChange",
+      type: "(open: boolean, eventDetails) => void",
+      description: "Called when the drawer opens or closes.",
+    },
+    {
+      prop: "swipeDirection",
+      type: '"up" | "down" | "left" | "right"',
+      default: '"down"',
+      description: "Direction the drawer is swiped to dismiss. Also sets the edge it is attached to.",
+    },
+    {
+      prop: "showSwipeHandle",
+      type: "boolean",
+      default: "false",
+      description: "Renders a grab handle inside the popup.",
+    },
+    {
+      prop: "modal",
+      type: 'boolean | "trap-focus"',
+      default: "true",
+      description: "Renders an overlay, locks scroll and traps focus while open.",
+    },
+    {
+      prop: "snapPoints",
+      type: "(number | string)[]",
+      description: "Heights the drawer snaps to while dragging, as fractions or CSS lengths.",
+    },
+    {
+      prop: "disablePointerDismissal",
+      type: "boolean",
+      default: "false",
+      description: "Prevents clicking outside from closing the drawer.",
+    },
+  ]}
+/>
+
+### DrawerTrigger, DrawerClose
+
+Open and close the drawer. Built on Base UI `Drawer.Trigger` and `Drawer.Close`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Renders the control as another element, such as a Button.",
+    },
+  ]}
+/>
+
+### DrawerContent
+
+The popup, rendered in a portal inside a viewport, with an overlay when modal. Built on Base UI
+`Drawer.Popup` and `Drawer.Content`.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes for the popup." }]} />
+
+### DrawerHeader, DrawerFooter
+
+Layout containers. The header centers its text on vertical drawers on small screens.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### DrawerTitle, DrawerDescription
+
+Built on Base UI `Drawer.Title` and `Drawer.Description`. They label the popup for assistive
+technology.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### DrawerSwipeHandle, DrawerPortal, DrawerOverlay
+
+Lower-level parts used by `DrawerContent`. Render `DrawerSwipeHandle` yourself when you need it in
+a custom position.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+## RTL
+
+`swipeDirection` follows the physical swipe gesture. Horizontal drawers are positioned with logical
+`start`/`end` insets, so check `left` and `right` drawers in both directions when you use them.
+
+The drawer is rendered in a portal outside your RTL subtree, so it follows the nearest
+`DirectionProvider`. Wrap RTL apps with `<DirectionProvider direction="rtl">` from the
+`direction` item so the drawer mirrors correctly.

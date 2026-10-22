@@ -1,0 +1,203 @@
+---
+name: input-group
+type: registry:ui
+title: Input Group
+description: Adds icons, text, buttons and other content to inputs and textareas.
+categories:
+  - core
+dependencies:
+  - class-variance-authority
+  - cn
+localRegistryDependencies:
+  - button
+  - input
+  - textarea
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/input-group
+---
+
+## Anatomy
+
+```tsx
+<InputGroup>
+  <InputGroupInput />
+  <InputGroupAddon align="inline-start">
+    <Icon />
+  </InputGroupAddon>
+  <InputGroupAddon align="inline-end">
+    <InputGroupText>Text</InputGroupText>
+    <InputGroupButton>Action</InputGroupButton>
+  </InputGroupAddon>
+</InputGroup>
+```
+
+## Usage
+
+```tsx
+import { IconSearch } from "@tabler/icons-react";
+
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
+  InputGroupTextarea,
+} from "@/components/ui/input-group";
+```
+
+```tsx
+<InputGroup>
+  <InputGroupInput placeholder="Search masjids…" />
+  <InputGroupAddon>
+    <IconSearch />
+  </InputGroupAddon>
+</InputGroup>
+```
+
+Place `InputGroupAddon` after the control in the markup; the `align` prop moves it visually with
+CSS `order`, which keeps the focus order natural. Clicking an addon focuses the input.
+
+## Examples
+
+### With Icon
+
+<Preview name="with-icon" />
+
+### With Text
+
+<Preview name="with-text" />
+
+### With Button
+
+<Preview name="with-button" />
+
+### With Textarea
+
+<Preview name="with-textarea" />
+
+### Block Start
+
+Use `align="block-start"` or `align="block-end"` to place an addon above or below the control.
+
+<Preview name="block-start" />
+
+### Invalid
+
+Setting `aria-invalid` on the control styles the whole group.
+
+<Preview name="invalid" />
+
+## API Reference
+
+### InputGroup
+
+The wrapper that draws the border, focus ring and invalid state. Renders a `div` with
+`role="group"`. Set `data-disabled="true"` to dim its addons.
+
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes, e.g. a max width.",
+    },
+  ]}
+/>
+
+### InputGroupAddon
+
+<PropsTable
+  rows={[
+    {
+      prop: "align",
+      type: '"inline-start" | "inline-end" | "block-start" | "block-end"',
+      default: '"inline-start"',
+      description: "Where the addon sits relative to the control. Inline values follow the text direction.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes, e.g. border-b for a block-start header.",
+    },
+  ]}
+/>
+
+### InputGroupButton
+
+A `Button` sized to fit inside the group. Accepts every Button prop except `size`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "size",
+      type: '"xs" | "sm" | "icon-xs" | "icon-sm"',
+      default: '"xs"',
+      description: "Compact sizes that fit the group height.",
+    },
+    {
+      prop: "variant",
+      type: '"default" | "secondary" | "outline" | "ghost" | "destructive" | "link"',
+      default: '"ghost"',
+      description: "Visual style, passed to Button.",
+    },
+    {
+      prop: "type",
+      type: '"button" | "submit" | "reset"',
+      default: '"button"',
+      description: "Native button type.",
+    },
+  ]}
+/>
+
+### InputGroupInput
+
+An `Input` with its own border and ring removed. Accepts every Input prop.
+
+<PropsTable
+  rows={[
+    {
+      prop: "aria-invalid",
+      type: "boolean",
+      description: "Marks the whole group as invalid.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default styles.",
+    },
+  ]}
+/>
+
+### InputGroupTextarea
+
+A `Textarea` with its own border and ring removed. Accepts every Textarea prop.
+
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default styles.",
+    },
+  ]}
+/>
+
+### InputGroupText
+
+Muted inline text for units, prefixes and counters such as currency codes.
+
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default styles.",
+    },
+  ]}
+/>
+
+## RTL
+
+`inline-start` and `inline-end` are logical: in Arabic, an `inline-start` icon sits on the right.
+Mirror directional icons such as send arrows with `rtl:-scale-x-100`.

@@ -1,0 +1,103 @@
+---
+name: alert
+type: registry:ui
+title: Alert
+description: Displays a callout for user attention.
+categories:
+  - core
+dependencies:
+  - class-variance-authority
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/alert
+---
+
+## Anatomy
+
+```tsx
+<Alert>
+  <Icon />
+  <AlertTitle />
+  <AlertDescription />
+  <AlertAction />
+</Alert>
+```
+
+## Usage
+
+```tsx
+import { IconBell } from "@tabler/icons-react";
+
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert";
+```
+
+```tsx
+<Alert>
+  <IconBell />
+  <AlertTitle>Isha prayer in 15 minutes</AlertTitle>
+  <AlertDescription>The adhan is at 8:05 PM.</AlertDescription>
+</Alert>
+```
+
+Place an icon as the first child and the alert switches to a two-column grid with the icon beside
+the title and description.
+
+## Variants
+
+### Default
+
+<Preview name="default-variant" />
+
+### Destructive
+
+<Preview name="destructive" />
+
+## Examples
+
+### With Action
+
+<Preview name="with-action" />
+
+### Title Only
+
+<Preview name="title-only" />
+
+## API Reference
+
+### Alert
+
+The root element, rendered as a `div` with `role="alert"`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "variant",
+      type: '"default" | "destructive"',
+      default: '"default"',
+      description: "Visual style of the alert.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the variant classes.",
+    },
+  ]}
+/>
+
+### AlertTitle, AlertDescription
+
+The heading and supporting text. Links inside them are underlined automatically.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+### AlertAction
+
+Positions a button at the top end corner and reserves space for it.
+
+<PropsTable rows={[{ prop: "className", type: "string", description: "Additional classes." }]} />
+
+## RTL
+
+Text aligns with `text-start` and `AlertAction` is placed with `end-3`, so both follow the reading
+direction. The alert announces itself to screen readers through `role="alert"`; use it for timely
+messages, not static content.

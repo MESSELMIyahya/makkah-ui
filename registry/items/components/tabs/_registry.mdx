@@ -1,0 +1,196 @@
+---
+name: tabs
+type: registry:ui
+title: Tabs
+description: A set of layered sections of content, known as tab panels, that are displayed one at a time.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - class-variance-authority
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/tabs
+  shadcn: https://ui.shadcn.com/docs/components/base/tabs
+---
+
+## Anatomy
+
+```tsx
+<Tabs>
+  <TabsList>
+    <TabsTrigger />
+  </TabsList>
+  <TabsContent />
+</Tabs>
+```
+
+## Usage
+
+```tsx
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+```
+
+```tsx
+<Tabs defaultValue="today">
+  <TabsList>
+    <TabsTrigger value="today">Today</TabsTrigger>
+    <TabsTrigger value="tomorrow">Tomorrow</TabsTrigger>
+  </TabsList>
+  <TabsContent value="today">Today's prayer times.</TabsContent>
+  <TabsContent value="tomorrow">Tomorrow's prayer times.</TabsContent>
+</Tabs>
+```
+
+Each `TabsTrigger` is linked to the `TabsContent` with the same `value`. Set `defaultValue` for an
+uncontrolled group, or `value` with `onValueChange` to control the active tab.
+
+## Variants
+
+### Line
+
+<Preview name="line" />
+
+### Vertical
+
+<Preview name="vertical" />
+
+## States
+
+### With Icons
+
+<Preview name="with-icons" />
+
+### Disabled
+
+<Preview name="disabled" />
+
+## API Reference
+
+### Tabs
+
+Built on the Base UI [Tabs](https://base-ui.com/react/components/tabs) `Root`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "defaultValue",
+      type: "any",
+      default: "0",
+      description: "The tab that is active on first render when uncontrolled.",
+    },
+    {
+      prop: "value",
+      type: "any",
+      description: "The active tab value when controlled.",
+    },
+    {
+      prop: "onValueChange",
+      type: "(value, eventDetails) => void",
+      description: "Called when the active tab changes.",
+    },
+    {
+      prop: "orientation",
+      type: '"horizontal" | "vertical"',
+      default: '"horizontal"',
+      description: "Lays the list and panels out in a row or a column and sets arrow key navigation.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes for the root element.",
+    },
+  ]}
+/>
+
+### TabsList
+
+Built on Base UI `Tabs.List`. Holds the triggers and handles keyboard navigation.
+
+<PropsTable
+  rows={[
+    {
+      prop: "variant",
+      type: '"default" | "line"',
+      default: '"default"',
+      description: "Pill background or an underline indicator under the active trigger.",
+    },
+    {
+      prop: "activateOnFocus",
+      type: "boolean",
+      default: "false",
+      description: "Activates a tab as soon as it receives keyboard focus.",
+    },
+    {
+      prop: "loopFocus",
+      type: "boolean",
+      default: "true",
+      description: "Wraps keyboard focus from the last tab back to the first.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the variant classes.",
+    },
+  ]}
+/>
+
+### TabsTrigger
+
+Built on Base UI `Tabs.Tab`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "any",
+      description: "Identifies the tab and links it to the matching panel.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Prevents the tab from being selected.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes for the trigger.",
+    },
+  ]}
+/>
+
+### TabsContent
+
+Built on Base UI `Tabs.Panel`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "value",
+      type: "any",
+      description: "Shows the panel when the tab with the same value is active.",
+    },
+    {
+      prop: "keepMounted",
+      type: "boolean",
+      default: "false",
+      description: "Keeps the panel in the DOM while it is hidden.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes for the panel.",
+    },
+  ]}
+/>
+
+### tabsListVariants
+
+A `cva` helper that returns the list classes for a given `variant`.
+
+## RTL
+
+Base UI reads the direction from the nearest `DirectionProvider`, so the Arrow Left and Arrow Right
+keys follow the visual order in RTL. The vertical line indicator uses `end` positioning and the icon
+padding uses `ps`/`pe`, so no extra classes are needed.

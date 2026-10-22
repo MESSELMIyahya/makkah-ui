@@ -1,0 +1,171 @@
+---
+name: resizable
+type: registry:ui
+title: Resizable
+description: Accessible resizable panel groups and layouts with keyboard support.
+categories:
+  - core
+dependencies:
+  - react-resizable-panels
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/resizable
+---
+
+## Anatomy
+
+```tsx
+<ResizablePanelGroup>
+  <ResizablePanel />
+  <ResizableHandle />
+  <ResizablePanel />
+</ResizablePanelGroup>
+```
+
+## Usage
+
+```tsx
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+```
+
+```tsx
+<ResizablePanelGroup orientation="horizontal">
+  <ResizablePanel defaultSize="40%">Masjids</ResizablePanel>
+  <ResizableHandle />
+  <ResizablePanel defaultSize="60%">Prayer times</ResizablePanel>
+</ResizablePanelGroup>
+```
+
+Built on [react-resizable-panels](https://react-resizable-panels.vercel.app) v4. Sizes given as
+numbers are pixels; strings without a unit, or with `%`, are percentages of the group.
+
+## Examples
+
+### Vertical
+
+<Preview name="vertical" />
+
+### With Handle
+
+Add `withHandle` to show a visible grip on the separator, and use `minSize` to limit how far a panel
+can shrink.
+
+<Preview name="with-handle" />
+
+## API Reference
+
+### ResizablePanelGroup
+
+Built on the react-resizable-panels `Group`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "orientation",
+      type: '"horizontal" | "vertical"',
+      default: '"horizontal"',
+      description: "Lays the panels out in a row or a column.",
+    },
+    {
+      prop: "defaultLayout",
+      type: "Layout",
+      description: "Initial panel sizes, e.g. a layout restored from storage.",
+    },
+    {
+      prop: "onLayoutChanged",
+      type: "(layout, meta) => void",
+      description: "Called after a resize ends. Use it to persist the layout.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables resizing for the whole group.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes for the group.",
+    },
+  ]}
+/>
+
+### ResizablePanel
+
+Built on the react-resizable-panels `Panel`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "defaultSize",
+      type: "number | string",
+      description: "Initial size. Numbers are pixels, strings like 40% are percentages.",
+    },
+    {
+      prop: "minSize",
+      type: "number | string",
+      description: "Smallest size the panel can be resized to.",
+    },
+    {
+      prop: "maxSize",
+      type: "number | string",
+      description: "Largest size the panel can be resized to.",
+    },
+    {
+      prop: "collapsible",
+      type: "boolean",
+      default: "false",
+      description: "Lets the panel collapse when dragged below minSize.",
+    },
+    {
+      prop: "collapsedSize",
+      type: "number | string",
+      default: '"0%"',
+      description: "Size of the panel while collapsed.",
+    },
+    {
+      prop: "id",
+      type: "string | number",
+      description: "Identifies the panel in persisted layouts.",
+    },
+  ]}
+/>
+
+### ResizableHandle
+
+Built on the react-resizable-panels `Separator`. Focusable and resizable with the arrow keys.
+
+<PropsTable
+  rows={[
+    {
+      prop: "withHandle",
+      type: "boolean",
+      description: "Shows a visible grip in the middle of the separator.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Prevents resizing from this separator.",
+    },
+    {
+      prop: "disableDoubleClick",
+      type: "boolean",
+      default: "false",
+      description: "Stops a double click from resetting the panel to its default size.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes for the separator.",
+    },
+  ]}
+/>
+
+## RTL
+
+Horizontal groups follow the document direction, so the first panel sits on the right in Arabic
+layouts and the handle's hit area is centered with `start-1/2`. react-resizable-panels calculates
+pointer and arrow key movement in physical screen coordinates, so in RTL a horizontal drag and the
+Arrow Left and Arrow Right keys move the separator in the opposite direction to the pointer. Vertical
+groups are not affected.

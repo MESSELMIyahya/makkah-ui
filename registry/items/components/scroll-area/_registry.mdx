@@ -1,0 +1,96 @@
+---
+name: scroll-area
+type: registry:ui
+title: Scroll Area
+description: Augments native scroll functionality for custom, cross-browser styling.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/scroll-area
+  shadcn: https://ui.shadcn.com/docs/components/base/scroll-area
+---
+
+## Anatomy
+
+```tsx
+<ScrollArea>
+  {children}
+  <ScrollBar orientation="horizontal" />
+</ScrollArea>
+```
+
+`ScrollArea` renders the viewport, a vertical `ScrollBar`, and the corner for you.
+
+## Usage
+
+```tsx
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+```
+
+```tsx
+<ScrollArea className="h-64 rounded-xl border">
+  <div className="p-4">Lecture schedule…</div>
+</ScrollArea>
+```
+
+Give the scroll area a fixed height (or width for horizontal content) so it can overflow.
+
+## Examples
+
+### Horizontal
+
+Add a `ScrollBar` with `orientation="horizontal"` and keep the content on one line.
+
+<Preview name="horizontal" />
+
+### Long Text
+
+<Preview name="long-text" />
+
+## API Reference
+
+### ScrollArea
+
+Built on Base UI `ScrollArea.Root` with `ScrollArea.Viewport` inside.
+
+<PropsTable
+  rows={[
+    {
+      prop: "overflowEdgeThreshold",
+      type: "number | { xStart, xEnd, yStart, yEnd }",
+      default: "0",
+      description: "Distance in pixels before the overflow edge data attributes are applied.",
+    },
+    { prop: "className", type: "string", description: "Additional classes, usually a height." },
+  ]}
+/>
+
+### ScrollBar
+
+Built on Base UI `ScrollArea.Scrollbar` and `ScrollArea.Thumb`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "orientation",
+      type: '"vertical" | "horizontal"',
+      default: '"vertical"',
+      description: "Which axis the scrollbar controls.",
+    },
+    {
+      prop: "keepMounted",
+      type: "boolean",
+      default: "false",
+      description: "Keeps the scrollbar in the DOM when the content does not overflow.",
+    },
+    { prop: "className", type: "string", description: "Additional classes." },
+  ]}
+/>
+
+## RTL
+
+The vertical scrollbar uses `border-s` and is positioned by Base UI from the reading direction, so it
+appears on the left in Arabic and on the right in English.

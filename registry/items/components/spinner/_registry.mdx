@@ -1,0 +1,76 @@
+---
+name: spinner
+type: registry:ui
+title: Spinner
+description: An indicator that can be used to show a loading state.
+categories:
+  - core
+dependencies:
+  - "@tabler/icons-react"
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/spinner
+---
+
+## Anatomy
+
+```tsx
+<Spinner />
+```
+
+## Usage
+
+```tsx
+import { Spinner } from "@/components/ui/spinner";
+```
+
+```tsx
+<Spinner aria-label="جارٍ التحميل" />
+```
+
+The spinner renders with `role="status"` and an English `aria-label` of "Loading". Pass a translated
+`aria-label` in Arabic interfaces.
+
+## Sizes
+
+<Preview name="sizes" />
+
+## Examples
+
+### In Button
+
+Add `data-icon="inline-start"` to space the spinner like any other button icon.
+
+<Preview name="in-button" />
+
+### In Badge
+
+<Preview name="in-badge" />
+
+### Colors
+
+The spinner uses `currentColor`, so any text color class recolors it.
+
+<Preview name="colors" />
+
+## API Reference
+
+### Spinner
+
+An animated Tabler `IconLoader`. Accepts every SVG attribute.
+
+<PropsTable
+  rows={[
+    {
+      prop: "aria-label",
+      type: "string",
+      default: '"Loading"',
+      description: "Accessible name announced by screen readers.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes, e.g. size-6 or a text color.",
+    },
+  ]}
+/>

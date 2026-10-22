@@ -1,0 +1,75 @@
+---
+name: separator
+type: registry:ui
+title: Separator
+description: Visually or semantically separates content.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/separator
+  shadcn: https://ui.shadcn.com/docs/components/base/separator
+---
+
+## Anatomy
+
+```tsx
+<Separator orientation="horizontal" />
+```
+
+## Usage
+
+```tsx
+import { Separator } from "@/components/ui/separator";
+```
+
+```tsx
+<Separator className="my-4" />
+```
+
+Use a horizontal separator between stacked sections and a vertical one between inline items. A
+vertical separator stretches to the height of its flex parent, so give the parent a height.
+
+## Examples
+
+### Horizontal
+
+<Preview name="horizontal" />
+
+### Vertical
+
+<Preview name="vertical" />
+
+### In a List
+
+<Preview name="list" />
+
+## API Reference
+
+### Separator
+
+Built on the Base UI [Separator](https://base-ui.com/react/components/separator). Renders a `div`
+with `role="separator"` and the matching `aria-orientation`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "orientation",
+      type: '"horizontal" | "vertical"',
+      default: '"horizontal"',
+      description: "Direction of the line.",
+    },
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Replaces the rendered element while keeping separator semantics.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes, e.g. margins such as my-4.",
+    },
+  ]}
+/>

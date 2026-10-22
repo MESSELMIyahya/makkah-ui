@@ -1,0 +1,160 @@
+---
+name: button
+type: registry:ui
+title: Button
+description: Displays a button or a component that looks like a button.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - class-variance-authority
+  - cn
+links:
+  baseUi: https://base-ui.com/react/components/button
+  shadcn: https://ui.shadcn.com/docs/components/base/button
+---
+
+## Anatomy
+
+```tsx
+<Button>
+  <Icon data-icon="inline-start" />
+  Label
+</Button>
+```
+
+## Usage
+
+```tsx
+import { Button } from "@/components/ui/button";
+```
+
+```tsx
+<Button variant="outline">Book Umrah</Button>
+```
+
+Icons placed inside the button get `data-icon="inline-start"` or `data-icon="inline-end"`. The
+padding uses logical properties (`ps`/`pe`), so the icon sits on the correct side in both RTL and
+LTR layouts without extra classes.
+
+## Variants
+
+### Default
+
+<Preview name="default-variant" />
+
+### Secondary
+
+<Preview name="secondary" />
+
+### Outline
+
+<Preview name="outline" />
+
+### Ghost
+
+<Preview name="ghost" />
+
+### Destructive
+
+<Preview name="destructive" />
+
+### Link
+
+<Preview name="link" />
+
+## Sizes
+
+<Preview name="sizes" />
+
+## States
+
+### With Icon
+
+<Preview name="with-icon" />
+
+### Loading
+
+<Preview name="loading" />
+
+### Disabled
+
+<Preview name="disabled" />
+
+### As Link
+
+Use the `render` prop to render the button as another element, such as a router link. Set
+`nativeButton={false}` when the rendered element is not a `<button>`.
+
+<Preview name="as-link" />
+
+## API Reference
+
+### Button
+
+Built on the Base UI [Button](https://base-ui.com/react/components/button). Accepts every Base UI
+button prop and native `<button>` attribute.
+
+<PropsTable
+  rows={[
+    {
+      prop: "variant",
+      type: '"default" | "secondary" | "outline" | "ghost" | "destructive" | "link"',
+      default: '"default"',
+      description: "Visual style of the button.",
+    },
+    {
+      prop: "size",
+      type: '"default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg"',
+      default: '"default"',
+      description: "Height and padding. Icon sizes render a square button.",
+    },
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Replaces the rendered element while keeping button behavior and styles.",
+    },
+    {
+      prop: "nativeButton",
+      type: "boolean",
+      default: "true",
+      description: "Set to false when `render` outputs a non-button element such as a link.",
+    },
+    {
+      prop: "disabled",
+      type: "boolean",
+      default: "false",
+      description: "Disables interaction and dims the button.",
+    },
+    {
+      prop: "focusableWhenDisabled",
+      type: "boolean",
+      default: "false",
+      description: "Keeps the button in the tab order while disabled, e.g. during loading.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the variant classes.",
+    },
+  ]}
+/>
+
+### buttonVariants
+
+A `cva` helper that returns the button classes. Use it to style other elements like buttons.
+
+```tsx
+import { buttonVariants } from "@/components/ui/button";
+
+<a className={buttonVariants({ variant: "outline", size: "sm" })} href="/prayer-times">
+  Prayer times
+</a>;
+```
+
+## RTL
+
+Direction comes from the nearest `dir` attribute. Icons with directional meaning, such as arrows,
+should be mirrored in RTL with `rtl:-scale-x-100`.
+
+<Preview name="rtl-icons" />

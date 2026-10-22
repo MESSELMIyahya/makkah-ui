@@ -1,0 +1,154 @@
+---
+name: button-group
+type: registry:ui
+title: Button Group
+description: A container that groups related buttons together with consistent styling.
+categories:
+  - core
+dependencies:
+  - "@base-ui/react"
+  - class-variance-authority
+  - cn
+localRegistryDependencies:
+  - separator
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/button-group
+---
+
+## Anatomy
+
+```tsx
+<ButtonGroup>
+  <Button />
+  <ButtonGroupSeparator />
+  <ButtonGroupText />
+  <Button />
+</ButtonGroup>
+```
+
+## Usage
+
+```tsx
+import { Button } from "@/components/ui/button";
+import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from "@/components/ui/button-group";
+```
+
+```tsx
+<ButtonGroup aria-label="Lecture actions">
+  <Button variant="outline">Add to calendar</Button>
+  <Button variant="outline">Share</Button>
+</ButtonGroup>
+```
+
+The group removes the inner corners and the shared border of its direct children, so any element
+with a `data-slot` (buttons, inputs, select triggers) joins into one control. Give the group an
+`aria-label` that describes the set.
+
+## Variants
+
+### Vertical
+
+<Preview name="vertical" />
+
+## Examples
+
+### With Text
+
+Use `ButtonGroupText` to show a value or label between buttons.
+
+<Preview name="with-text" />
+
+### With Separator
+
+`ButtonGroupSeparator` divides buttons that have no border, such as the `secondary` variant.
+
+<Preview name="with-separator" />
+
+### Nested
+
+Nest groups to add spacing between related sets.
+
+<Preview name="nested" />
+
+### With Dropdown
+
+Pair a primary action with an icon button that opens a `DropdownMenu` of related actions. Pass the icon
+button to `DropdownMenuTrigger` through `render` so it joins the group.
+
+<Preview name="with-dropdown" />
+
+## API Reference
+
+### ButtonGroup
+
+A `<div>` with `role="group"`.
+
+<PropsTable
+  rows={[
+    {
+      prop: "orientation",
+      type: '"horizontal" | "vertical"',
+      default: '"horizontal"',
+      description: "Joins the children in a row or a column.",
+    },
+    {
+      prop: "aria-label",
+      type: "string",
+      description: "Accessible name for the group.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the orientation classes.",
+    },
+  ]}
+/>
+
+### ButtonGroupText
+
+Renders a `<div>` styled to match the buttons, through the Base UI `useRender` hook.
+
+<PropsTable
+  rows={[
+    {
+      prop: "render",
+      type: "ReactElement | (props, state) => ReactElement",
+      description: "Replaces the rendered element, e.g. with a label element.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes for the text.",
+    },
+  ]}
+/>
+
+### ButtonGroupSeparator
+
+A `Separator` sized to the group.
+
+<PropsTable
+  rows={[
+    {
+      prop: "orientation",
+      type: '"horizontal" | "vertical"',
+      default: '"vertical"',
+      description: "Use horizontal inside a vertical group.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes for the separator.",
+    },
+  ]}
+/>
+
+### buttonGroupVariants
+
+A `cva` helper that returns the group classes for a given `orientation`.
+
+## RTL
+
+Corner rounding and border removal use logical utilities (`rounded-s`, `rounded-e`, `border-s`), so the
+first child is rounded on the start side in both Arabic and English layouts. Mirror directional icons
+with `rtl:-scale-x-100`, as in the nested example.

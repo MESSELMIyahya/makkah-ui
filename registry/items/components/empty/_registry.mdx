@@ -1,0 +1,131 @@
+---
+name: empty
+type: registry:ui
+title: Empty
+description: Displays an empty state with an icon, a title, a description and actions.
+categories:
+  - core
+dependencies:
+  - class-variance-authority
+  - cn
+links:
+  shadcn: https://ui.shadcn.com/docs/components/base/empty
+---
+
+## Anatomy
+
+```tsx
+<Empty>
+  <EmptyHeader>
+    <EmptyMedia />
+    <EmptyTitle />
+    <EmptyDescription />
+  </EmptyHeader>
+  <EmptyContent />
+</Empty>
+```
+
+## Usage
+
+```tsx
+import { IconBellRinging } from "@tabler/icons-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+```
+
+```tsx
+<Empty>
+  <EmptyHeader>
+    <EmptyMedia variant="icon">
+      <IconBellRinging />
+    </EmptyMedia>
+    <EmptyTitle>No prayer reminders yet</EmptyTitle>
+    <EmptyDescription>Add a reminder and we will notify you on time.</EmptyDescription>
+  </EmptyHeader>
+  <EmptyContent>
+    <Button>Add reminder</Button>
+  </EmptyContent>
+</Empty>
+```
+
+Use an empty state wherever a list, table or search can have no data. `EmptyContent` holds the actions
+that help the user fill it.
+
+## Examples
+
+### Outline
+
+`Empty` ships with a dashed border style but no border width. Add `border` to outline the area.
+
+<Preview name="outline" />
+
+### No Results
+
+The default `EmptyMedia` variant renders the icon as is, without a background.
+
+<Preview name="no-results" />
+
+## API Reference
+
+### Empty
+
+The root `<div>`. Centers its content in a padded area.
+
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes, e.g. border or a background.",
+    },
+  ]}
+/>
+
+### EmptyMedia
+
+A `<div>` for an icon or avatar above the title.
+
+<PropsTable
+  rows={[
+    {
+      prop: "variant",
+      type: '"default" | "icon"',
+      default: '"default"',
+      description: "The icon variant adds a muted rounded background and sizes the icon.",
+    },
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the variant classes.",
+    },
+  ]}
+/>
+
+### EmptyHeader, EmptyTitle, EmptyDescription and EmptyContent
+
+`EmptyHeader` stacks the media, title and description. `EmptyTitle` and `EmptyDescription` style the text,
+and links inside the description are underlined. `EmptyContent` holds actions such as buttons or a search
+input.
+
+<PropsTable
+  rows={[
+    {
+      prop: "className",
+      type: "string",
+      description: "Additional classes merged with the default styles.",
+    },
+  ]}
+/>
+
+## RTL
+
+Every part is centered and the text uses `text-balance`, so the empty state looks the same in Arabic and
+English. Mirror directional icons inside actions with `rtl:-scale-x-100`.
