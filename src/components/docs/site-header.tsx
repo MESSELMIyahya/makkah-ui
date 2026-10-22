@@ -6,17 +6,9 @@ import { DocsSidebar } from "@/components/docs/docs-sidebar";
 import { SearchDialog } from "@/components/docs/search-dialog";
 import { ThemeToggle } from "@/components/docs/theme-toggle";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
-import {
-  getSiteNavigationSections,
-  type SiteNavigationSection,
-} from "../../lib/navigation";
+import { getSiteNavigationSections, type SiteNavigationSection } from "../../lib/navigation";
 import { siteConfig } from "../../lib/site-config";
 import { cn } from "../../lib/utils";
 
@@ -31,18 +23,11 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="mx-auto flex h-14 max-w-screen-2xl items-center gap-4 px-4">
         <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger
-            render={
-              <Button variant="ghost" size="icon" className="lg:hidden" />
-            }
-          >
+          <SheetTrigger render={<Button variant="ghost" size="icon" className="lg:hidden" />}>
             <IconMenu2 data-icon />
             <span className="sr-only">Toggle menu</span>
           </SheetTrigger>
-          <SheetContent
-            side="left"
-            className="w-66! bg-background/96 p-0 backdrop-blur-lg"
-          >
+          <SheetContent side="left" className="w-66! bg-background/96 p-0 backdrop-blur-lg">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
             <DocsSidebar
               sections={visibleSections}
@@ -62,11 +47,7 @@ export function SiteHeader() {
 
         <nav className="hidden items-center gap-1 lg:flex">
           {visibleSections.map((section) => (
-            <HeaderSectionLink
-              key={section.id}
-              section={section}
-              pathname={pathname}
-            />
+            <HeaderSectionLink key={section.id} section={section} pathname={pathname} />
           ))}
         </nav>
 
@@ -77,13 +58,7 @@ export function SiteHeader() {
             size="icon"
             nativeButton={false}
             // oxlint-disable-next-line jsx-a11y/control-has-associated-label -- Label is provided by the parent's children.
-            render={
-              <a
-                href={siteConfig.repositoryUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              />
-            }
+            render={<a href={siteConfig.repositoryUrl} target="_blank" rel="noopener noreferrer" />}
           >
             <IconBrandGithub data-icon />
             <span className="sr-only">GitHub</span>
@@ -104,9 +79,7 @@ function HeaderSectionLink({
 }) {
   const className = cn(
     "rounded-md px-3 py-1.5 text-sm transition-colors hover:text-foreground",
-    isSectionActive(section, pathname)
-      ? "text-foreground"
-      : "text-muted-foreground"
+    isSectionActive(section, pathname) ? "text-foreground" : "text-muted-foreground",
   );
 
   switch (section.id) {
@@ -118,13 +91,9 @@ function HeaderSectionLink({
       );
     case "components":
     case "blocks":
-    case "utilities":
+    case "utilities-and-hooks":
       return (
-        <Link
-          to="/$section"
-          params={{ section: section.id }}
-          className={className}
-        >
+        <Link to="/$section" params={{ section: section.id }} className={className}>
           {section.title}
         </Link>
       );
@@ -140,9 +109,7 @@ function HeaderSectionLink({
 }
 
 function isSectionActive(section: SiteNavigationSection, pathname: string) {
-  return (
-    pathname === section.basePath || pathname.startsWith(`${section.basePath}/`)
-  );
+  return pathname === section.basePath || pathname.startsWith(`${section.basePath}/`);
 }
 
 function RegistryLogo(props: React.SVGProps<SVGSVGElement>) {
@@ -153,6 +120,7 @@ function RegistryLogo(props: React.SVGProps<SVGSVGElement>) {
       height={34}
       xmlnsXlink="http://www.w3.org/1999/xlink"
       viewBox="0 0 1254 1254"
+      {...props}
     >
       <image
         x="0"

@@ -57,7 +57,7 @@ vi.mock("./registry/markdown.server", () => {
       const markdownBySection: Record<string, string> = {
         components: "# Components",
         blocks: "# Blocks",
-        utilities: "# Utilities",
+        "utilities-and-hooks": "# Utilities",
       };
 
       return markdownBySection[section]
@@ -68,7 +68,7 @@ vi.mock("./registry/markdown.server", () => {
       const markdownBySectionItem: Record<string, string> = {
         "components:sample-component": "# Sample Component",
         "blocks:sample-block": "# Sample Block",
-        "utilities:sample-hook": "# Sample Hook",
+        "utilities-and-hooks:sample-hook": "# Sample Hook",
       };
       const markdown = markdownBySectionItem[`${section}:${name}`];
 
@@ -162,8 +162,8 @@ describe("markdown negotiation", () => {
       { path: "/components/sample-component", expected: "# Sample Component" },
       { path: "/blocks", expected: "# Blocks" },
       { path: "/blocks/sample-block", expected: "# Sample Block" },
-      { path: "/utilities", expected: "# Utilities" },
-      { path: "/utilities/sample-hook", expected: "# Sample Hook" },
+      { path: "/utilities-and-hooks", expected: "# Utilities" },
+      { path: "/utilities-and-hooks/sample-hook", expected: "# Sample Hook" },
     ];
 
     await Promise.all(
@@ -255,7 +255,7 @@ describe("shadcn registry JSON negotiation", () => {
       { path: "/registry/sample-component", expected: { name: "sample-component" } },
       { path: "/components/sample-component", expected: { name: "sample-component" } },
       { path: "/blocks/sample-block", expected: { name: "sample-block" } },
-      { path: "/utilities/sample-hook", expected: { name: "sample-hook" } },
+      { path: "/utilities-and-hooks/sample-hook", expected: { name: "sample-hook" } },
     ];
 
     await Promise.all(
@@ -301,7 +301,7 @@ describe("shadcn registry JSON negotiation", () => {
       "/docs",
       "/components",
       "/blocks",
-      "/utilities",
+      "/utilities-and-hooks",
       "/registry.json",
       "/r/registry.json",
       "/r/sample-component.json",

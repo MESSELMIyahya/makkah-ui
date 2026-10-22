@@ -22,12 +22,12 @@ Update `registry/config.ts` before publishing your fork. This file controls the 
 Scaffold new installable items under `registry/items/**` with the starter script.
 
 ```sh
-bun --bun ./scripts/new.ts --type registry:ui --name example-card --description "A compact card component."
+bun --bun ./scripts/new.ts --type registry:ui --name prayer-card --description "A card showing the five daily prayer times."
 ```
 
 You can also run `bun --bun ./scripts/new.ts` for an interactive prompt. Use `--target` for `registry:page`, `registry:file`, custom alias installs such as `@ui/ai/prompt-input.tsx`, or targeted `registry:item` files.
 
-The scaffold creates the item source, `_registry.mdx` metadata and usage docs, and an optional `_preview.tsx` preview. Public documentation pages live directly in `registry/docs/`.
+The scaffold creates the item source, `_registry.mdx` metadata and usage docs, and an optional `_preview.tsx` preview (split it into `_preview-ar.tsx` and `_preview-en.tsx` for bilingual examples). Public documentation pages live directly in `registry/docs/`.
 
 ## Verify Changes
 

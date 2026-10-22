@@ -70,7 +70,7 @@ function SidebarSectionLink({
       );
     case "components":
     case "blocks":
-    case "utilities":
+    case "utilities-and-hooks":
       return (
         <Link
           to="/$section"
@@ -181,5 +181,5 @@ function isRegistryItemActive(
 }
 
 function getSidebarItemGroup(item: SiteNavigationItem | undefined): string | undefined {
-  return item?.kind === "docs" ? item.group : undefined;
+  return item?.group;
 }

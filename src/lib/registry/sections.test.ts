@@ -20,18 +20,18 @@ describe("registry sections", () => {
     expect(
       publicRegistryItemTypes.map((type) => [type, getRegistrySectionIdForType(type)]),
     ).toEqual([
-      ["registry:base", "utilities"],
+      ["registry:base", "utilities-and-hooks"],
       ["registry:block", "blocks"],
       ["registry:component", "components"],
-      ["registry:font", "utilities"],
-      ["registry:lib", "utilities"],
-      ["registry:hook", "utilities"],
+      ["registry:font", "utilities-and-hooks"],
+      ["registry:lib", "utilities-and-hooks"],
+      ["registry:hook", "utilities-and-hooks"],
       ["registry:ui", "components"],
-      ["registry:page", "utilities"],
-      ["registry:file", "utilities"],
-      ["registry:style", "utilities"],
-      ["registry:theme", "utilities"],
-      ["registry:item", "utilities"],
+      ["registry:page", "utilities-and-hooks"],
+      ["registry:file", "utilities-and-hooks"],
+      ["registry:style", "utilities-and-hooks"],
+      ["registry:theme", "utilities-and-hooks"],
+      ["registry:item", "utilities-and-hooks"],
     ]);
   });
 
@@ -43,7 +43,7 @@ describe("registry sections", () => {
       "/blocks/alpha",
     );
     expect(getRegistryItemRoutePath({ name: "alpha", type: "registry:hook" })).toBe(
-      "/utilities/alpha",
+      "/utilities-and-hooks/alpha",
     );
   });
 
@@ -51,7 +51,7 @@ describe("registry sections", () => {
     const sections = getRegistrySectionsWithItems(fixtureRegistryItems);
 
     expect(sections.map((section) => section.id)).toEqual(
-      expect.arrayContaining(["components", "blocks", "utilities"]),
+      expect.arrayContaining(["components", "blocks", "utilities-and-hooks"]),
     );
     expect(
       sections.find((section) => section.id === "components")?.items.map(({ name }) => name),
@@ -60,7 +60,9 @@ describe("registry sections", () => {
       sections.find((section) => section.id === "blocks")?.items.map(({ name }) => name),
     ).toContain("stats-grid");
     expect(
-      sections.find((section) => section.id === "utilities")?.items.map(({ name }) => name),
+      sections
+        .find((section) => section.id === "utilities-and-hooks")
+        ?.items.map(({ name }) => name),
     ).toContain("use-clipboard");
   });
 

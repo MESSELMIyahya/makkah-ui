@@ -1,5 +1,5 @@
 import { compareRegistryItemNames, getDefaultRegistryTitle } from "./item-title";
-import { parseRegistryMdx } from "./mdx";
+import { parseRegistryMdx, type RegistryItemDocsLinks } from "./mdx";
 import type {
   RegistryFileAuthoringDefinition,
   RegistryFileDefinition,
@@ -16,6 +16,7 @@ import {
   isInvalidRegistryRelativePath,
   normalizeRegistryRelativePath,
 } from "./paths";
+import { defaultRegistryPreviewName, parseRegistryPreviewFileName } from "./previews";
 
 export { compareRegistryItemNames, getDefaultRegistryTitle } from "./item-title";
 
@@ -28,6 +29,7 @@ type RegistryDisplayItem = Omit<RegistryItemDefinition, "description" | "files" 
 export type RegistryItemModuleEntry = {
   path: string;
   registryItem: RegistryItemAuthoringDefinition;
+  links?: RegistryItemDocsLinks;
   hasUsage: boolean;
   usageSource: string;
 };
@@ -48,10 +50,24 @@ export type RegistryPreviewSourceFile = {
   source: string;
 };
 
+/**
+ * One named example. Bilingual examples have `ar` and `en` files; single-language
+ * examples use `single`. The code tab always shows `codeFile`, which prefers English.
+ */
+export type RegistryPreviewExample = {
+  name: string;
+  ar?: RegistryPreviewSourceFile;
+  en?: RegistryPreviewSourceFile;
+  single?: RegistryPreviewSourceFile;
+};
+
 export type RegistryCatalogItem = RegistryDisplayItem & {
   registryMdxFilePath: string;
   sourceFiles: RegistrySourceFile[];
+  /** Code file of the default example, kept for Markdown output and older callers. */
   previewSourceFile: RegistryPreviewSourceFile;
+  previews: RegistryPreviewExample[];
+  links?: RegistryItemDocsLinks;
   hasPreview: boolean;
   hasUsage: boolean;
   usageSource: string;
@@ -118,9 +134,11 @@ function toRegistryCatalogItem(
   previewEntries: readonly RegistryPreviewModuleEntry[],
 ): RegistryCatalogItem {
   const itemRoot = getParentPath(entry.path);
-  const previewEntry = previewEntries.find((preview) => preview.path === getPreviewPath(itemRoot));
-  const previewSource =
-    previewEntry && hasRegistryPreviewExport(previewEntry.source) ? previewEntry.source : "";
+  const previews = getRegistryPreviewExamples(itemRoot, previewEntries);
+  const defaultPreview = previews.find((preview) => preview.name === defaultRegistryPreviewName);
+  const defaultPreviewFile = defaultPreview
+    ? getRegistryPreviewCodeFile(defaultPreview)
+    : undefined;
   const sourceFileDefinitions = getRegistrySourceFileDefinitions(itemRoot, entry.registryItem);
   const sourceFileDefinitionsByPath = new Map(
     sourceFileDefinitions.map((file) => [file.path, file]),
@@ -139,11 +157,53 @@ function toRegistryCatalogItem(
 
       return toRegistrySourceFile(file, sourceFile);
     }),
-    previewSourceFile: getPreviewSourceFile(itemRoot, previewSource),
-    hasPreview: previewSource.length > 0,
+    previewSourceFile: defaultPreviewFile ?? getPreviewSourceFile(itemRoot, ""),
+    previews,
+    ...(entry.links ? { links: entry.links } : {}),
+    hasPreview: defaultPreviewFile !== undefined,
     hasUsage: entry.hasUsage,
     usageSource: entry.usageSource,
   };
+}
+
+export function getRegistryPreviewCodeFile(
+  example: RegistryPreviewExample,
+): RegistryPreviewSourceFile | undefined {
+  return example.en ?? example.single ?? example.ar;
+}
+
+function getRegistryPreviewExamples(
+  itemRoot: string,
+  previewEntries: readonly RegistryPreviewModuleEntry[],
+): RegistryPreviewExample[] {
+  const examples = new Map<string, RegistryPreviewExample>();
+
+  for (const entry of previewEntries) {
+    if (getParentPath(entry.path) !== itemRoot || !hasRegistryPreviewExport(entry.source)) {
+      continue;
+    }
+
+    const fileName = getFileName(entry.path);
+    const info = parseRegistryPreviewFileName(fileName);
+
+    if (!info) {
+      continue;
+    }
+
+    const example = examples.get(info.name) ?? { name: info.name };
+
+    example[info.language ?? "single"] = { path: entry.path, fileName, source: entry.source };
+    examples.set(info.name, example);
+  }
+
+  // Default example first, then the rest alphabetically for stable output.
+  return [...examples.values()].toSorted((a, b) =>
+    a.name === defaultRegistryPreviewName
+      ? -1
+      : b.name === defaultRegistryPreviewName
+        ? 1
+        : a.name.localeCompare(b.name, "en"),
+  );
 }
 
 export function hasRegistryPreviewExport(source: string): boolean {

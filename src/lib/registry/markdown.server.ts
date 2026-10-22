@@ -10,9 +10,10 @@ import {
 } from "../content/responses.server";
 import { getCanonicalDocsUrl, getCanonicalRegistryItemUrl } from "../site-config";
 import { getRegistryCatalogWithItems, getRegistryItem, registryItems } from "./catalog";
-import type { RegistryCatalogItem } from "./catalog-builder";
+import { getRegistryPreviewCodeFile, type RegistryCatalogItem } from "./catalog-builder";
 import { getRegistryDisplaySource } from "./display-source.server";
 import { registryCatalog } from "./item-types";
+import { registryPreviewReferencePattern } from "./previews";
 import {
   getRegistryItemRoutePath,
   getRegistrySectionItem,
@@ -44,7 +45,8 @@ type RegistryItemMarkdownItem = Pick<
   | "sourceFiles"
   | "title"
   | "usageSource"
->;
+> &
+  Partial<Pick<RegistryCatalogItemWithSources, "previews">>;
 
 export function getRegistryCatalogMarkdownResponse(): Response {
   return createLinkedMarkdownResponse(getRegistryCatalogMarkdown(), registryCatalog.basePath);
@@ -144,7 +146,10 @@ export function createRegistryItemMarkdown(itemWithSources: RegistryItemMarkdown
       ),
     ]),
   );
-  const usageSource = itemWithSources.usageSource.trim();
+  const usageSource = inlineRegistryPreviewSources(
+    itemWithSources,
+    itemWithSources.usageSource.trim(),
+  );
   const previewSource = itemWithSources.hasPreview
     ? getRegistryDisplaySource(itemWithSources, itemWithSources.previewSourceFile)
     : "";
@@ -162,6 +167,21 @@ export function createRegistryItemMarkdown(itemWithSources: RegistryItemMarkdown
     sourceBlocks.length > 0 ? joinMarkdownBlocks(["## Source", ...sourceBlocks]) : "",
     usageSource ? joinMarkdownBlocks(["## Usage", usageSource]) : "",
   ]);
+}
+
+// Markdown readers can't render `<Preview />`, so swap each reference for the example's code.
+function inlineRegistryPreviewSources(
+  itemWithSources: RegistryItemMarkdownItem,
+  usageSource: string,
+): string {
+  return usageSource.replace(registryPreviewReferencePattern, (match, name: string) => {
+    const example = itemWithSources.previews?.find((preview) => preview.name === name);
+    const codeFile = example ? getRegistryPreviewCodeFile(example) : undefined;
+
+    return codeFile
+      ? formatCodeBlock(getRegistryDisplaySource(itemWithSources, codeFile), "tsx")
+      : match;
+  });
 }
 
 function createLinkedRegistryCatalogMarkdown(catalog: {

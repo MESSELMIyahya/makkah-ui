@@ -1,11 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { getRegistrySectionMarkdownResponse } from "../lib/registry/markdown.server";
-
+// The section was renamed to "Utilities & Hooks"; keep the old Markdown URL working.
 export const Route = createFileRoute("/utilities.md")({
   server: {
     handlers: {
-      GET: () => getRegistrySectionMarkdownResponse("utilities"),
+      GET: ({ request }) => Response.redirect(new URL("/utilities-and-hooks.md", request.url), 301),
     },
   },
 });

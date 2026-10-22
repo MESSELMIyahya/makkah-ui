@@ -25,7 +25,7 @@ const sectionCounts = registryNavigationItems.reduce<Record<RegistrySectionId, n
     counts[getRegistrySectionIdForType(item.type)] += 1;
     return counts;
   },
-  { components: 0, blocks: 0, utilities: 0 },
+  { components: 0, blocks: 0, "utilities-and-hooks": 0 },
 );
 
 const featuredItem =
@@ -52,9 +52,9 @@ const sections = [
     preview: <BlocksPreview />,
   },
   {
-    id: "utilities",
-    title: "Utilities",
-    arabic: "الأدوات",
+    id: "utilities-and-hooks",
+    title: "Utilities & Hooks",
+    arabic: "الأدوات والخطافات",
     description: "Hooks, libraries, and themes that round out what you build.",
     preview: <UtilitiesPreview />,
   },
@@ -117,7 +117,7 @@ function HomePage() {
           />
           <div
             aria-hidden="true"
-            className="absolute inset-0 -z-10 bg-radial-[ellipse_55%_45%_at_50%_50%] from-background/85 via-background/45 via-55% to-transparent"
+            className="absolute inset-0 -z-10 bg-radial-[ellipse_55%_45%_at_50%_50%] from-background/55 via-background/45 dark:from-background/55 dark:via-background/25 via-55% to-transparent "
           />
           <div
             aria-hidden="true"
@@ -130,19 +130,29 @@ function HomePage() {
 
           <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center px-5 py-12 text-center sm:px-10">
             <Link
-              to={featuredItem ? getRegistryItemRoutePath(featuredItem) : "/registry"}
-              className="home-reveal group/badge inline-flex items-center gap-2 rounded-full border border-input bg-background py-1 ps-1 pe-3 text-xs text-foreground/70  transition-colors hover:text-foreground"
+              to={
+                featuredItem
+                  ? getRegistryItemRoutePath(featuredItem)
+                  : "/registry"
+              }
+              className="home-reveal group/badge inline-flex items-center gap-2 rounded-full border border-input bg-background py-1 ps-1 pe-3 text-xs text-foreground/70 transition-colors hover:text-foreground"
             >
               <span className="rounded-full bg-primary px-2 py-0.5 text-[0.7rem] font-semibold text-primary-foreground">
                 New
               </span>
-              <span>{featuredItem ? `${featuredItem.title} is now available` : "New blocks"}</span>
+              <span>
+                {featuredItem
+                  ? `${featuredItem.title} is now available`
+                  : "New blocks"}
+              </span>
               <IconArrowRight className="size-3 opacity-60 transition-transform group-hover/badge:translate-x-0.5" />
             </Link>
 
             <h1 className="home-reveal up mt-6 font-IBM text-4xl leading-[1.1] font-bold text-balance [animation-delay:80ms] sm:text-5xl md:text-6xl">
               The Arabic UI library
-              <span className="block text-chart-2">for Islamic applications.</span>
+              <span className="block text-chart-2">
+                For Islamic Applications.
+              </span>
             </h1>
 
             <p className="home-reveal mt-5 max-w-xl text-base leading-7 text-pretty text-foreground/75 [animation-delay:160ms] sm:text-lg">
@@ -154,7 +164,9 @@ function HomePage() {
                 size="lg"
                 className="h-11 rounded-full px-6 text-base shadow-lg shadow-primary/25"
                 nativeButton={false}
-                render={<Link to="/$section" params={{ section: "components" }} />}
+                render={
+                  <Link to="/$section" params={{ section: "components" }} />
+                }
               >
                 Get started
                 <IconArrowRight data-icon="inline-end" />
@@ -224,7 +236,11 @@ function HomePage() {
                 <div className="flex items-baseline justify-between gap-3">
                   <h3 className="text-xl font-semibold">{section.title}</h3>
 
-                  <span lang="ar" dir="rtl" className="text-sm text-muted-foreground">
+                  <span
+                    lang="ar"
+                    dir="rtl"
+                    className="text-sm text-muted-foreground"
+                  >
                     {section.arabic}
                   </span>
                 </div>
@@ -252,12 +268,18 @@ function HomePage() {
                 <span className="flex size-9 items-center justify-center rounded-full bg-primary/15 font-mono text-sm font-semibold text-chart-2">
                   {index + 1}
                 </span>
-                <span lang="ar" dir="rtl" className="text-sm text-muted-foreground">
+                <span
+                  lang="ar"
+                  dir="rtl"
+                  className="text-sm text-muted-foreground"
+                >
                   {principle.arabic}
                 </span>
               </div>
               <h3 className="mt-2 text-lg font-semibold">{principle.title}</h3>
-              <p className="text-sm leading-7 text-muted-foreground">{principle.description}</p>
+              <p className="text-sm leading-7 text-muted-foreground">
+                {principle.description}
+              </p>
             </div>
           ))}
         </div>

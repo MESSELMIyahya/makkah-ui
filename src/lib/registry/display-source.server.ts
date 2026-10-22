@@ -2,6 +2,7 @@ import componentsConfig from "../../../components.json";
 import { registryItems } from "./catalog";
 import type { RegistryFileType } from "./metadata";
 import { getFileName, getParentPath, normalizePath, stripCodeExtension } from "./paths";
+import { isRegistryPreviewFileName } from "./previews";
 
 type RegistryDisplaySourceFile = {
   path: string;
@@ -73,7 +74,7 @@ export function getRegistryDisplaySource(
 }
 
 function isRegistryPreviewSourceFile(file: RegistryDisplaySourceFile): boolean {
-  return getFileName(file.path) === "_preview.tsx";
+  return isRegistryPreviewFileName(getFileName(file.path));
 }
 
 function cleanRegistryPreviewDisplaySource(source: string): string {

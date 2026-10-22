@@ -5,7 +5,7 @@ import type { RegistryCatalogItem, RegistryPreviewSourceFile } from "./catalog-b
 const registrySources = import.meta.glob<string>(
   [
     "../../../registry/items/**/*",
-    "!../../../registry/items/**/_preview.tsx",
+    "!../../../registry/items/**/_preview*.tsx",
     "!../../../registry/items/**/_registry.mdx",
   ],
   {
@@ -42,11 +42,20 @@ export function getRegistryItemWithSources(
       ...file,
       source: getRegistrySource(file.sourcePath),
     })),
-    previewSourceFile: {
-      ...item.previewSourceFile,
-      source: trimBlankTrailingLines(item.previewSourceFile.source),
-    },
+    previewSourceFile: trimPreviewSourceFile(item.previewSourceFile),
+    previews: item.previews.map((example) => ({
+      name: example.name,
+      ...(example.ar ? { ar: trimPreviewSourceFile(example.ar) } : {}),
+      ...(example.en ? { en: trimPreviewSourceFile(example.en) } : {}),
+      ...(example.single ? { single: trimPreviewSourceFile(example.single) } : {}),
+    })),
   };
+}
+
+function trimPreviewSourceFile(
+  file: RegistryPreviewSourceFile,
+): RegistryPreviewSourceFileWithSource {
+  return { ...file, source: trimBlankTrailingLines(file.source) };
 }
 
 export function getMissingRegistrySourcePaths(): string[] {

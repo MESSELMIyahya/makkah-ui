@@ -4,6 +4,7 @@ import {
   type RegistryCatalogItem,
 } from "../registry/catalog-builder";
 import { getFileName, getParentPath, isInvalidRegistryRelativePath } from "../registry/paths";
+import { getRegistryPreviewReferences, isRegistryPreviewFileName } from "../registry/previews";
 
 export type RegistryDiagnosticLevel = "error" | "warning";
 
@@ -28,7 +29,6 @@ type RegistryItemParseResult = {
 };
 
 const registryItemAuthoringFile = "_registry.mdx";
-const registryItemPreviewFile = "_preview.tsx";
 const ignoredRegistryFileNames = new Set([".DS_Store"]);
 
 export function getRegistryDiagnostics(input: RegistryDiagnosticsInput): RegistryDiagnostics {
@@ -43,7 +43,9 @@ export function getRegistryDiagnostics(input: RegistryDiagnosticsInput): Registr
 
   diagnostics.errors.push(...getRegistryItemValidationErrors(parseResult.items, files));
   diagnostics.errors.push(...getRegistryPreviewValidationErrors(previewSources));
+  diagnostics.errors.push(...getRegistryPreviewReferenceErrors(parseResult.items));
   diagnostics.errors.push(...getDocsValidationErrors(files));
+  diagnostics.warnings.push(...getRegistryPreviewLanguageWarnings(parseResult.items));
   diagnostics.warnings.push(...getSuspiciousRegistryFileWarnings(files, parseResult.items));
 
   diagnostics.errors = sortDiagnostics(diagnostics.errors);
@@ -80,7 +82,7 @@ function getRegistryPreviewSources(
   return Object.fromEntries(
     Object.entries(files).filter(
       ([path]) =>
-        path.startsWith("registry/items/") && getFileName(path) === registryItemPreviewFile,
+        path.startsWith("registry/items/") && isRegistryPreviewFileName(getFileName(path)),
     ),
   );
 }
@@ -95,16 +97,15 @@ function parseRegistryItemSources(
   };
 
   for (const [path, source] of Object.entries(sources)) {
-    const previewPath = `${getParentPath(path)}/${registryItemPreviewFile}`;
-    const previewSource = previewSources[previewPath];
+    const itemRoot = getParentPath(path);
+    const itemPreviewSources = Object.fromEntries(
+      Object.entries(previewSources).filter(
+        ([previewPath]) => getParentPath(previewPath) === itemRoot,
+      ),
+    );
 
     try {
-      result.items.push(
-        ...createRegistryCatalogItems(
-          { [path]: source },
-          previewSource === undefined ? {} : { [previewPath]: previewSource },
-        ),
-      );
+      result.items.push(...createRegistryCatalogItems({ [path]: source }, itemPreviewSources));
     } catch (error) {
       result.errors.push(
         createError(
@@ -125,6 +126,38 @@ function getRegistryPreviewValidationErrors(
     hasRegistryPreviewExport(source)
       ? []
       : [createError(path, `Registry preview ${path} must export a named Preview component.`)],
+  );
+}
+
+function getRegistryPreviewReferenceErrors(
+  items: readonly RegistryCatalogItem[],
+): RegistryDiagnostic[] {
+  return items.flatMap((item) => {
+    const previewNames = new Set(item.previews.map((preview) => preview.name));
+
+    return getRegistryPreviewReferences(item.usageSource)
+      .filter((name) => !previewNames.has(name))
+      .map((name) =>
+        createError(
+          item.registryMdxFilePath,
+          `Registry item "${item.name}" references <Preview name="${name}" /> but has no _preview-${name}*.tsx file.`,
+        ),
+      );
+  });
+}
+
+function getRegistryPreviewLanguageWarnings(
+  items: readonly RegistryCatalogItem[],
+): RegistryDiagnostic[] {
+  return items.flatMap((item) =>
+    item.previews
+      .filter((preview) => (preview.ar === undefined) !== (preview.en === undefined))
+      .map((preview) =>
+        createWarning(
+          (preview.ar ?? preview.en)?.path ?? item.registryMdxFilePath,
+          `Registry item "${item.name}" preview "${preview.name}" needs both -ar and -en files for the language switcher.`,
+        ),
+      ),
   );
 }
 
@@ -346,7 +379,7 @@ function isKnownAuthoringOrIgnoredFile(path: string): boolean {
 
   return (
     fileName === registryItemAuthoringFile ||
-    fileName === registryItemPreviewFile ||
+    isRegistryPreviewFileName(fileName) ||
     ignoredRegistryFileNames.has(fileName)
   );
 }

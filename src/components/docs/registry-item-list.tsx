@@ -1,10 +1,13 @@
 import { Link } from "@tanstack/react-router";
 
-import type { RegistryRouteItem } from "../../lib/registry/sections";
-import { getRegistrySectionIdForType } from "../../lib/registry/sections";
+import type { RegistryCategorizedItem } from "../../lib/registry/sections";
+import {
+  getRegistryCategoryGroups,
+  getRegistrySectionIdForType,
+} from "../../lib/registry/sections";
 import { DocsPageHeader } from "./docs-page-header";
 
-type RegistryListItem = RegistryRouteItem & {
+type RegistryListItem = RegistryCategorizedItem & {
   title: string;
   description: string;
 };
@@ -19,6 +22,9 @@ type RegistryItemListProps = {
 };
 
 export function RegistryItemList({ catalog }: RegistryItemListProps) {
+  const groups = getRegistryCategoryGroups(catalog.items);
+  const showGroups = groups.some((group) => group.id !== "other");
+
   return (
     <div className="flex w-full flex-col gap-6">
       <DocsPageHeader
@@ -28,17 +34,31 @@ export function RegistryItemList({ catalog }: RegistryItemListProps) {
       />
 
       {catalog.items.length > 0 ? (
-        <div className="flex flex-col">
-          {catalog.items.map((item) => (
-            <Link
-              key={item.name}
-              to="/$section/$name"
-              params={{ section: getRegistrySectionIdForType(item.type), name: item.name }}
-              className="flex flex-col gap-1 border-b py-3 transition-colors first:border-t hover:text-foreground"
-            >
-              <span className="text-sm font-medium">{item.title}</span>
-              <span className="text-sm text-muted-foreground">{item.description}</span>
-            </Link>
+        <div className="flex flex-col gap-8">
+          {groups.map((group) => (
+            <section key={group.id} aria-labelledby={showGroups ? `group-${group.id}` : undefined}>
+              {showGroups ? (
+                <h2
+                  id={`group-${group.id}`}
+                  className="mb-3 font-heading text-lg font-semibold tracking-tight"
+                >
+                  {group.title}
+                </h2>
+              ) : null}
+              <div className="flex flex-col">
+                {group.items.map((item) => (
+                  <Link
+                    key={item.name}
+                    to="/$section/$name"
+                    params={{ section: getRegistrySectionIdForType(item.type), name: item.name }}
+                    className="flex flex-col gap-1 border-b py-3 transition-colors first:border-t hover:text-foreground"
+                  >
+                    <span className="text-sm font-medium">{item.title}</span>
+                    <span className="text-sm text-muted-foreground">{item.description}</span>
+                  </Link>
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       ) : (

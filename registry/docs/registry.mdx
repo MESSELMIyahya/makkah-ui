@@ -7,7 +7,7 @@ order: 2
 Registry items live under `registry/items/**` and can be installed by shadcn-compatible CLIs. Start new items with the scaffold command so the folder, `_registry.mdx`, source file, metadata, and generated registry JSON paths follow the template conventions.
 
 ```sh
-bun --bun ./scripts/new.ts --type registry:ui --name example-card --description "A compact card component."
+bun --bun ./scripts/new.ts --type registry:ui --name prayer-card --description "A card showing the five daily prayer times."
 ```
 
 Or, run the command without flags if you want an interactive prompt (recommended).
@@ -42,10 +42,22 @@ Choose the registry type from what the item installs:
 The scaffold creates each item in its own folder:
 
 ```text
-registry/items/components/example-card/
+registry/items/components/prayer-card/
   _registry.mdx
   _preview.tsx
-  example-card.tsx
+  prayer-card.tsx
+```
+
+Rename `_preview.tsx` to `_preview-ar.tsx` and add `_preview-en.tsx` for bilingual examples:
+
+```text
+registry/items/components/prayer-card/
+  _registry.mdx
+  _preview-ar.tsx
+  _preview-en.tsx
+  _preview-compact-ar.tsx
+  _preview-compact-en.tsx
+  prayer-card.tsx
 ```
 
 ## CLI Flags
@@ -53,7 +65,7 @@ registry/items/components/example-card/
 Use flags for agent-friendly and CI-friendly scaffolding:
 
 ```sh
-bun --bun ./scripts/new.ts --type registry:block --name stats-panel --description "A metrics panel with reusable sample data."
+bun --bun ./scripts/new.ts --type registry:block --name prayer-times-panel --description "A prayer times panel with reusable sample data."
 bun --bun ./scripts/new.ts --type registry:ui --name prompt-input --description "An AI prompt input." --target @ui/ai/prompt-input.tsx
 bun --bun ./scripts/new.ts --type registry:page --name dashboard-page --description "A starter dashboard page." --target app/dashboard/page.tsx
 bun --bun ./scripts/new.ts --type registry:file --name chart-theme --description "Shared chart theme tokens." --target styles/chart-theme.css --file-extension css
@@ -74,7 +86,55 @@ Use `bun --bun ./scripts/new.ts --help` to print the full usage.
 
 ## Authoring
 
-Use `_registry.mdx` for public metadata and usage docs. Put the optional named `Preview` export in `_preview.tsx`. Keep both files private to authoring; never list them in `files`.
+Use `_registry.mdx` for public metadata and usage docs. Put each interactive example in a `_preview*.tsx` file that exports a named `Preview` component. Keep these authoring files private; never list them in `files`.
+
+### Previews
+
+Previews are bilingual by default. Pair an Arabic and an English file for each example; the docs show a language switcher (Arabic first), and the Code tab always shows the English file:
+
+| File                                                | Example                               |
+| --------------------------------------------------- | ------------------------------------- |
+| `_preview-ar.tsx` / `_preview-en.tsx`               | Default example shown at the page top |
+| `_preview-<name>-ar.tsx` / `_preview-<name>-en.tsx` | Named example, e.g. `outline`         |
+| `_preview.tsx` / `_preview-<name>.tsx`              | Single-language example (no switcher) |
+
+Place named examples anywhere in the MDX body with `<Preview name="outline" />`. The doctor fails when a referenced example has no files.
+
+### Core component pages
+
+Core component docs follow one structure. The page header, preview, and Installation section are generated; the MDX body adds the rest:
+
+```mdx
+---
+name: button
+type: registry:ui
+title: Button
+description: Displays a button or a component that looks like a button.
+categories:
+  - core
+links:
+  baseUi: https://base-ui.com/react/components/button
+  shadcn: https://ui.shadcn.com/docs/components/base/button
+---
+
+## Anatomy
+
+## Usage
+
+## Variants
+
+### Outline
+
+<Preview name="outline" />
+
+## API Reference
+
+### Button
+
+<PropsTable rows={[{ prop: "variant", type: '"default" | "outline"', default: '"default"' }]} />
+```
+
+`categories` groups items on section pages and in the sidebar (`core` → Core UI, `hooks` → Hooks, `utils` → Utilities). `links` renders the Base UI and shadcn/ui badges under the page title and is never published to registry JSON.
 
 For one-file `registry:ui` items, the catalog infers `<item-name>.tsx`. Hooks, libs, blocks, pages, target paths, and multi-file items should list `files` explicitly. Metadata-only styles, themes, fonts, bases, and universal items can omit `files`.
 

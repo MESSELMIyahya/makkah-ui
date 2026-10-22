@@ -18,6 +18,7 @@ import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as RegistryDotjsonRouteImport } from './routes/registry[.]json'
 import { Route as RegistryDotmdRouteImport } from './routes/registry[.]md'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as UtilitiesAndHooksDotmdRouteImport } from './routes/utilities-and-hooks[.]md'
 import { Route as UtilitiesDotmdRouteImport } from './routes/utilities[.]md'
 import { Route as SectionIndexRouteImport } from './routes/$section.index'
 import { Route as SectionNameRouteImport } from './routes/$section.$name'
@@ -74,6 +75,11 @@ const RegistryDotmdRoute = RegistryDotmdRouteImport.update({
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UtilitiesAndHooksDotmdRoute = UtilitiesAndHooksDotmdRouteImport.update({
+  id: '/utilities-and-hooks.md',
+  path: '/utilities-and-hooks.md',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UtilitiesDotmdRoute = UtilitiesDotmdRouteImport.update({
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/registry.json': typeof RegistryDotjsonRoute
   '/registry.md': typeof RegistryDotmdRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/utilities-and-hooks.md': typeof UtilitiesAndHooksDotmdRoute
   '/utilities.md': typeof UtilitiesDotmdRoute
   '/$section/$name': typeof SectionNameRoute
   '/$section/{$name}.md': typeof SectionChar123nameChar125DotmdRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByTo {
   '/registry.json': typeof RegistryDotjsonRoute
   '/registry.md': typeof RegistryDotmdRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/utilities-and-hooks.md': typeof UtilitiesAndHooksDotmdRoute
   '/utilities.md': typeof UtilitiesDotmdRoute
   '/$section/$name': typeof SectionNameRoute
   '/$section/{$name}.md': typeof SectionChar123nameChar125DotmdRoute
@@ -198,6 +206,7 @@ export interface FileRoutesById {
   '/registry.json': typeof RegistryDotjsonRoute
   '/registry.md': typeof RegistryDotmdRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/utilities-and-hooks.md': typeof UtilitiesAndHooksDotmdRoute
   '/utilities.md': typeof UtilitiesDotmdRoute
   '/$section/$name': typeof SectionNameRoute
   '/$section/{$name}.md': typeof SectionChar123nameChar125DotmdRoute
@@ -223,6 +232,7 @@ export interface FileRouteTypes {
     | '/registry.json'
     | '/registry.md'
     | '/robots.txt'
+    | '/utilities-and-hooks.md'
     | '/utilities.md'
     | '/$section/$name'
     | '/$section/{$name}.md'
@@ -246,6 +256,7 @@ export interface FileRouteTypes {
     | '/registry.json'
     | '/registry.md'
     | '/robots.txt'
+    | '/utilities-and-hooks.md'
     | '/utilities.md'
     | '/$section/$name'
     | '/$section/{$name}.md'
@@ -269,6 +280,7 @@ export interface FileRouteTypes {
     | '/registry.json'
     | '/registry.md'
     | '/robots.txt'
+    | '/utilities-and-hooks.md'
     | '/utilities.md'
     | '/$section/$name'
     | '/$section/{$name}.md'
@@ -293,6 +305,7 @@ export interface RootRouteChildren {
   RegistryDotjsonRoute: typeof RegistryDotjsonRoute
   RegistryDotmdRoute: typeof RegistryDotmdRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
+  UtilitiesAndHooksDotmdRoute: typeof UtilitiesAndHooksDotmdRoute
   UtilitiesDotmdRoute: typeof UtilitiesDotmdRoute
   SectionNameRoute: typeof SectionNameRoute
   SectionChar123nameChar125DotmdRoute: typeof SectionChar123nameChar125DotmdRoute
@@ -370,6 +383,13 @@ declare module '@tanstack/react-router' {
       path: '/robots.txt'
       fullPath: '/robots.txt'
       preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/utilities-and-hooks.md': {
+      id: '/utilities-and-hooks.md'
+      path: '/utilities-and-hooks.md'
+      fullPath: '/utilities-and-hooks.md'
+      preLoaderRoute: typeof UtilitiesAndHooksDotmdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/utilities.md': {
@@ -469,6 +489,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegistryDotjsonRoute: RegistryDotjsonRoute,
   RegistryDotmdRoute: RegistryDotmdRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
+  UtilitiesAndHooksDotmdRoute: UtilitiesAndHooksDotmdRoute,
   UtilitiesDotmdRoute: UtilitiesDotmdRoute,
   SectionNameRoute: SectionNameRoute,
   SectionChar123nameChar125DotmdRoute: SectionChar123nameChar125DotmdRoute,

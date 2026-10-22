@@ -14,15 +14,25 @@ import { getCanonicalRegistryItemUrl } from "../site-config.ts";
 import { isPublicRegistryItemType } from "./item-types.ts";
 import type { RegistryFileAuthoringDefinition, RegistryItemAuthoringDefinition } from "./metadata";
 
+/** Docs-only links rendered as badges on the item page; never emitted to registry JSON. */
+export type RegistryItemDocsLinks = {
+  baseUi?: string;
+  shadcn?: string;
+};
+
 type RegistryMdxFrontmatter = RegistryItemAuthoringDefinition & {
   localRegistryDependencies?: string[];
+  links?: RegistryItemDocsLinks;
 };
 
 export type ParsedRegistryMdx = {
   registryItem: RegistryItemAuthoringDefinition;
+  links?: RegistryItemDocsLinks;
   hasUsage: boolean;
   usageSource: string;
 };
+
+const registryDocsLinkFields = ["baseUi", "shadcn"] as const;
 
 const knownFrontmatterFields = new Set([
   "$schema",
@@ -39,6 +49,7 @@ const knownFrontmatterFields = new Set([
   "extends",
   "files",
   "font",
+  "links",
   "localRegistryDependencies",
   "meta",
   "name",
@@ -95,6 +106,7 @@ function createParsedRegistryMdx(
 ): ParsedRegistryMdx {
   return {
     registryItem: toRegistryItemAuthoringDefinition(metadata),
+    ...(metadata.links ? { links: metadata.links } : {}),
     hasUsage: usageSource.length > 0,
     usageSource,
   };
@@ -119,7 +131,7 @@ function parseRegistryMdxFrontmatter(path: string, frontmatter: string): Registr
 function getRegistryMdxUsageSource(path: string, root: MdxAstNode, source: string): string {
   assertNoMdxEsm(
     root,
-    `Registry item ${path} must not contain MDX imports or exports. Put interactive previews in _preview.tsx.`,
+    `Registry item ${path} must not contain MDX imports or exports. Put interactive previews in _preview*.tsx files and place them with <Preview name="..." />.`,
   );
 
   return getMdxBodySource(root, source);
@@ -155,9 +167,34 @@ function assertRegistryMdxFrontmatter(
     assertOptionalStringArrayField(diagnostic, value, field);
   }
 
+  assertDocsLinksField(path, value);
   assertBaseConfigField(path, value, type);
   assertFontField(path, value, type);
   assertOptionalRegistryFiles(path, value);
+}
+
+function assertDocsLinksField(path: string, value: Record<string, unknown>): void {
+  const links = value.links;
+
+  if (links === undefined) {
+    return;
+  }
+
+  if (!isRecord(links)) {
+    throw new Error(`Registry item ${path} frontmatter field "links" must be an object.`);
+  }
+
+  for (const [field, url] of Object.entries(links)) {
+    if (!(registryDocsLinkFields as readonly string[]).includes(field)) {
+      throw new Error(
+        `Registry item ${path} has unsupported links field "${field}". Use ${registryDocsLinkFields.join(", ")}.`,
+      );
+    }
+
+    if (typeof url !== "string" || !url.startsWith("https://")) {
+      throw new Error(`Registry item ${path} links.${field} must be an https URL.`);
+    }
+  }
 }
 
 function assertBaseConfigField(path: string, value: Record<string, unknown>, type: string): void {
@@ -183,7 +220,7 @@ function assertFontField(path: string, value: Record<string, unknown>, type: str
 function toRegistryItemAuthoringDefinition(
   metadata: RegistryMdxFrontmatter,
 ): RegistryItemAuthoringDefinition {
-  const { localRegistryDependencies, ...item } = metadata;
+  const { localRegistryDependencies, links: _links, ...item } = metadata;
   const registryDependencies = [
     ...(item.registryDependencies ?? []),
     ...(localRegistryDependencies ?? []).map(getCanonicalRegistryItemUrl),

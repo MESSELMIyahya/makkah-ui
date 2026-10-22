@@ -85,6 +85,7 @@ const registryNavigationItems = defineCollection({
       type: item.type,
       title: item.title ?? getDefaultRegistryTitle(item.name),
       description: item.description ?? "",
+      categories: item.categories ?? [],
     };
   },
 });
@@ -92,7 +93,7 @@ const registryNavigationItems = defineCollection({
 const registryPreviews = defineCollection({
   name: "registryPreviews",
   directory: "registry/items",
-  include: "**/_preview.tsx",
+  include: "**/_preview*.tsx",
   parser: sourceParser,
   schema: sourceSchema,
   transform: (document) => ({

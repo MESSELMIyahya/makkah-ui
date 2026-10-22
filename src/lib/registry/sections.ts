@@ -1,12 +1,42 @@
 import type { RegistryCatalogItem } from "./catalog-builder";
 import type { RegistryItemType } from "./item-types.ts";
 
-export type RegistrySectionId = "components" | "blocks" | "utilities";
+export type RegistrySectionId = "components" | "blocks" | "utilities-and-hooks";
+
+// The section was renamed from "Utilities"; old /utilities links redirect.
+export const legacyUtilitiesSectionId = "utilities";
 
 export type RegistryRouteItem = {
   name: string;
   type: RegistryItemType;
 };
+
+export type RegistryCategorizedItem = RegistryRouteItem & {
+  categories?: readonly string[];
+};
+
+export type RegistryCategoryGroup<T extends RegistryCategorizedItem> = {
+  id: string;
+  title: string;
+  sidebarTitle: string;
+  items: T[];
+};
+
+type RegistryCategoryConfig = {
+  title: string;
+  sidebarTitle: string;
+};
+
+// Known `categories` frontmatter values, in display order. An item is grouped
+// under its first known category; anything else falls into "Other".
+const registryCategories: ReadonlyMap<string, RegistryCategoryConfig> = new Map([
+  ["core", { title: "Core Components", sidebarTitle: "Core UI" }],
+  ["hooks", { title: "Hooks", sidebarTitle: "Hooks" }],
+  ["utils", { title: "Utilities", sidebarTitle: "Utilities" }],
+]);
+
+const otherRegistryCategoryId = "other";
+const otherRegistryCategory: RegistryCategoryConfig = { title: "Other", sidebarTitle: "Other" };
 
 export type RegistrySectionConfig = {
   id: RegistrySectionId;
@@ -55,11 +85,11 @@ export const registrySections = {
     basePath: "/blocks",
     types: blockRegistryTypes,
   },
-  utilities: {
-    id: "utilities",
-    title: "Utilities",
+  "utilities-and-hooks": {
+    id: "utilities-and-hooks",
+    title: "Utilities & Hooks",
     description: "Hooks, libraries, pages, files, themes, fonts, bases, styles, and other items.",
-    basePath: "/utilities",
+    basePath: "/utilities-and-hooks",
     types: utilityRegistryTypes,
   },
 } as const satisfies Record<RegistrySectionId, RegistrySectionConfig>;
@@ -67,22 +97,22 @@ export const registrySections = {
 export const registrySectionList = [
   registrySections.components,
   registrySections.blocks,
-  registrySections.utilities,
+  registrySections["utilities-and-hooks"],
 ] as const satisfies readonly RegistrySectionConfig[];
 
 const registrySectionByType = {
-  "registry:base": "utilities",
+  "registry:base": "utilities-and-hooks",
   "registry:block": "blocks",
   "registry:component": "components",
-  "registry:font": "utilities",
-  "registry:lib": "utilities",
-  "registry:hook": "utilities",
+  "registry:font": "utilities-and-hooks",
+  "registry:lib": "utilities-and-hooks",
+  "registry:hook": "utilities-and-hooks",
   "registry:ui": "components",
-  "registry:page": "utilities",
-  "registry:file": "utilities",
-  "registry:style": "utilities",
-  "registry:theme": "utilities",
-  "registry:item": "utilities",
+  "registry:page": "utilities-and-hooks",
+  "registry:file": "utilities-and-hooks",
+  "registry:style": "utilities-and-hooks",
+  "registry:theme": "utilities-and-hooks",
+  "registry:item": "utilities-and-hooks",
 } as const satisfies Record<RegistryItemType, RegistrySectionId>;
 
 export function isRegistrySectionId(value: unknown): value is RegistrySectionId {
@@ -142,6 +172,49 @@ export function getRegistrySectionItem<T extends RegistryRouteItem>(
   );
 }
 
+export function getRegistryItemCategoryId(item: RegistryCategorizedItem): string {
+  return (
+    item.categories?.find((category) => registryCategories.has(category)) ?? otherRegistryCategoryId
+  );
+}
+
+export function getRegistryCategoryGroups<T extends RegistryCategorizedItem>(
+  items: readonly T[],
+): RegistryCategoryGroup<T>[] {
+  const itemsByCategory = new Map<string, T[]>();
+  const groups: RegistryCategoryGroup<T>[] = [];
+
+  for (const item of items) {
+    const id = getRegistryItemCategoryId(item);
+    const categoryItems = itemsByCategory.get(id);
+
+    if (categoryItems) {
+      categoryItems.push(item);
+    } else {
+      itemsByCategory.set(id, [item]);
+    }
+  }
+
+  for (const id of [...registryCategories.keys(), otherRegistryCategoryId]) {
+    const categoryItems = itemsByCategory.get(id);
+
+    if (!categoryItems) {
+      continue;
+    }
+
+    const category = registryCategories.get(id) ?? otherRegistryCategory;
+
+    groups.push({
+      id,
+      title: category.title,
+      sidebarTitle: category.sidebarTitle,
+      items: categoryItems,
+    });
+  }
+
+  return groups;
+}
+
 function toRegistrySectionWithItems<T extends RegistryRouteItem>(
   section: RegistrySectionConfig,
   items: readonly T[],
@@ -158,5 +231,8 @@ function getRegistryItemsForSection<T extends RegistryRouteItem>(
   items: readonly T[],
   sectionId: RegistrySectionId,
 ): T[] {
-  return items.filter((item) => getRegistrySectionIdForType(item.type) === sectionId);
+  // Keep items of the same category adjacent so lists can render group headings.
+  return getRegistryCategoryGroups(
+    items.filter((item) => getRegistrySectionIdForType(item.type) === sectionId),
+  ).flatMap((group) => group.items);
 }

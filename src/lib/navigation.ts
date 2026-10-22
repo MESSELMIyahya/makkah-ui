@@ -6,6 +6,7 @@ import {
   registryNavigationItems,
 } from "./registry/catalog-navigation";
 import {
+  getRegistryCategoryGroups,
   getRegistryItemRoutePath,
   getRegistrySection,
   getRegistrySectionIdForType,
@@ -32,6 +33,7 @@ type RegistryNavigationItem = {
   description: string;
   sectionId: RegistrySectionId;
   routePath: string;
+  group?: string;
 };
 
 type DocsNavigationEntry = DocsNavigationItem & {
@@ -177,15 +179,26 @@ function toRegistrySiteNavigationSection(section: {
   basePath: string;
   items: readonly RegistryNavigationSourceItem[];
 }): SiteNavigationSection {
+  const groups = getRegistryCategoryGroups(section.items);
+  // A lone "Other" group adds no information, so only label known categories or mixes.
+  const showGroups = groups.some((group) => group.id !== "other");
+
   return {
     id: section.id,
     title: section.title,
     basePath: section.basePath,
-    items: section.items.map(toRegistryNavigationItem),
+    items: groups.flatMap((group) =>
+      group.items.map((item) =>
+        toRegistryNavigationItem(item, showGroups ? group.sidebarTitle : undefined),
+      ),
+    ),
   };
 }
 
-function toRegistryNavigationItem(item: RegistryNavigationSourceItem): RegistryNavigationItem {
+function toRegistryNavigationItem(
+  item: RegistryNavigationSourceItem,
+  group: string | undefined,
+): RegistryNavigationItem {
   return {
     kind: "registry",
     title: item.title,
@@ -193,5 +206,6 @@ function toRegistryNavigationItem(item: RegistryNavigationSourceItem): RegistryN
     description: item.description,
     sectionId: getRegistrySectionIdForType(item.type),
     routePath: getRegistryItemRoutePath(item),
+    ...(group ? { group } : {}),
   };
 }

@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 
 import { RegistryItemDoc } from "@/components/docs/component-doc";
 import { ContentSkeleton } from "@/components/docs/content-skeleton";
@@ -11,11 +11,20 @@ import {
   getRegistrySectionForType,
   getRegistrySectionItem,
   isRegistrySectionId,
+  legacyUtilitiesSectionId,
 } from "../lib/registry/sections";
 import { getMarkdownAlternatePath, getSeoHead, getTechArticleJsonLd } from "../lib/seo";
 
 export const Route = createFileRoute("/$section/$name")({
   loader: async ({ params }) => {
+    if (params.section === legacyUtilitiesSectionId) {
+      throw redirect({
+        to: "/$section/$name",
+        params: { section: "utilities-and-hooks", name: params.name },
+        statusCode: 301,
+      });
+    }
+
     const sectionItem = getRegistrySectionItem(
       params.section,
       params.name,

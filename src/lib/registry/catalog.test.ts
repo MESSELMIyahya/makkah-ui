@@ -172,7 +172,7 @@ describe("registry catalog", () => {
   test("loads metadata without evaluating client-only preview imports", () => {
     for (const item of registryItems) {
       expect(item.registryMdxFilePath).toMatch(/\/_registry\.mdx$/u);
-      expect(item.previewSourceFile.path).toMatch(/\/_preview\.tsx$/u);
+      expect(item.previewSourceFile.path).toMatch(/\/_preview(?:-[a-z0-9-]+)?\.tsx$/u);
     }
 
     for (const item of registryItems.filter((registryItem) => registryItem.hasPreview)) {
@@ -355,7 +355,9 @@ export function Preview() {
         continue;
       }
 
-      expect(itemWithSources.previewSourceFile.path.endsWith("_preview.tsx")).toBe(true);
+      expect(itemWithSources.previewSourceFile.fileName).toMatch(
+        /^_preview(?:-[a-z0-9-]+)?\.tsx$/u,
+      );
       expect(itemWithSources.previewSourceFile.source).toContain("export function Preview");
       expect(itemWithSources.previewSourceFile.source).not.toContain("registryItem");
       expect(itemWithSources.previewSourceFile.source).not.toContain("---");

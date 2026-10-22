@@ -1,12 +1,7 @@
+import { DirectionProvider } from "@base-ui/react";
 import { IconArrowRight, IconHome } from "@tabler/icons-react";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import {
-  HeadContent,
-  Link,
-  Outlet,
-  Scripts,
-  createRootRoute,
-} from "@tanstack/react-router";
+import { HeadContent, Link, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { NavigationProgress } from "@/components/docs/navigation-progress";
@@ -21,7 +16,6 @@ import { getJsonLdScripts, getWebSiteJsonLd } from "../lib/seo";
 import { siteConfig } from "../lib/site-config";
 
 import appCss from "../styles.css?url";
-import { DirectionProvider } from "@base-ui/react";
 
 export const Route = createRootRoute({
   headers: () => ({
@@ -90,21 +84,14 @@ function GlobalNotFoundRoute() {
       <div className="mx-auto grid w-full max-w-5xl items-center gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <section className="flex min-w-0 flex-col items-start gap-6">
           <div className="flex max-w-2xl flex-col gap-4">
-            <h1 className="font-heading text-4xl font-semibold">
-              Page not found
-            </h1>
+            <h1 className="font-heading text-4xl font-semibold">Page not found</h1>
             <p className="max-w-xl text-base text-muted-foreground">
-              The page you're looking for isn't here. Start from a known
-              section, or use the search box in the header.
+              The page you're looking for isn't here. Start from a known section, or use the search
+              box in the header.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button
-              size="lg"
-              variant="outline"
-              nativeButton={false}
-              render={<Link to="/" />}
-            >
+            <Button size="lg" variant="outline" nativeButton={false} render={<Link to="/" />}>
               <IconHome data-icon="inline-start" />
               Go home
             </Button>
@@ -113,11 +100,7 @@ function GlobalNotFoundRoute() {
 
         <aside className="overflow-hidden rounded-lg border bg-background shadow-sm">
           <div className="divide-y">
-            <NotFoundPathLink
-              to="/docs"
-              label="Docs"
-              description="Install, theming, CLI"
-            />
+            <NotFoundPathLink to="/docs" label="Docs" description="Install, theming, CLI" />
             <NotFoundSectionLink
               section="components"
               label="Components"
@@ -129,8 +112,8 @@ function GlobalNotFoundRoute() {
               description="Composed templates and sections"
             />
             <NotFoundSectionLink
-              section="utilities"
-              label="Utilities"
+              section="utilities-and-hooks"
+              label="Utilities & Hooks"
               description="Hooks, libraries, themes, and files"
             />
           </div>
@@ -156,9 +139,7 @@ function NotFoundPathLink({
     >
       <span className="flex min-w-0 flex-col">
         <span className="text-sm font-medium">{label}</span>
-        <span className="truncate text-sm text-muted-foreground">
-          {description}
-        </span>
+        <span className="truncate text-sm text-muted-foreground">{description}</span>
       </span>
       <IconArrowRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-foreground" />
     </Link>
@@ -182,9 +163,7 @@ function NotFoundSectionLink({
     >
       <span className="flex min-w-0 flex-col">
         <span className="text-sm font-medium">{label}</span>
-        <span className="truncate text-sm text-muted-foreground">
-          {description}
-        </span>
+        <span className="truncate text-sm text-muted-foreground">{description}</span>
       </span>
       <IconArrowRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-foreground" />
     </Link>

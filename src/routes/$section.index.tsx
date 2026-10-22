@@ -1,14 +1,26 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 
 import { DocsLayout } from "@/components/docs/docs-layout";
 import { RegistryItemList } from "@/components/docs/registry-item-list";
 
 import { registryNavigationItems } from "../lib/registry/catalog-navigation";
-import { getRegistryItemRoutePath, getRegistrySectionWithItems } from "../lib/registry/sections";
+import {
+  getRegistryItemRoutePath,
+  getRegistrySectionWithItems,
+  legacyUtilitiesSectionId,
+} from "../lib/registry/sections";
 import { getCollectionPageJsonLd, getMarkdownAlternatePath, getSeoHead } from "../lib/seo";
 
 export const Route = createFileRoute("/$section/")({
   loader: ({ params }) => {
+    if (params.section === legacyUtilitiesSectionId) {
+      throw redirect({
+        to: "/$section",
+        params: { section: "utilities-and-hooks" },
+        statusCode: 301,
+      });
+    }
+
     const section = getRegistrySectionWithItems(params.section, registryNavigationItems);
 
     if (!section) {

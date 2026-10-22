@@ -1,5 +1,6 @@
-import { IconAppWindow, IconCode, IconFiles, IconTerminal } from "@tabler/icons-react";
+import { IconFiles, IconTerminal } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
+import * as React from "react";
 
 import type { RegistryItemDetail } from "../../lib/registry/detail.server";
 import { getRegistryItemRoutePath, getRegistrySectionForType } from "../../lib/registry/sections";
@@ -12,8 +13,6 @@ import {
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { CodeBlock } from "./code-block";
-import { ComponentPreview } from "./component-preview";
 import { DocsPageHeader } from "./docs-page-header";
 import { InstallCommand } from "./install-command";
 import { ManualInstallation } from "./manual-install";
@@ -47,34 +46,11 @@ export function RegistryItemDoc({ item }: RegistryItemDocProps) {
         description={item.description}
         pagePath={pagePath}
         registryItemName={item.name}
+        links={item.links}
       />
 
-      {item.hasPreview ? (
-        <Tabs key={`${item.name}:preview`} defaultValue="preview" className="gap-4">
-          <TabsList variant="line">
-            <TabsTrigger value="preview">
-              <IconAppWindow data-icon="inline-start" />
-              Preview
-            </TabsTrigger>
-            <TabsTrigger value="code">
-              <IconCode data-icon="inline-start" />
-              Code
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="preview">
-            <ComponentPreview preview={item.preview ?? null} />
-          </TabsContent>
-          <TabsContent value="code">
-            {item.previewSourceFile.source ? (
-              <CodeBlock
-                code={item.previewSourceFile.source}
-                highlightedHtml={item.previewSourceFile.highlightedHtml}
-              />
-            ) : (
-              <p className="text-sm text-muted-foreground">No preview source is available.</p>
-            )}
-          </TabsContent>
-        </Tabs>
+      {item.preview ? (
+        <React.Fragment key={`${item.name}:preview`}>{item.preview}</React.Fragment>
       ) : null}
 
       <section className="flex flex-col gap-4">
@@ -105,12 +81,8 @@ export function RegistryItemDoc({ item }: RegistryItemDocProps) {
         </Tabs>
       </section>
 
-      {item.usage ? (
-        <section className="flex flex-col gap-4">
-          <h2 className="font-heading text-xl font-semibold tracking-tight">Usage</h2>
-          {item.usage}
-        </section>
-      ) : null}
+      {/* The MDX body owns its sections (Anatomy, Usage, Variants, API Reference, ...). */}
+      {item.usage ? <React.Fragment key={`${item.name}:usage`}>{item.usage}</React.Fragment> : null}
     </article>
   );
 }

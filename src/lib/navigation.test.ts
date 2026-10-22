@@ -23,18 +23,21 @@ const fixtureRegistryItems = [
     title: "Alpha Card",
     description: "A compact card.",
     type: "registry:ui",
+    categories: [] as string[],
   },
   {
     name: "stats-grid",
     title: "Stats Grid",
     description: "A dashboard block.",
     type: "registry:block",
+    categories: [] as string[],
   },
   {
     name: "use-clipboard",
     title: "useClipboard",
     description: "A clipboard hook.",
     type: "registry:hook",
+    categories: [] as string[],
   },
 ] as const;
 
@@ -49,13 +52,13 @@ describe("site navigation", () => {
       "docs",
       "components",
       "blocks",
-      "utilities",
+      "utilities-and-hooks",
     ]);
     expect(sections.map((section) => section.title)).toEqual([
       "Docs",
       "Components",
       "Blocks",
-      "Utilities",
+      "Utilities & Hooks",
     ]);
   });
 
@@ -83,8 +86,8 @@ describe("site navigation", () => {
     expect(
       sectionItems.find((item) => item.kind === "registry" && item.name === "use-clipboard"),
     ).toMatchObject({
-      routePath: "/utilities/use-clipboard",
-      sectionId: "utilities",
+      routePath: "/utilities-and-hooks/use-clipboard",
+      sectionId: "utilities-and-hooks",
     });
   });
 
@@ -98,5 +101,27 @@ describe("site navigation", () => {
       .filter((item) => item.kind === "registry");
 
     expect(registryItems.every((item) => !("group" in item))).toBe(true);
+  });
+
+  test("groups categorized registry items under sidebar labels", () => {
+    const sections = createSiteNavigationSections({
+      docsSection: fixtureDocsSection,
+      registryItems: [
+        ...fixtureRegistryItems,
+        {
+          name: "button",
+          title: "Button",
+          description: "A button.",
+          type: "registry:ui",
+          categories: ["core"],
+        },
+      ],
+    });
+    const components = sections.find((section) => section.id === "components")?.items ?? [];
+
+    expect(components.map((item) => ({ title: item.title, group: item.group }))).toEqual([
+      { title: "Button", group: "Core UI" },
+      { title: "Alpha Card", group: "Other" },
+    ]);
   });
 });

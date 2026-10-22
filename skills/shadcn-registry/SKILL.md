@@ -84,6 +84,8 @@ export function Preview() {
 
 Keep previews client-safe: static data, local state, and events are fine; avoid network calls, auth, server functions, env reads, and app-only providers.
 
+Makkah UI previews are bilingual. Prefer `_preview-ar.tsx` + `_preview-en.tsx` (page hero) and `_preview-<example>-ar.tsx` + `_preview-<example>-en.tsx` for each example, placed in the MDX body with `<Preview name="<example>" />`. The docs show an AR/EN switcher (Arabic default) and the Code tab shows the English file. Document API parts with `<PropsTable rows={[{ prop, type, default, description }]} />`, group items with `categories` (`core`, `hooks`, `utils`), and add `links.baseUi` / `links.shadcn` for the doc badges. `registry/items/components/button/` is the reference item.
+
 ## Adaptation Rules
 
 - Extract only the reusable unit into the scaffolded item folder.

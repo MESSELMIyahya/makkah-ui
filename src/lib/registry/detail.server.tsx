@@ -1,20 +1,23 @@
-import { createCompositeComponent, type AnyCompositeComponent } from "@tanstack/react-start/rsc";
+import { renderServerComponent } from "@tanstack/react-start/rsc";
 import * as React from "react";
 
 import {
   renderMdxContentModule,
   type MdxContentModule,
 } from "@/components/docs/mdx-content.server";
+import { PreviewCard } from "@/components/docs/preview-card";
+import { PropsTable } from "@/components/docs/props-table";
 
 import { normalizeGlobFiles } from "../glob";
 import { getRegistryItem } from "./catalog";
+import { getRegistryPreviewCodeFile, type RegistryPreviewExample } from "./catalog-builder";
 import type { RegistryItemDetailInput } from "./detail.types";
 import { getRegistryDisplaySource } from "./display-source.server";
 import { highlightCodeToHtml } from "./highlight.server";
+import { defaultRegistryPreviewName } from "./previews";
 import {
   getRegistryItemWithSources,
   type RegistryCatalogItemWithSources,
-  type RegistryPreviewSourceFileWithSource,
   type RegistrySourceFileWithSource,
 } from "./source.server";
 
@@ -22,11 +25,20 @@ type RenderedUsage = Awaited<ReturnType<typeof renderUsage>>;
 type RenderedPreview = Awaited<ReturnType<typeof renderPreview>>;
 type RegistryPreviewModule = React.ComponentType;
 
+type LoadedPreviewExample = {
+  name: string;
+  ar?: RegistryPreviewModule;
+  en?: RegistryPreviewModule;
+  single?: RegistryPreviewModule;
+  code: string;
+  highlightedHtml: string;
+};
+
 const registryUsageModules = import.meta.glob<MdxContentModule>(
   "../../../registry/items/**/_registry.mdx",
 );
 const registryPreviewModules = import.meta.glob<RegistryPreviewModule>(
-  "../../../registry/items/**/_preview.tsx",
+  "../../../registry/items/**/_preview*.tsx",
   {
     import: "Preview",
   },
@@ -39,16 +51,16 @@ export type HighlightedRegistrySourceFile = RegistrySourceFileWithSource & {
   highlightedHtml: string;
 };
 
-export type HighlightedRegistryPreviewSourceFile = RegistryPreviewSourceFileWithSource & {
-  highlightedHtml: string;
-};
-
 export type RegistryItemDetail = Omit<
   RegistryCatalogItemWithSources,
-  "hasUsage" | "previewSourceFile" | "registryMdxFilePath" | "sourceFiles" | "usageSource"
+  | "hasUsage"
+  | "previewSourceFile"
+  | "previews"
+  | "registryMdxFilePath"
+  | "sourceFiles"
+  | "usageSource"
 > & {
   preview?: RenderedPreview;
-  previewSourceFile: HighlightedRegistryPreviewSourceFile;
   sourceFiles: HighlightedRegistrySourceFile[];
   usage?: RenderedUsage;
 };
@@ -72,35 +84,72 @@ export async function getRegistryItemDetailData(data: RegistryItemDetailInput) {
 async function highlightRegistryItem(
   item: RegistryCatalogItemWithSources,
 ): Promise<RegistryItemDetail> {
-  const { hasPreview, hasUsage, usageSource: _usageSource, ...itemWithoutUsageFlag } = item;
-  const [preview, previewSourceFile, sourceFiles, usage] = await Promise.all([
-    hasPreview ? renderPreview(item.previewSourceFile.path) : null,
-    highlightPreviewSourceFile(item, item.previewSourceFile),
+  const {
+    hasPreview,
+    hasUsage,
+    previewSourceFile: _previewSourceFile,
+    previews: _previews,
+    usageSource: _usageSource,
+    ...itemWithoutUsageFlag
+  } = item;
+  const [examples, sourceFiles] = await Promise.all([
+    loadPreviewExamples(item),
     Promise.all(item.sourceFiles.map((file) => highlightSourceFile(item, file))),
-    renderUsage(item.registryMdxFilePath, hasUsage),
+  ]);
+  const defaultExample = examples.get(defaultRegistryPreviewName);
+  const [preview, usage] = await Promise.all([
+    hasPreview && defaultExample ? renderPreview(defaultExample) : null,
+    renderUsage(item.registryMdxFilePath, hasUsage, examples),
   ]);
 
   return {
     ...itemWithoutUsageFlag,
     hasPreview,
     ...(preview ? { preview } : {}),
-    previewSourceFile,
     sourceFiles,
     ...(usage ? { usage } : {}),
   };
 }
 
-async function highlightPreviewSourceFile(
+async function loadPreviewExamples(
   item: RegistryCatalogItemWithSources,
-  file: RegistryPreviewSourceFileWithSource,
-): Promise<HighlightedRegistryPreviewSourceFile> {
-  const source = getRegistryDisplaySource(item, file);
+): Promise<Map<string, LoadedPreviewExample>> {
+  const examples = await Promise.all(
+    item.previews.map((example) => loadPreviewExample(item, example)),
+  );
+
+  return new Map(examples.map((example) => [example.name, example]));
+}
+
+async function loadPreviewExample(
+  item: RegistryCatalogItemWithSources,
+  example: RegistryPreviewExample,
+): Promise<LoadedPreviewExample> {
+  const codeFile = getRegistryPreviewCodeFile(example);
+  const code = codeFile ? getRegistryDisplaySource(item, codeFile) : "";
+  const [ar, en, single, highlightedHtml] = await Promise.all([
+    loadPreviewModule(example.ar?.path),
+    loadPreviewModule(example.en?.path),
+    loadPreviewModule(example.single?.path),
+    highlightCodeToHtml(code, "preview.tsx"),
+  ]);
 
   return {
-    ...file,
-    source,
-    highlightedHtml: await highlightCodeToHtml(source, "preview.tsx"),
+    name: example.name,
+    ...(ar ? { ar } : {}),
+    ...(en ? { en } : {}),
+    ...(single ? { single } : {}),
+    code,
+    highlightedHtml,
   };
+}
+
+async function loadPreviewModule(
+  path: string | undefined,
+): Promise<RegistryPreviewModule | undefined> {
+  const loadPreview = path ? registryPreviewModulesByPath[path] : undefined;
+
+  return loadPreview ? loadPreview() : undefined;
 }
 
 async function highlightSourceFile(
@@ -116,31 +165,55 @@ async function highlightSourceFile(
   };
 }
 
-async function renderUsage(path: string, hasUsage: boolean) {
+async function renderUsage(
+  path: string,
+  hasUsage: boolean,
+  examples: ReadonlyMap<string, LoadedPreviewExample>,
+) {
   if (!hasUsage) {
     return null;
   }
 
-  return renderMdxContentModule(registryUsageModulesByPath[path]);
+  return renderMdxContentModule(registryUsageModulesByPath[path], {
+    components: {
+      Preview: createMdxPreview(examples),
+      PropsTable,
+    },
+  });
 }
 
-async function renderPreview(path: string): Promise<AnyCompositeComponent | null> {
-  const loadPreview = registryPreviewModulesByPath[path];
+function renderPreview(example: LoadedPreviewExample) {
+  return renderServerComponent(<PreviewExample example={example} />);
+}
 
-  if (!loadPreview) {
-    return null;
-  }
+function PreviewExample({ example }: { example: LoadedPreviewExample }) {
+  const { ar: Ar, en: En, single: Single } = example;
 
-  const Preview = await loadPreview();
+  return (
+    <PreviewCard
+      ar={Ar ? <Ar /> : undefined}
+      en={En ? <En /> : undefined}
+      single={Single ? <Single /> : undefined}
+      code={example.code}
+      highlightedHtml={example.highlightedHtml}
+      className="my-4"
+    />
+  );
+}
 
-  return createCompositeComponent(() => (
-    <div
-      data-slot="component-preview"
-      className="grid min-h-72 place-items-center rounded-lg border bg-background p-6"
-    >
-      <div data-slot="component-preview-stage" className="grid min-h-60 w-full place-items-center">
-        <Preview />
-      </div>
-    </div>
-  ));
+/** Binds `<Preview name="..." />` in registry MDX to this item's preview files. */
+function createMdxPreview(examples: ReadonlyMap<string, LoadedPreviewExample>) {
+  return function MdxPreview({ name = defaultRegistryPreviewName }: { name?: string }) {
+    const example = examples.get(name);
+
+    if (!example) {
+      return (
+        <p className="not-prose rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+          Missing preview “{name}”.
+        </p>
+      );
+    }
+
+    return <PreviewExample example={example} />;
+  };
 }
