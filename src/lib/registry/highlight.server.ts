@@ -1,5 +1,5 @@
 import { createHighlighterCore, type HighlighterCore, type ShikiTransformer } from "@shikijs/core";
-import { createOnigurumaEngine } from "@shikijs/engine-oniguruma";
+import { createJavaScriptRegexEngine } from "@shikijs/engine-javascript";
 
 const SHIKI_THEMES = {
   light: "github-light",
@@ -53,7 +53,9 @@ export async function highlightCodeToHtml(code: string, path: string): Promise<s
 
 function getHighlighter(): Promise<HighlighterCore> {
   highlighterPromise ??= createHighlighterCore({
-    engine: createOnigurumaEngine(import("@shikijs/engine-oniguruma/wasm-inlined")),
+    // Cloudflare Workers block runtime WebAssembly compilation, so the Oniguruma
+    // engine fails there and every block silently falls back to plain text.
+    engine: createJavaScriptRegexEngine(),
     themes: [
       import("@shikijs/themes/github-light").then((module) => module.default),
       import("@shikijs/themes/github-dark").then((module) => module.default),

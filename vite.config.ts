@@ -1,3 +1,4 @@
+import { cloudflare } from "@cloudflare/vite-plugin";
 import contentCollections from "@content-collections/vite";
 import createMdx from "@mdx-js/rollup";
 import babel from "@rolldown/plugin-babel";
@@ -6,11 +7,11 @@ import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
 import rsc from "@vitejs/plugin-rsc";
-import { cloudflare } from "@cloudflare/vite-plugin";
 // import { nitro } from "nitro/vite";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import { defineConfig } from "vite-plus";
+
 import { getPrerenderPages } from "./src/lib/prerender-pages.ts";
 import { shouldExcludeFromSitemap } from "./src/lib/seo.ts";
 import { siteConfig } from "./src/lib/site-config.ts";
@@ -60,16 +61,7 @@ const config = defineConfig({
     ],
   },
   lint: {
-    plugins: [
-      "oxc",
-      "eslint",
-      "typescript",
-      "react",
-      "import",
-      "unicorn",
-      "vitest",
-      "jsx-a11y",
-    ],
+    plugins: ["oxc", "eslint", "typescript", "react", "import", "unicorn", "vitest", "jsx-a11y"],
     options: { typeAware: true, typeCheck: true },
     env: {
       builtin: true,
@@ -168,16 +160,17 @@ const config = defineConfig({
     ],
   },
   plugins: [
-    cloudflare({
-      viteEnvironment: { name: "ssr", childEnvironments: ["rsc"] },
-    }),
+    ...(process.env.VITEST === "true"
+      ? []
+      : [
+          cloudflare({
+            viteEnvironment: { name: "ssr", childEnvironments: ["rsc"] },
+          }),
+        ]),
     devtools(),
     contentCollections(),
     createMdx({
-      include: [
-        "**/registry/docs/*.{md,mdx}",
-        "**/registry/items/**/_registry.mdx",
-      ],
+      include: ["**/registry/docs/*.{md,mdx}", "**/registry/items/**/_registry.mdx"],
       remarkPlugins: [remarkFrontmatter, remarkGfm],
     }),
     tailwindcss(),
